@@ -40,7 +40,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         : user?.email ?? "User";
 
     final waterLogNotifier = ref.watch(waterLogProvider.notifier);
-    List<WaterLog> totalLogsToday = ref.watch(waterLogProvider).value!;
+    List<WaterLog>? totalLogsToday = ref.watch(waterLogProvider).value!;
     double totalToday =
         waterLogNotifier.calculateTotalFromLogs(logs: totalLogsToday);
     WaterPreferences waterPrefs = ref.watch(waterPreferencesProvider).value!;

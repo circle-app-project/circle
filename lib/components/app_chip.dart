@@ -47,7 +47,7 @@ class _AppChipState extends State<AppChip> {
               : BorderSide(
                   width: 1,
                   color: isDarkMode
-                      ? AppColours.neutral20
+                      ? AppColours.neutral10
                       : AppColours.neutral90),
           backgroundColor: theme.scaffoldBackgroundColor,
           selectedColor:
@@ -79,7 +79,7 @@ class _AppChipState extends State<AppChip> {
         side: BorderSide(
             width: 1,
             color: isDarkMode
-                ? AppColours.neutral20
+                ? AppColours.neutral10
                 : AppColours.neutral90),
         label: Text(
           widget.label,

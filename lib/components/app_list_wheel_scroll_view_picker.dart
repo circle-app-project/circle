@@ -770,7 +770,7 @@ class _ListWheelScrollViewPickerState
                     horizontal: BorderSide(
                       width: 1,
                       color: isDarkMode
-                          ? AppColours.neutral20
+                          ? AppColours.neutral10
                           : AppColours.neutral90,
                     ),
                   ),

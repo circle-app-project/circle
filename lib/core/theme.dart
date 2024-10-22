@@ -80,7 +80,7 @@ class AppThemeData {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
     ),
     sliderTheme: const SliderThemeData(
-        activeTickMarkColor: AppColours.purple40,
+        activeTickMarkColor: AppColours.purpleSeed,
         inactiveTrackColor: AppColours.neutral90,
         trackHeight: 4,
         trackShape: RoundedRectSliderTrackShape(),
@@ -97,13 +97,13 @@ class AppThemeData {
       thumbColor: const WidgetStatePropertyAll<Color>(AppColours.white),
       trackColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
-          return AppColours.purple40;
+          return AppColours.purpleSeed;
         }
         return AppColours.purple90;
       }),
       trackOutlineColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
-          return AppColours.purple40;
+          return AppColours.purpleSeed;
         }
         return AppColours.purple90;
       }),
@@ -115,7 +115,7 @@ class AppThemeData {
       seedColor: AppColours.purpleSeed,
       primary: AppColours.purpleSeed,
       onPrimary: AppColours.white,
-      primaryContainer: AppColours.purple90,
+      primaryContainer: AppColours.purple95,
       onPrimaryContainer: AppColours.purple10,
       secondary: AppColours.orangeSeed,
       onSecondary: AppColours.white,
@@ -128,6 +128,7 @@ class AppThemeData {
       onError: AppColours.white,
       errorContainer: AppColours.red95,
       onErrorContainer: AppColours.red10,
+      surface: AppColours.neutral95
     ),
   );
 
@@ -153,18 +154,18 @@ class AppThemeData {
         if (states.contains(WidgetState.selected)) {
           return AppColours.purple70;
         }
-        return AppColours.neutral20;
+        return AppColours.neutral10;
       }),
       trackOutlineColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
           return AppColours.purple70;
         }
-        return AppColours.neutral20;
+        return AppColours.neutral10;
       }),
       trackOutlineWidth: const WidgetStatePropertyAll<double>(0),
     ),
     cardTheme: CardTheme(
-      color: AppColours.neutral20,
+      color: AppColours.neutral10,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
@@ -201,7 +202,7 @@ class AppThemeData {
       elevation: 0,
       backgroundColor: Colors.transparent,
     ),
-    cardColor: AppColours.neutral20,
+    cardColor: AppColours.neutral10,
     elevatedButtonTheme: const ElevatedButtonThemeData(
       style: ButtonStyle(
         splashFactory: InkSparkle.splashFactory,
@@ -225,7 +226,7 @@ class AppThemeData {
     chipTheme: ChipThemeData(
       elevation: 0,
       selectedColor: AppColours.purple70,
-      backgroundColor: AppColours.neutral20,
+      backgroundColor: AppColours.neutral10,
       side: BorderSide.none,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
     ),
@@ -261,6 +262,7 @@ class AppThemeData {
       onError: AppColours.white,
       errorContainer: AppColours.red10,
       onErrorContainer: AppColours.red90,
+      surface: AppColours.neutral10,
     ),
   );
 }

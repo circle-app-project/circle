@@ -37,7 +37,7 @@ class WaterCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
               color: isDarkMode
-                  ? AppColours.neutral20
+                  ? AppColours.neutral10
                   : AppColours.neutral95),
         ),
         child: Column(

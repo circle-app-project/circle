@@ -121,7 +121,7 @@ class BarChartWidget extends StatelessWidget {
                   bottom: BorderSide(
                       width: 1,
                       color: isDarkMode
-                          ? AppColours.neutral20
+                          ? AppColours.neutral10
                           : AppColours.neutral95))),
           gridData: const FlGridData(show: false),
           titlesData: FlTitlesData(

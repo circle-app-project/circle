@@ -26,11 +26,11 @@ class WaterLogListItem extends StatelessWidget {
       decoration: BoxDecoration(
           border: Border.all(
             color: isDarkMode
-                ? AppColours.neutral20
+                ? AppColours.neutral10
                 : AppColours.neutral90,
           ),
           // color: isDarkMode
-          //     ? SicklerColours.neutral20
+          //     ? SicklerColours.neutral10
           //     : SicklerColours.neutral95,
           borderRadius: BorderRadius.circular(16)),
       child: Padding(

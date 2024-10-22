@@ -1,6 +1,6 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
@@ -36,11 +36,7 @@ class CustomAppBar extends StatelessWidget {
                   Feedback.forTap(context);
                   context.pop();
                 },
-                icon: SvgPicture.asset(
-                  "assets/svg/chevron-back.svg",
-                  colorFilter:
-                      ColorFilter.mode(theme.iconTheme.color!, BlendMode.srcIn),
-                ),
+                icon:Icon(FluentIcons.arrow_left_24_regular),
               ),
             ),
             const Spacer(),

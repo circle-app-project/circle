@@ -27,14 +27,14 @@ class MedsScreen extends StatelessWidget {
                 children: [
                   Text(
                     "Upcoming",
-                    style: theme.textTheme.titleLarge,
+                    style: theme.textTheme.titleMedium,
                   ),
                   const Gap(16),
                   const MedsScreenReminderCard(),
                   const Gap(48),
                   Text(
                     "My Medications",
-                    style: theme.textTheme.titleLarge,
+                    style: theme.textTheme.titleMedium,
                   ),
                   const Gap(16),
                   const MyMedsCard(),

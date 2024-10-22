@@ -330,7 +330,7 @@ class WaterStatsCard extends StatelessWidget {
                         color: theme.colorScheme.onTertiary),
                     style: IconButton.styleFrom(
                         backgroundColor: isDarkMode
-                            ? AppColours.neutral20
+                            ? AppColours.neutral10
                             : AppColours.blue90),
                   ),
                 ),

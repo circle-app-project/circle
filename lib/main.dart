@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'core/core.dart';
-import 'features/water/water.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -40,7 +39,7 @@ class _MyAppState extends ConsumerState<MyApp> {
               .copyWith(statusBarColor: Colors.transparent)
           : SystemUiOverlayStyle.light
               .copyWith(statusBarColor: Colors.transparent),
-      child: MaterialApp(
+      child: MaterialApp.router(
         title: 'Circle',
         debugShowCheckedModeBanner: false,
         theme: AppThemeData.lightTheme,
@@ -50,9 +49,9 @@ class _MyAppState extends ConsumerState<MyApp> {
           curve: Curves.easeInOut,
           duration: const Duration(milliseconds: 300),
         ),
-        home: const WaterScreen(),
+        //home: const WaterScreen(),
 
-        //  routerConfig: router,
+         routerConfig: router,
         //  home: const OnboardingBaseScreen(),
       ),
     );

@@ -21,7 +21,7 @@ class _FeelingCardState extends State<FeelingCard> {
       decoration: BoxDecoration(
         // border: Border.all(
         //     color: isDarkMode
-        //         ? SicklerColours.neutral20
+        //         ? SicklerColours.neutral10
         //         : SicklerColours.neutral90),
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(24),

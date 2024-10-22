@@ -58,7 +58,7 @@ class _GenotypeSelectorItemState extends State<GenotypeSelectorItem> {
         break;
       case Genotype.na:
         _backgroundColor =
-            !isDarkMode ? AppColours.neutral95 : AppColours.neutral20;
+            !isDarkMode ? AppColours.neutral95 : AppColours.neutral10;
         _color =
             !isDarkMode ? AppColours.neutral50 : AppColours.neutral50;
         _label = "N/A";

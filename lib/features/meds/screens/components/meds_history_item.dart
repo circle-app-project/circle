@@ -27,7 +27,7 @@ class MedsHistoryItem extends StatelessWidget {
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: isDarkMode
-                    ? AppColours.neutral20
+                    ? AppColours.neutral10
                     : AppColours.neutral95),
             child: Center(
               child: SvgPicture.asset(
