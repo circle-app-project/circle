@@ -1,4 +1,4 @@
-name: Analyze, Tests, and Builds for Zoner
+name: Analyze, Test and Build
 on:
   pull_request:
     branches: [ "main", "dev" ]
