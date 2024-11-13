@@ -50,7 +50,6 @@ class _MyAppState extends ConsumerState<MyApp> {
           duration: const Duration(milliseconds: 300),
         ),
         //home: const WaterScreen(),
-
          routerConfig: router,
         //  home: const OnboardingBaseScreen(),
       ),
