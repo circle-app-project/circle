@@ -1,15 +1,10 @@
 import 'package:equatable/equatable.dart';
-import 'package:isar/isar.dart';
+
 
 import '../../../core/core.dart';
 
-part 'water_preferences.g.dart';
-
-@Collection(inheritance: false)
 class WaterPreferences extends Equatable {
-  final Id id = 1;
   final int? dailyGoal;
-  @Enumerated(EnumType.name)
   final Units? unit;
   final int? logAmount;
 
@@ -50,9 +45,7 @@ class WaterPreferences extends Equatable {
   }
 
   static const empty = WaterPreferences();
-  @ignore
   bool get isEmpty => this == WaterPreferences.empty;
-  @ignore
   bool get isNotEmpty => this != WaterPreferences.empty;
 
   @override
@@ -64,11 +57,11 @@ class WaterPreferences extends Equatable {
     return super.toString();
   }
 
-  @ignore
+   
   @override
   bool? get stringify => true;
 
-  @ignore
+   
   @override
   List<Object?> get props => [dailyGoal, unit, logAmount];
 }

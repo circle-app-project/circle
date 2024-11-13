@@ -2,7 +2,6 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:gap/gap.dart';
 import 'package:circle/core/core.dart';
 
@@ -80,7 +79,7 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
               Align(
                 alignment: Alignment.center,
                 child: CustomCircularPercentIndicator(
-                  value: waterStats?.percentCompleteToday.toInt().toString(),
+                  value: waterStats.percentCompleteToday.toInt().toString(),
                   shouldAnimate: true,
                   unit: "%",
                   progress: waterStats.percentCompleteToday > 100

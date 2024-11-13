@@ -1,10 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart';
 import '../../../../core/core.dart';
-part 'user_preferences.g.dart';
 
-@Embedded(inheritance: false)
 class UserPreferences extends Equatable {
   const UserPreferences(
       {this.uid,
@@ -19,17 +16,13 @@ class UserPreferences extends Equatable {
   //Water Preferences
   final String? uid;
 
-  @Enumerated(EnumType.name)
   final Units? volumeUnit;
-  @Enumerated(EnumType.name)
   final Units? lengthUnit;
-  @Enumerated(EnumType.name)
   final Units? massUnit;
 
   final bool isFirstTime;
   final bool isOnboarded;
 
-  @Enumerated(EnumType.name)
   final ThemeMode? themeMode;
 
   final DateTime? lastUpdated;
@@ -86,9 +79,9 @@ class UserPreferences extends Equatable {
 
   static const UserPreferences empty = UserPreferences();
 
-  @ignore
+   
   bool get isEmpty => this == UserPreferences.empty;
-  @ignore
+   
   bool get isNotEmpty => this != UserPreferences.empty;
 
   @override
@@ -99,11 +92,11 @@ class UserPreferences extends Equatable {
     return super.toString();
   }
 
-  @ignore
+   
   @override
   bool? get stringify => true;
 
-  @ignore
+   
   @override
   List<Object?> get props => [
         volumeUnit,

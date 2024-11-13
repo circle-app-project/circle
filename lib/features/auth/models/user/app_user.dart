@@ -1,14 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:isar/isar.dart';
 
 import '../../auth.dart';
 
-part 'app_user.g.dart';
-
-@Collection(inheritance: false)
 class AppUser extends Equatable {
-  final Id id = 1;
   final String uid;
   final String email;
   final String? photoUrl;
@@ -96,28 +91,28 @@ class AppUser extends Equatable {
 
   ///-------Empty--------///
 
-  @ignore
+   
   static AppUser empty =
       const AppUser(email: "", isAnonymous: false, uid: "");
-  @ignore
+
   bool get isEmpty => this == AppUser.empty;
-  @ignore
+
   bool get isNotEmpty => this != AppUser.empty;
 
   @override
   String toString() {
     if (this == AppUser.empty) {
-      return "SicklerUser.empty";
+      return "AppUser.empty";
     }
 
     return super.toString();
   }
 
-  @ignore
+   
   @override
   bool? get stringify => true;
 
-  @ignore
+   
   @override
   List<Object?> get props => [
         email,
