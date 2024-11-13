@@ -2,6 +2,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:gap/gap.dart';
 import 'package:circle/core/core.dart';
 
@@ -39,12 +40,31 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
   Widget build(BuildContext context) {
     final WaterLogNotifier waterLogNotifier =
         ref.watch(waterLogProvider.notifier);
-    AppUser user = ref.watch(userProvider).value!;
-    WaterStats waterStats = ref.watch(waterStatsProvider);
+    AppUser selfUser = ref.watch(userProvider).value!;
+    List<WaterLog> allLogs = ref.watch(waterLogProvider).value!;
+  //  WaterStats waterStats = ref.watch(waterStatsProvider);
+
+
+
+    final DateTime now = DateTime.now();
+    final DateTime today = DateTime(now.year, now.month, now.day);
+    final DateTime tomorrow = today.add(const Duration(days: 1));
+
+    List<WaterLog> logsToday = allLogs
+        .where((log) =>
+    log.timestamp.isAfter(today) && log.timestamp.isBefore(tomorrow))
+        .toList();
+
+    WaterStats waterStats = WaterStats(
+        logsToday: logsToday,
+        logsLastSevenDays: [],
+        logsLastThirtyDays: [],
+        logsThisWeek: [],
+        logsThisMonth: [],
+        dailyGoal: 2000);
     WaterPreferences waterPreferences =
         ref.watch(waterPreferencesProvider).value!;
-
-    List<WaterLog> todayLogs = waterStats.logsToday;
+    List<WaterLog>? todayLogs = waterStats.logsToday;
     List<WaterLog>? thisWeekLogs = waterStats.logsThisWeek;
     List<WaterLog>? thisMonthLogs = waterStats.logsThisMonth;
 
@@ -60,7 +80,7 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
               Align(
                 alignment: Alignment.center,
                 child: CustomCircularPercentIndicator(
-                  value: waterStats.percentCompleteToday.toInt().toString(),
+                  value: waterStats?.percentCompleteToday.toInt().toString(),
                   shouldAnimate: true,
                   unit: "%",
                   progress: waterStats.percentCompleteToday > 100
@@ -93,7 +113,7 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
                         waterPreferences.logAmount!.toDouble());
 
                 await waterLogNotifier.addWaterLog(
-                    entry: waterLog, user: user, updateRemote: false);
+                    entry: waterLog, user: selfUser, updateRemote: false);
                 if (!waterLogNotifier.isSuccessful &&
                     waterLogNotifier.errorMessage != null) {
                   if (context.mounted) {
@@ -190,14 +210,14 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
                       onDeletePressed: () async {
                         await waterLogNotifier.deleteWaterLog(
                             entry: waterStats.logsToday[index],
-                            user: user,
+                            user: selfUser,
                             updateRemote:
                                 false); // Todo: change to true or setup periodic syncing
                       },
                       onEditPressed: (newLog) async {
                         await waterLogNotifier.updateWaterLog(
                             entry: newLog,
-                            user: user,
+                            user: selfUser,
                             updateRemote:
                                 false); // Todo: change to true or setup periodic syncing
                         setState(() {});

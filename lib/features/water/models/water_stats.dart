@@ -5,6 +5,8 @@ import '../water.dart';
 
 class WaterStats extends Equatable {
   ///---Today---///
+
+
   final List<WaterLog> logsToday;
   final double dailyGoal;
   double get totalToday => calculateTotalFromLogs(logs: logsToday);

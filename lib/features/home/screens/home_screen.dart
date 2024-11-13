@@ -44,8 +44,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     double totalToday =
         waterLogNotifier.calculateTotalFromLogs(logs: totalLogsToday);
     WaterPreferences waterPrefs = ref.watch(waterPreferencesProvider).value!;
-    double percentComplete = ((totalToday / waterPrefs.dailyGoal!) * 100);
-    int remaining = waterPrefs.dailyGoal! - totalToday.toInt();
+    double percentComplete = ((totalToday / 2000) * 100);
+    int remaining = 2000 - totalToday.toInt();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -105,7 +105,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   onPressed: () {
                     context.pushNamed(WaterScreen.id);
                   },
-                  unit: waterPrefs.unit!.symbol),
+                  unit: Units.millilitres.symbol),
               const Gap(kPadding32),
               Align(
                 alignment: Alignment.centerLeft,
