@@ -1,54 +1,33 @@
 import 'package:circle/features/auth/auth.dart';
-import 'package:isar/isar.dart';
 import '../../../../../databse_service.dart';
 
 class UserLocalService extends LocalDbService {
-  late Future<Isar> db;
-
-  UserLocalService() {
-    db = initializeDB();
-  }
+  
+  UserLocalService();
 
   Stream<List<AppUser>> listenUserPreferences() async* {
-    final isar = await db;
-    yield* isar.appUsers.where().watch();
+        ///Todo: Implement
+    throw UnimplementedError();
   }
 
   Future<AppUser> getUser() async {
-    final isar = await db;
-    List<AppUser> userList = await isar.appUsers.where().findAll();
-    if (userList.isEmpty) {
-      return AppUser.empty;
-    } else {
-      return userList.first;
-    }
+        ///Todo: Implement
+    throw UnimplementedError();
   }
 
   Future<void> addUser(AppUser user) async {
-    final isar = await db;
-    await isar.writeTxn(() async {
-      await isar.appUsers.put(user);
-    });
+        ///Todo: Implement
+    throw UnimplementedError();
   }
 
   Future<void> updateUser(AppUser user) async {
-    final isar = await db;
-    await isar.writeTxn(() async {
-      await isar.appUsers.put(user);
-    });
+        ///Todo: Implement
+    throw UnimplementedError();
   }
 
   Future<void> deleteUser({AppUser? user}) async {
-    final isar = await db;
-
-    if (user == null) {
-      await isar.writeTxn(() async {
-        await isar.appUsers.clear();
-      });
-    } else {
-      await isar.writeTxn(() async {
-        await isar.appUsers.delete(user.id);
-      });
-    }
+    ///Todo: Implement
+        ///Todo: Implement
+    throw UnimplementedError();
   }
 }

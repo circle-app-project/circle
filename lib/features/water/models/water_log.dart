@@ -1,20 +1,14 @@
 import 'package:equatable/equatable.dart';
-import 'package:isar/isar.dart';
-
 import '../../../core/core.dart';
 
-part 'water_log.g.dart';
-
-@Collection(inheritance: false)
 class WaterLog extends Equatable {
-  final Id id;
+  //final int id;
   final DateTime timestamp;
   final double amount;
-  @Enumerated(EnumType.name)
   final Units unit;
 
   const WaterLog({
-    this.id = Isar.autoIncrement,
+
     required this.timestamp,
     required this.amount,
     this.unit = Units.millilitres,
@@ -48,14 +42,12 @@ class WaterLog extends Equatable {
     );
   }
 
-  @ignore
+
   static WaterLog empty = WaterLog(
       timestamp: DateTime(0, 0, 0, 0), amount: 0, unit: Units.millilitres);
 
-  @ignore
   bool get isEmpty => this == WaterLog.empty;
 
-  @ignore
   bool get isNotEmpty => this != WaterLog.empty;
   @override
   String toString() {
@@ -65,11 +57,9 @@ class WaterLog extends Equatable {
     return super.toString();
   }
 
-  @ignore
   @override
   bool? get stringify => true;
 
-  @ignore
   @override
-  List<Object?> get props => [timestamp, amount, unit, id];
+  List<Object?> get props => [timestamp, amount, unit];
 }

@@ -1,16 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:isar/isar.dart';
-
 import '../../../../core/enums.dart';
 
-part 'user_profile.g.dart';
-
-@Embedded(inheritance: false)
 class UserProfile extends Equatable {
   ///Profile Info
   final String? uid;
-  @Enumerated(EnumType.name)
   final Gender? gender;
   final String? name;
   final String? displayName;
@@ -18,7 +12,6 @@ class UserProfile extends Equatable {
   final String? email;
   final String? photoUrl;
   final String? phone;
-  @Enumerated(EnumType.name)
   final Genotype? genotype;
 
   /// Health Info
@@ -166,11 +159,11 @@ class UserProfile extends Equatable {
   }
 
   ///-------------Empty----------///
-  @ignore
+   
   static const UserProfile empty = UserProfile();
-  @ignore
+   
   bool get isEmpty => this == UserProfile.empty || this == const UserProfile();
-  @ignore
+   
   bool get isNotEmpty => this != UserProfile.empty;
 
   @override
@@ -181,11 +174,11 @@ class UserProfile extends Equatable {
     return super.toString();
   }
 
-  @ignore
+   
   @override
   bool? get stringify => true;
 
-  @ignore
+   
   @override
   List<Object?> get props => [
         uid,
