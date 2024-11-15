@@ -54,7 +54,7 @@ dependencies:
   intl: ^0.19.0
   objectbox: ^4.0.3
   objectbox_flutter_libs: ^4.0.3
-  objectbox_sync_flutter_libs: ^4.0.3
+  path: ^1.9.0
 
 dev_dependencies:
   flutter_test:
