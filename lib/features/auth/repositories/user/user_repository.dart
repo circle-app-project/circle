@@ -31,7 +31,7 @@ class UserRepository {
       if (currentUser == null) {
         ///If user is not signed in, return an empty class
         log("User is not signed in");
-        await _userLocalService.deleteUser();
+        _userLocalService.deleteUser();
         return AppUser.empty;
       }
 
@@ -40,13 +40,13 @@ class UserRepository {
         return await _getRemoteUser(currentUser.uid);
       }
 
-      AppUser localUser = await _userLocalService.getUser();
+      AppUser localUser = _userLocalService.getUser();
       if (localUser.isNotEmpty) {
         log("Local User Found");
         return localUser;
       } else {
         log("Local user is empty");
-        await _userLocalService.deleteUser();
+        _userLocalService.deleteUser();
         return AppUser.empty;
       }
 
@@ -62,7 +62,7 @@ class UserRepository {
         documentSnapshot.data()!.isNotEmpty) {
       AppUser remoteUser =
           AppUser.fromMap(data: documentSnapshot.data()!);
-      await _userLocalService.addUser(remoteUser);
+      _userLocalService.addUser(remoteUser);
       return remoteUser;
     } else {
       throw Exception("User data doesn't exist");
@@ -72,7 +72,7 @@ class UserRepository {
   FutureEither<void> updateUserData(
       {required AppUser user, bool updateRemote = false}) async {
     return futureHandler(() async {
-      await _userLocalService.updateUser(user);
+      _userLocalService.updateUser(user);
       if (updateRemote) {
         await _userService.updateUserData(user);
       }
@@ -82,7 +82,7 @@ class UserRepository {
   FutureEither<void> addUserData(
       {required AppUser user, bool updateRemote = false}) async {
     return futureHandler(() async {
-      await _userLocalService.updateUser(user);
+       _userLocalService.updateUser(user);
       if (updateRemote) {
         await _userService.addUserData(user);
       }
@@ -93,7 +93,7 @@ class UserRepository {
   FutureEither<void> deleteUserData(
       {required AppUser user, bool deleteRemote = false}) async {
     return futureHandler(() async {
-      await _userLocalService.deleteUser(user: user);
+     _userLocalService.deleteUser(user: user);
 
       if (deleteRemote) {
         await _userService.deleteUserData(user.uid);
