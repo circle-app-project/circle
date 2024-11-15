@@ -1,3 +1,5 @@
+import 'package:circle/objectbox.g.dart';
+
 enum AppState { initial, submitting, success, error }
 
 enum AuthState { authenticated, unauthenticated }
@@ -12,15 +14,9 @@ enum SelectorColors { purple, blue, green, red, orange }
 
 enum Gender { male, female }
 
-enum Genotype { as, ss, aa, na }
+enum Genotype { as, ss, aa, unknown }
 
-enum AppListWheelScrollViewPickerMode {
-  integer,
-  duration,
-  time,
-  decimal,
-  text
-}
+enum AppListWheelScrollViewPickerMode { integer, duration, time, decimal, text }
 
 enum MedicationType {
   tabletsPills,
@@ -35,63 +31,39 @@ enum MedicationType {
 
 enum Units {
   ///Mass Measurement Units
-  pound,
-  ounce,
-  kilogram,
-  gram,
-  milligram,
+  pound(symbol: 'lb'),
+  ounce(symbol: 'oz'),
+  kilogram(symbol: 'kg'),
+  gram(symbol: 'g'),
+  milligram(symbol: 'mg'),
 
   /// Length measurement units
-  kilometres,
-  metres,
-  centimetres,
-  millimetres,
-  miles,
-  inches,
-  feet,
+  kilometres(symbol: 'km'),
+  metres(symbol: 'm'),
+  centimetres(symbol: 'cm'),
+  millimetres(symbol: 'mm'),
+  miles(symbol: 'mi'),
+  inches(symbol: 'in'),
+  feet(symbol: 'ft'),
 
   ///Volume measurement units
-  litres,
-  millilitres,
-  centilitres,
-  gallons;
+  litres(symbol: 'L'),
+  millilitres(symbol: 'ml'),
+  centilitres(symbol: 'cl'),
+  gallons(symbol: 'gal'),
 
-  String get symbol {
-    switch (this) {
-      case Units.pound:
-        return 'lb';
-      case Units.ounce:
-        return 'oz';
-      case Units.kilogram:
-        return 'kg';
-      case Units.gram:
-        return 'g';
-      case Units.milligram:
-        return 'mg';
-      case Units.kilometres:
-        return 'km';
-      case Units.metres:
-        return 'm';
-      case Units.centimetres:
-        return 'cm';
-      case Units.millimetres:
-        return 'mm';
-      case Units.miles:
-        return 'mi';
-      case Units.inches:
-        return 'in';
-      case Units.feet:
-        return 'ft';
-      case Units.litres:
-        return 'L';
-      case Units.millilitres:
-        return 'ml';
-      case Units.centilitres:
-        return 'cl';
-      case Units.gallons:
-        return 'gal';
-    }
-  }
+  ///Energy measurement units
+  kilocalories(symbol: 'kcal'),
+  calories(symbol: 'cal'),
+  joules(symbol: 'J'),
+
+  ///Temperature measurement units
+  celsius(symbol: 'C'),
+  fahrenheit(symbol: 'F'),
+  kelvin(symbol: 'K');
+
+  final String symbol;
+  const Units({required this.symbol});
 }
 
 enum MedsScheduleEndingState {
