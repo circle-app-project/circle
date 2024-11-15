@@ -17,9 +17,10 @@ class UserLocalService {
   }
 
   AppUser getUser({int? id}) {
-    if(id == null){
-     return  userBox.getAll().first;
-    }else{
+    if (id == null) {
+      List<AppUser> users = userBox.getAll();
+      return users.isEmpty ? AppUser.empty : users.first;
+    } else {
       return userBox.get(id) ?? AppUser.empty;
     }
   }
