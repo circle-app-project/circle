@@ -30,6 +30,8 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
     final ThemeData theme = Theme.of(context);
     final authNotifier = ref.read(authProvider.notifier);
     final userNotifier = ref.read(userProvider.notifier);
+    AppUser user = ref.watch(userProvider).value!;
+    UserPreferences userPreferences = user.preferences.target ?? UserPreferences.empty;
 
     return Scaffold(
       body: Padding(
@@ -48,27 +50,24 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
                       await authNotifier.singInWithGoogle();
 
                       if (authNotifier.isSuccessful) {
-                        await userNotifier.getCurrentUserData();
-                        AppUser user = ref.watch(userProvider).value!;
-
+                        await userNotifier.getCurrentUserData(); //Might not be super necessary tho, should probably set up a stream to just listen for changes to the user.
                         if (context.mounted) {
                           showCustomSnackBar(
                               context: context,
                               message: "Signed in successfully",
                               mode: SnackBarMode.success);
-                          if (user.preferences.isFirstTime) {
+                          if (userPreferences.isFirstTime) {
                             ///Set as is Not First Time
-
                             await userNotifier.updateUserData(
                                 user: user.copyWith(
-                                    preferences: user.preferences
+                                    preferences: userPreferences
                                         .copyWith(isFirstTime: false)));
 
                             if (context.mounted) {
                               context.goNamed(AuthSuccessScreen.id);
                             }
                           } else {
-                            if (user.preferences.isOnboarded) {
+                            if (userPreferences.isOnboarded) {
                               context.goNamed(BottomNavBar.id);
                             } else {
                               context.goNamed(ProfileBasicInfoScreen.id);

@@ -28,7 +28,7 @@ class AppUser extends Equatable {
     this.photoUrl,
   });
 
-  ///-------copyWith--------///
+  //-------copyWith--------//
   AppUser copyWith({
     String? email,
     bool? isAnonymous,
@@ -52,8 +52,7 @@ class AppUser extends Equatable {
     return user;
   }
 
-  ///-----To Map and From Map------///
-
+  //-----To Map and From Map------//
   Map<String, dynamic> toMap() {
     Map<String, dynamic> data = {
       "uid": uid,
@@ -95,7 +94,7 @@ class AppUser extends Equatable {
     }
   }
 
-  ///-------Empty--------///
+  //-------Empty--------//
   @Transient()
   static AppUser empty = AppUser(
       email: "",
@@ -134,4 +133,20 @@ class AppUser extends Equatable {
         profile,
         preferences,
       ];
+
+  String getDisplayName() {
+    UserProfile? uProfile = profile.target;
+
+    if (uProfile != null) {
+      if (uProfile.displayName != null) {
+        return uProfile.displayName!.split(" ").first;
+      } else {
+        if (uProfile.name != null) {
+          return uProfile.name!.split(" ").first;
+        }
+      }
+    }
+
+    return email;
+  }
 }

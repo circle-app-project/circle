@@ -72,7 +72,7 @@ class WaterRepository {
     bool updateRemote = false,
   }) async {
     return futureHandler(() async {
-      await _waterLocalService.addWaterLog(log);
+      _waterLocalService.addWaterLog(log);
       if (updateRemote) {
         await _waterService.addLog(waterLog: log, uid: user.uid);
       }
@@ -85,7 +85,7 @@ class WaterRepository {
     bool updateRemote = false,
   }) async {
     return futureHandler(() async {
-      await _waterLocalService.update(log);
+      _waterLocalService.update(log);
       if (updateRemote) {
         await _waterService.updateLog(waterLog: log, uid: user.uid);
       }
@@ -98,7 +98,7 @@ class WaterRepository {
     bool updateRemote = false,
   }) async {
     return futureHandler(() async {
-      await _waterLocalService.deleteWaterLog(log);
+      _waterLocalService.deleteWaterLog(log);
       if (updateRemote) {
         await _waterService.deleteLog(waterLog: log, uid: user.uid);
       }
@@ -110,7 +110,7 @@ class WaterRepository {
     bool updateRemote = false,
   }) async {
     return futureHandler(() async {
-      await _waterLocalService.clear();
+      _waterLocalService.clear();
       if (updateRemote) {
         await _waterService.clear(uid: user.uid);
       }
@@ -121,7 +121,7 @@ class WaterRepository {
     required AppUser user,
   }) async {
     return futureHandler(() async {
-      return await _waterLocalService.count();
+      return _waterLocalService.count();
     });
   }
 
@@ -146,7 +146,7 @@ class WaterRepository {
         }
       }
 
-      preferences = await _waterLocalService.getPreferences();
+      preferences = _waterLocalService.getPreferences();
 
       if (preferences.isEmpty) {
         throw Exception("No Preferences found found");
@@ -177,7 +177,7 @@ class WaterRepository {
     bool? updateRemote = false,
   }) async {
     return futureHandler(() async {
-      await _waterLocalService.addPreferences(preferences);
+      _waterLocalService.addPreferences(preferences);
       if (updateRemote! && user != null) {
         await _waterService.addPreferences(
             preferences: preferences, uid: user.uid);
@@ -191,7 +191,7 @@ class WaterRepository {
     bool updateRemote = false,
   }) async {
     return futureHandler(() async {
-      await _waterLocalService.updatePreferences(preferences);
+      _waterLocalService.updatePreferences(preferences);
       if (updateRemote) {
         await _waterService.updatePreferences(
             preferences: preferences, uid: user.uid);
@@ -204,7 +204,7 @@ class WaterRepository {
     bool updateRemote = false,
   }) async {
     return futureHandler(() async {
-      await _waterLocalService.deletePreferences();
+      _waterLocalService.deletePreferences();
       if (updateRemote) {
         await _waterService.deletePreferences(user.uid);
       }

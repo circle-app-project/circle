@@ -42,15 +42,13 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
 
   Future<void> evaluateInitialLocation(BuildContext context) async {
     log("EVALUATING INITIAL LOCATION");
-
-    final userNotifier = ref.read(userProvider.notifier);
-
+    final userNotifier = ref.watch(userProvider.notifier);
     await userNotifier.getCurrentUserData();
-
     final AppUser user = ref.watch(userProvider).value!;
-
-    final bool isFirstTime = user.preferences.isFirstTime;
-    final bool isOnboardingComplete = user.preferences.isOnboarded;
+    UserPreferences userPreferences =
+        user.preferences.target ?? UserPreferences.empty;
+    final bool isFirstTime = userPreferences.isFirstTime;
+    final bool isOnboardingComplete = userPreferences.isOnboarded;
     final bool isLoggedIn = user.isNotEmpty;
     if (context.mounted) {
       if (isLoggedIn) {

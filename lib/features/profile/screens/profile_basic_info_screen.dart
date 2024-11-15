@@ -7,7 +7,6 @@ import '../../../core/core.dart';
 import '../../auth/auth.dart';
 import '../profile.dart';
 
-
 class ProfileBasicInfoScreen extends ConsumerStatefulWidget {
   static const String id = "basic_info";
   final bool? isEditing;
@@ -49,12 +48,13 @@ class _ProfileBasicInfoScreenState
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.watch(userProvider.notifier).getCurrentUserData();
       AppUser user = ref.watch(userProvider).value!;
-      nameController.text = user.profile.displayName ?? "";
-      ageController.text = user.profile.age.toString();
+      UserProfile userProfile = user.profile.target ?? UserProfile.empty;
+      nameController.text = userProfile.displayName ?? "";
+      ageController.text = userProfile.age.toString();
 
-      if (user.profile.gender != null) {
+      if (userProfile.gender != null) {
         setState(() {
-          selectedRadioValue = user.profile.gender!;
+          selectedRadioValue = userProfile.gender!;
         });
       }
     });
@@ -64,8 +64,10 @@ class _ProfileBasicInfoScreenState
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final userNotifier =
-    ref.watch(userProvider.notifier);
+    final userNotifier = ref.watch(userProvider.notifier);
+    AppUser user = ref.watch(userProvider).value!;
+    UserProfile userProfile = user.profile.target ?? UserProfile.empty;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Form(
@@ -98,9 +100,8 @@ class _ProfileBasicInfoScreenState
                     TextFormField(
                       controller: nameController,
                       keyboardType: TextInputType.name,
-                      decoration:
-                          AppInputDecoration.inputDecoration(context)
-                              .copyWith(hintText: "Names"),
+                      decoration: AppInputDecoration.inputDecoration(context)
+                          .copyWith(hintText: "Names"),
                     ),
                     const Gap(24),
                     Text("Age", style: theme.textTheme.bodyMedium),
@@ -111,8 +112,7 @@ class _ProfileBasicInfoScreenState
                       controller: ageController,
                       keyboardType: TextInputType.number,
                       decoration:
-                          AppInputDecoration.inputDecoration(context)
-                              .copyWith(
+                          AppInputDecoration.inputDecoration(context).copyWith(
                         hintText: "Age",
                       ),
                       validator: (value) {
@@ -195,11 +195,10 @@ class _ProfileBasicInfoScreenState
                     AppButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-
                             AppUser user = ref.watch(userProvider).value!;
 
                             user = user.copyWith(
-                                profile: user.profile.copyWith(
+                                profile: userProfile.copyWith(
                               name: nameController.text.trim(),
                               gender: selectedRadioValue,
                               age: int.tryParse(ageController.text.trim()),
@@ -236,8 +235,6 @@ class _ProfileBasicInfoScreenState
                                 context.pushNamed(ProfileVitalsInfoScreen.id);
                               }
                             }
-
-
                           }
                         },
                         label: "Continue"),

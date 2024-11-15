@@ -21,7 +21,7 @@ class WaterPrefsNotifier extends AsyncNotifier<WaterPreferences> {
   String? get errorMessage => state.error is Failure
       ? (state.error as Failure).message
       : state.error.toString();
-  WaterPreferences _preferences = const WaterPreferences.initial();
+  WaterPreferences _preferences = WaterPreferences.initial();
   WaterPreferences get preferences => _preferences;
 
   @override

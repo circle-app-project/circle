@@ -1,3 +1,4 @@
+import 'package:circle/main.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../water.dart';
@@ -8,7 +9,7 @@ import '../water.dart';
 ///
 
 final WaterService waterService = WaterService();
-final WaterLocalService waterLocalService = WaterLocalService();
+final WaterLocalService waterLocalService = WaterLocalService(store: database.store);
 final WaterRepository waterRepository = WaterRepository(
     waterService: waterService, waterLocalService: waterLocalService);
 

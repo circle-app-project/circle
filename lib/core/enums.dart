@@ -1,4 +1,3 @@
-import 'package:circle/objectbox.g.dart';
 
 enum AppState { initial, submitting, success, error }
 

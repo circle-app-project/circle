@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
 import '../../../../core/core.dart';
-import '../../auth.dart';
 
 @Entity()
 // ignore: must_be_immutable

@@ -33,14 +33,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    final AppUser? user = ref.watch(userProvider).value;
-
-    final String displayName = user?.profile.displayName != null
-        ? user!.profile.displayName!.split(" ").first
-        : user?.email ?? "User";
+    final AppUser user = ref.watch(userProvider).value!;
 
     final waterLogNotifier = ref.watch(waterLogProvider.notifier);
+
     List<WaterLog>? totalLogsToday = ref.watch(waterLogProvider).value!;
+
+    //Todo: This calculation should be done somewhere in the water notifier and the value just returned.
     double totalToday =
         waterLogNotifier.calculateTotalFromLogs(logs: totalLogsToday);
     //WaterPreferences waterPrefs = ref.watch(waterPreferencesProvider).value!;
@@ -71,22 +70,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ],
                         ),
                       ),
-                      Text(displayName,
+                      Text(user.getDisplayName(),
                           style: theme.textTheme.headlineLarge!
                               .copyWith(fontWeight: FontWeight.w700)),
                     ],
                   ),
                   const Spacer(),
                   InkWell(
-                    splashColor: theme.colorScheme.primary.withValues(alpha:.2),
+                    splashColor:
+                        theme.colorScheme.primary.withValues(alpha: .2),
                     splashFactory: InkSparkle.splashFactory,
                     borderRadius: BorderRadius.circular(kPadding64),
                     onTap: () {
                       context.pushNamed(ProfileScreen.id);
                     },
                     child: CircleAvatar(
-                      backgroundImage: user?.photoUrl != null
-                          ? NetworkImage(user!.photoUrl!)
+                      backgroundImage: user.photoUrl != null
+                          ? NetworkImage(user.photoUrl!)
                           : const AssetImage("assets/images/memoji.png")
                               as ImageProvider,
                       radius: 32,

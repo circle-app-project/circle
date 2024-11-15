@@ -20,7 +20,7 @@ class SuggestedWaterDailyGoalScreen extends ConsumerStatefulWidget {
       _SuggestedWaterDailyGoalScreenState();
 }
 
-int dailyGoal = 2000;
+double defaultDailyGoal = 2000;
 
 class _SuggestedWaterDailyGoalScreenState
     extends ConsumerState<SuggestedWaterDailyGoalScreen> {
@@ -62,7 +62,7 @@ class _SuggestedWaterDailyGoalScreenState
                 style: theme.textTheme.bodyMedium),
           ),
           const Gap(64),
-          Text("$dailyGoal ml",
+          Text("$defaultDailyGoal ml",
               style: theme.textTheme.displaySmall!
                   .copyWith(fontWeight: FontWeight.w700)),
           const Gap(24),
@@ -94,7 +94,7 @@ class _SuggestedWaterDailyGoalScreenState
                           primaryUnitLabels: const ["ml"],
                           onSelectedItemChanged: (selectedValue) {
                             setState(() {
-                              dailyGoal = selectedValue;
+                              defaultDailyGoal = selectedValue;
                             });
                           },
                         ),
@@ -110,7 +110,7 @@ class _SuggestedWaterDailyGoalScreenState
                   isLoading: ref.watch(waterPreferencesProvider).isLoading,
                   onPressed: () async {
                     preferences = preferences.copyWith(
-                      dailyGoal: dailyGoal,
+                      defaultDailyGoal: defaultDailyGoal,
                     );
 
                     await waterPrefsNotifier.addWaterPreferences(

@@ -112,6 +112,6 @@ class WaterService {
         .doc(uid)
         .collection('preferences')
         .doc('water')
-        .update(const WaterPreferences.initial().toMap());
+        .update(WaterPreferences.initial().toMap());
   }
 }
