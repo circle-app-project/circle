@@ -1,31 +1,85 @@
+import 'package:circle/objectbox.g.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:objectbox/objectbox.dart';
 import '../../../../core/core.dart';
+import '../../auth.dart';
 
+// ignore: must_be_immutable
+@Entity()
 class UserPreferences extends Equatable {
-  const UserPreferences(
-      {this.uid,
-      this.volumeUnit,
-      this.lengthUnit,
-      this.massUnit,
-      this.isFirstTime = true,
-      this.isOnboarded = false,
-      this.lastUpdated,
-      this.themeMode});
+  UserPreferences({
+    this.id = 0,
+    required this.uid,
+    required this.isFirstTime,
+    required this.isOnboarded,
+    this.volumeUnit,
+    this.lengthUnit,
+    this.massUnit,
+    this.lastUpdated,
+    this.themeMode,
+  });
 
   //Water Preferences
+  @Id()
+  int id;
   final String? uid;
-
-  final Units? volumeUnit;
-  final Units? lengthUnit;
-  final Units? massUnit;
-
   final bool isFirstTime;
   final bool isOnboarded;
+  //Todo: Probably join all these unit preferences into one class
+  ///So you can have for example height unit of cm,
+  ///but distance unit of km. all fall under [lengthUnit] but allows for more flexibility
+  @Transient()
+  Units? volumeUnit;
+  @Transient()
+  Units? lengthUnit;
+  @Transient()
+  Units? massUnit;
+  @Transient()
+  ThemeMode? themeMode;
 
-  final ThemeMode? themeMode;
+  ///ObjectBox enum converters
+  //themMode
+  String? get dbThemeMode => themeMode?.name;
 
-  final DateTime? lastUpdated;
+  set dbThemeMode(String? value) {
+    if (value != null) {
+      themeMode = ThemeMode.values.byName(value);
+    } else {
+      themeMode == null;
+    }
+  }
+
+  String? get dbVolumeUnit => volumeUnit?.name;
+  String? get dbLengthUnit => lengthUnit?.name;
+  String? get dbMassUnit => massUnit?.name;
+
+  set dbVolumeUnit(String? value) {
+    if (value != null) {
+      volumeUnit = Units.values.byName(value);
+    } else {
+      volumeUnit == null;
+    }
+  }
+
+  set dbLengthUnit(String? value) {
+    if (value != null) {
+      lengthUnit = Units.values.byName(value);
+    } else {
+      lengthUnit == null;
+    }
+  }
+
+  set dbMassUnit(String? value) {
+    if (value != null) {
+      massUnit = Units.values.byName(value);
+    } else {
+      massUnit == null;
+    }
+  }
+
+  @Property(type: PropertyType.date)
+  final DateTime? lastUpdated; //Prolly rename to updated at
 
   ///------CopyWith---------///
   UserPreferences copyWith(
@@ -59,14 +113,12 @@ class UserPreferences extends Equatable {
       "themeMode": themeMode?.name,
       "lastUpdated": lastUpdated,
     };
-
     return data;
   }
 
   factory UserPreferences.fromMap({required Map<String, dynamic> data}) {
     return UserPreferences(
-      // dailyWaterGoal: data["dailyWaterGoal"] as double?,
-      // waterInputVolume: data["waterInputVolume"] as double?,
+      uid: "",
       volumeUnit: Units.values.byName(data["volumeUnit"] as String),
       massUnit: Units.values.byName(data["massUnit"] as String),
       lengthUnit: Units.values.byName(data["lengthUnit"] as String),
@@ -76,12 +128,13 @@ class UserPreferences extends Equatable {
       lastUpdated: DateTime.parse(data["lastUpdated"]),
     );
   }
+  @Transient()
+  static UserPreferences empty =
+      UserPreferences(uid: "", isOnboarded: false, isFirstTime: true);
 
-  static const UserPreferences empty = UserPreferences();
-
-   
+  @Transient()
   bool get isEmpty => this == UserPreferences.empty;
-   
+  @Transient()
   bool get isNotEmpty => this != UserPreferences.empty;
 
   @override
@@ -92,12 +145,12 @@ class UserPreferences extends Equatable {
     return super.toString();
   }
 
-   
   @override
+  @Transient()
   bool? get stringify => true;
 
-   
   @override
+  @Transient()
   List<Object?> get props => [
         volumeUnit,
         lengthUnit,
@@ -109,17 +162,16 @@ class UserPreferences extends Equatable {
       ];
 }
 
-extension UnitToString on Units {
-  String toCleanString() {
-    /// Figure out a away to clean this unit string
-    return toString().split('(').last.split(')').first;
-  }
-}
+class UnitPreferences {
+  final Units height;
+  final Units weight;
+  final Units distance;
+  final Units waterVolume;
 
-extension StringToUnits on String {
-  Units? convertToUnit() {
-    if (isEmpty) return null;
-    return Units.values.firstWhere((element) =>
-        element.toCleanString().contains(this) || element.toString() == this);
-  }
+  UnitPreferences({
+    this.height = Units.centimetres,
+    this.weight = Units.kilogram,
+    this.distance = Units.kilometres,
+    this.waterVolume = Units.millilitres,
+  });
 }

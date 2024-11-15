@@ -1,0 +1,235 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:9210468346883610997",
+      "lastPropertyId": "10:7776106648647357425",
+      "name": "AppUser",
+      "properties": [
+        {
+          "id": "1:6793769419637763149",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:417247235985229651",
+          "name": "uid",
+          "type": 9
+        },
+        {
+          "id": "3:5185424966544459360",
+          "name": "email",
+          "type": 9
+        },
+        {
+          "id": "4:927931047185036496",
+          "name": "photoUrl",
+          "type": 9
+        },
+        {
+          "id": "5:8273309073968860340",
+          "name": "isAnonymous",
+          "type": 1
+        },
+        {
+          "id": "6:2555433748586013967",
+          "name": "isEmailVerified",
+          "type": 1
+        },
+        {
+          "id": "7:7223991870356115469",
+          "name": "isPhoneVerified",
+          "type": 1
+        },
+        {
+          "id": "8:8399786612049634084",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "1:4140018892505963279",
+          "relationTarget": "UserProfile"
+        },
+        {
+          "id": "10:7776106648647357425",
+          "name": "preferencesId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "3:7305761162520707228",
+          "relationTarget": "UserPreferences"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:7166028067144916976",
+      "lastPropertyId": "18:1583331589492315386",
+      "name": "UserProfile",
+      "properties": [
+        {
+          "id": "1:7096745133435402091",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5360133605550174324",
+          "name": "uid",
+          "type": 9
+        },
+        {
+          "id": "3:2642145193887279486",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "4:4395116447830403324",
+          "name": "displayName",
+          "type": 9
+        },
+        {
+          "id": "5:8429495187897421578",
+          "name": "age",
+          "type": 6
+        },
+        {
+          "id": "6:269684340983521806",
+          "name": "email",
+          "type": 9
+        },
+        {
+          "id": "7:705516932664929996",
+          "name": "photoUrl",
+          "type": 9
+        },
+        {
+          "id": "8:1664576630604936704",
+          "name": "phone",
+          "type": 9
+        },
+        {
+          "id": "9:7192482139177737210",
+          "name": "painSeverity",
+          "type": 6
+        },
+        {
+          "id": "10:1724840226639888386",
+          "name": "crisisFrequency",
+          "type": 9
+        },
+        {
+          "id": "11:6629241393886714269",
+          "name": "height",
+          "type": 8
+        },
+        {
+          "id": "12:7408718016768229555",
+          "name": "weight",
+          "type": 8
+        },
+        {
+          "id": "13:8969005121810407638",
+          "name": "bmi",
+          "type": 8
+        },
+        {
+          "id": "14:7467163394291670971",
+          "name": "bloodGroup",
+          "type": 9
+        },
+        {
+          "id": "15:1424233479968241717",
+          "name": "allergies",
+          "type": 30
+        },
+        {
+          "id": "16:5346806588601411509",
+          "name": "medicalConditions",
+          "type": 30
+        },
+        {
+          "id": "17:3418391106783914792",
+          "name": "dbGender",
+          "type": 9
+        },
+        {
+          "id": "18:1583331589492315386",
+          "name": "dbGenotype",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:867207695587786430",
+      "lastPropertyId": "9:8332419882270310101",
+      "name": "UserPreferences",
+      "properties": [
+        {
+          "id": "1:6382851924054177629",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1938034445264548325",
+          "name": "uid",
+          "type": 9
+        },
+        {
+          "id": "3:6756802899985026265",
+          "name": "isFirstTime",
+          "type": 1
+        },
+        {
+          "id": "4:4137700724415044066",
+          "name": "isOnboarded",
+          "type": 1
+        },
+        {
+          "id": "5:7538616858440401534",
+          "name": "lastUpdated",
+          "type": 10
+        },
+        {
+          "id": "6:4322896623179610370",
+          "name": "dbThemeMode",
+          "type": 9
+        },
+        {
+          "id": "7:589524113363230822",
+          "name": "dbVolumeUnit",
+          "type": 9
+        },
+        {
+          "id": "8:5351588759555286712",
+          "name": "dbLengthUnit",
+          "type": 9
+        },
+        {
+          "id": "9:8332419882270310101",
+          "name": "dbMassUnit",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "3:867207695587786430",
+  "lastIndexId": "3:7305761162520707228",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [
+    8176574082609213585
+  ],
+  "retiredPropertyUids": [
+    1282289976025498362
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}

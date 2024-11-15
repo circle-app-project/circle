@@ -1,32 +1,62 @@
+import 'package:circle/features/auth/auth.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:objectbox/objectbox.dart';
 import '../../../../core/enums.dart';
 
+@Entity()
+// ignore: must_be_immutable
 class UserProfile extends Equatable {
   ///Profile Info
-  final String? uid;
-  final Gender? gender;
-  final String? name;
-  final String? displayName;
-  final int? age;
-  final String? email;
-  final String? photoUrl;
-  final String? phone;
-  final Genotype? genotype;
+  @Id()
+  int id;
+  String? uid;
+  @Transient()
+  Gender? gender;
+  String? name;
+  String? displayName;
+  int? age;
+  String? email;
+  String? photoUrl;
+  String? phone;
+  @Transient()
+  Genotype? genotype;
 
   /// Health Info
-  final int? painSeverity;
-  final String? crisisFrequency;
-  final double? height;
-  final double? weight;
-  final double? bmi;
-  final String? bloodGroup;
-  final List<String>? allergies;
-  final List<String>? medicalConditions;
+  int? painSeverity;
+  String? crisisFrequency;
+  double? height;
+  double? weight;
+  double? bmi;
+  String? bloodGroup;
+  List<String>? allergies;
+  List<String>? medicalConditions;
 
-  const UserProfile(
+
+  ///Object Box Type Converters
+  String? get dbGender => gender?.name;
+  String? get dbGenotype => genotype?.name;
+
+  set dbGender(String? value) {
+    if (value != null) {
+      gender = Gender.values.byName(value);
+    } else {
+      gender == null;
+    }
+  }
+
+  set dbGenotype(String? value) {
+    if (value != null) {
+      genotype = Genotype.values.byName(value);
+    } else {
+      genotype == null;
+    }
+  }
+
+  UserProfile(
       {
       ///Profile Info
+      this.id = 0,
       this.uid,
       this.gender,
       this.name,
@@ -46,8 +76,6 @@ class UserProfile extends Equatable {
       this.bloodGroup,
       this.allergies,
       this.medicalConditions});
-
-  //Write a copy with method
 
   UserProfile copyWith({
     String? uid,
@@ -159,11 +187,11 @@ class UserProfile extends Equatable {
   }
 
   ///-------------Empty----------///
-   
-  static const UserProfile empty = UserProfile();
-   
-  bool get isEmpty => this == UserProfile.empty || this == const UserProfile();
-   
+@Transient()
+  static UserProfile empty = UserProfile();
+@Transient()
+  bool get isEmpty => this == UserProfile.empty || this == UserProfile();
+@Transient()
   bool get isNotEmpty => this != UserProfile.empty;
 
   @override
@@ -174,12 +202,12 @@ class UserProfile extends Equatable {
     return super.toString();
   }
 
-   
   @override
+  @Transient()
   bool? get stringify => true;
 
-   
   @override
+  @Transient()
   List<Object?> get props => [
         uid,
         name,
