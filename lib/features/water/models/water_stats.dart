@@ -6,7 +6,6 @@ import '../water.dart';
 class WaterStats extends Equatable {
   ///---Today---///
 
-
   final List<WaterLog> logsToday;
   final double dailyGoal;
   double get totalToday => calculateTotalFromLogs(logs: logsToday);
@@ -174,7 +173,7 @@ class WaterStats extends Equatable {
     double totalToday = 0;
     //Calculate total
     for (WaterLog log in logs) {
-      totalToday += log.amount;
+      totalToday += log.value;
     }
     return totalToday;
   }
@@ -191,8 +190,8 @@ class WaterStats extends Equatable {
 
       // Convert amount to milliliters if necessary
       double amountInMl = log.unit == Units.millilitres
-          ? log.amount
-          : convertToMilliliters(log.amount, log.unit);
+          ? log.value
+          : convertToMilliliters(log.value, log.unit);
 
       double amountInLitres = amountInMl/1000;
 

@@ -49,7 +49,7 @@ class WaterLogListItem extends StatelessWidget {
                 RichText(
                     text: TextSpan(children: [
                   TextSpan(
-                      text: "${log.amount} ${log.unit.symbol}  ",
+                      text: "${log.value} ${log.unit.symbol}  ",
                       style: theme.textTheme.titleMedium),
                   TextSpan(
                       text:

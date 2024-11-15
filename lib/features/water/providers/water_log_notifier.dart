@@ -58,7 +58,7 @@ class WaterLogNotifier extends AsyncNotifier<List<WaterLog>> {
     double totalToday = 0;
     //Calculate total
     for (WaterLog log in allLogs) {
-      totalToday += log.amount;
+      totalToday += log.value;
     }
     return totalToday;
   }

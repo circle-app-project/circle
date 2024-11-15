@@ -17,6 +17,8 @@ import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 import 'features/auth/models/user/app_user.dart';
 import 'features/auth/models/user/user_preferences.dart';
 import 'features/auth/models/user/user_profile.dart';
+import 'features/water/models/water_log.dart';
+import 'features/water/models/water_preferences.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
@@ -231,6 +233,64 @@ final _entities = <obx_int.ModelEntity>[
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(4, 9220182941712639121),
+      name: 'WaterLog',
+      lastPropertyId: const obx_int.IdUid(4, 8044481272773995284),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 2390008030440043296),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 3899823053853080757),
+            name: 'timestamp',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 7571913508040307035),
+            name: 'value',
+            type: 8,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 8044481272773995284),
+            name: 'dbUnit',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(5, 8525861671860013939),
+      name: 'WaterPreferences',
+      lastPropertyId: const obx_int.IdUid(4, 5185646952489030688),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 5659237027889275562),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 6782218037740632246),
+            name: 'defaultDailyGoal',
+            type: 8,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 2807300026539704189),
+            name: 'defaultLogValue',
+            type: 8,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 5185646952489030688),
+            name: 'dbUnit',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
 ];
 
@@ -269,7 +329,7 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(3, 867207695587786430),
+      lastEntityId: const obx_int.IdUid(5, 8525861671860013939),
       lastIndexId: const obx_int.IdUid(3, 7305761162520707228),
       lastRelationId: const obx_int.IdUid(0, 0),
       lastSequenceId: const obx_int.IdUid(0, 0),
@@ -543,6 +603,77 @@ obx_int.ModelDefinition getObjectBoxModel() {
                 .vTableGetNullable(buffer, rootOffset, 20);
 
           return object;
+        }),
+    WaterLog: obx_int.EntityDefinition<WaterLog>(
+        model: _entities[3],
+        toOneRelations: (WaterLog object) => [],
+        toManyRelations: (WaterLog object) => {},
+        getId: (WaterLog object) => object.id,
+        setId: (WaterLog object, int id) {
+          object.id = id;
+        },
+        objectToFB: (WaterLog object, fb.Builder fbb) {
+          final dbUnitOffset = fbb.writeString(object.dbUnit);
+          fbb.startTable(5);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.timestamp.millisecondsSinceEpoch);
+          fbb.addFloat64(2, object.value);
+          fbb.addOffset(3, dbUnitOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final timestampParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0));
+          final valueParam =
+              const fb.Float64Reader().vTableGet(buffer, rootOffset, 8, 0);
+          final object = WaterLog(
+              id: idParam, timestamp: timestampParam, value: valueParam)
+            ..dbUnit = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 10, '');
+
+          return object;
+        }),
+    WaterPreferences: obx_int.EntityDefinition<WaterPreferences>(
+        model: _entities[4],
+        toOneRelations: (WaterPreferences object) => [],
+        toManyRelations: (WaterPreferences object) => {},
+        getId: (WaterPreferences object) => object.id,
+        setId: (WaterPreferences object, int id) {
+          object.id = id;
+        },
+        objectToFB: (WaterPreferences object, fb.Builder fbb) {
+          final dbUnitOffset =
+              object.dbUnit == null ? null : fbb.writeString(object.dbUnit!);
+          fbb.startTable(5);
+          fbb.addInt64(0, object.id);
+          fbb.addFloat64(1, object.defaultDailyGoal);
+          fbb.addFloat64(2, object.defaultLogValue);
+          fbb.addOffset(3, dbUnitOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final defaultDailyGoalParam =
+              const fb.Float64Reader().vTableGetNullable(buffer, rootOffset, 6);
+          final defaultLogValueParam =
+              const fb.Float64Reader().vTableGetNullable(buffer, rootOffset, 8);
+          final object = WaterPreferences(
+              id: idParam,
+              defaultDailyGoal: defaultDailyGoalParam,
+              defaultLogValue: defaultLogValueParam)
+            ..dbUnit = const fb.StringReader(asciiOptimization: true)
+                .vTableGetNullable(buffer, rootOffset, 10);
+
+          return object;
         })
   };
 
@@ -700,4 +831,42 @@ class UserPreferences_ {
   /// See [UserPreferences.dbMassUnit].
   static final dbMassUnit =
       obx.QueryStringProperty<UserPreferences>(_entities[2].properties[8]);
+}
+
+/// [WaterLog] entity fields to define ObjectBox queries.
+class WaterLog_ {
+  /// See [WaterLog.id].
+  static final id =
+      obx.QueryIntegerProperty<WaterLog>(_entities[3].properties[0]);
+
+  /// See [WaterLog.timestamp].
+  static final timestamp =
+      obx.QueryDateProperty<WaterLog>(_entities[3].properties[1]);
+
+  /// See [WaterLog.value].
+  static final value =
+      obx.QueryDoubleProperty<WaterLog>(_entities[3].properties[2]);
+
+  /// See [WaterLog.dbUnit].
+  static final dbUnit =
+      obx.QueryStringProperty<WaterLog>(_entities[3].properties[3]);
+}
+
+/// [WaterPreferences] entity fields to define ObjectBox queries.
+class WaterPreferences_ {
+  /// See [WaterPreferences.id].
+  static final id =
+      obx.QueryIntegerProperty<WaterPreferences>(_entities[4].properties[0]);
+
+  /// See [WaterPreferences.defaultDailyGoal].
+  static final defaultDailyGoal =
+      obx.QueryDoubleProperty<WaterPreferences>(_entities[4].properties[1]);
+
+  /// See [WaterPreferences.defaultLogValue].
+  static final defaultLogValue =
+      obx.QueryDoubleProperty<WaterPreferences>(_entities[4].properties[2]);
+
+  /// See [WaterPreferences.dbUnit].
+  static final dbUnit =
+      obx.QueryStringProperty<WaterPreferences>(_entities[4].properties[3]);
 }

@@ -28,7 +28,7 @@ List<WaterLog> generateSampleWaterLogs() {
       double amount = amountStep * 100;
 
       logs.add(WaterLog(
-          timestamp: logTime, amount: amount, unit: Units.millilitres));
+          timestamp: logTime, value: amount, unit: Units.millilitres));
     }
   }
 

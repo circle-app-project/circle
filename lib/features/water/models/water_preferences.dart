@@ -1,51 +1,76 @@
-import 'package:equatable/equatable.dart';
 
+import 'package:equatable/equatable.dart';
+import 'package:objectbox/objectbox.dart';
 
 import '../../../core/core.dart';
 
+@Entity()
+//ignore: must_be_immutable
 class WaterPreferences extends Equatable {
-  final int? dailyGoal;
-  final Units? unit;
-  final int? logAmount;
+  @Id()
+  int id;
+  final double? defaultDailyGoal;
+  @Transient()
+  Units? unit;
+  final double? defaultLogValue;
 
-  const WaterPreferences({
-    this.dailyGoal,
+  //Object box type converter
+  String? get dbUnit => unit?.symbol;
+  set dbUnit(String? value) {
+    if (value != null && isNotEmpty) {
+      unit = Units.values.byName(value);
+    } else {
+      unit = null;
+    }
+  }
+
+  WaterPreferences({
+    this.id = 0,
+    this.defaultDailyGoal,
     this.unit,
-    this.logAmount,
+    this.defaultLogValue,
   });
 
-  const WaterPreferences.initial({
-    this.dailyGoal = 2000,
+  WaterPreferences.initial({
+    this.id = 0,
+    this.defaultDailyGoal = 2000,
     this.unit = Units.millilitres,
-    this.logAmount = 250,
+    this.defaultLogValue = 250,
   });
 
-  WaterPreferences copyWith({int? dailyGoal, Units? unit, int? logAmount}) {
+  WaterPreferences copyWith({
+    double? defaultDailyGoal,
+    Units? unit,
+    double? defaultLogValue,
+  }) {
     return WaterPreferences(
-      dailyGoal: dailyGoal ?? this.dailyGoal,
+      defaultDailyGoal: defaultDailyGoal ?? this.defaultDailyGoal,
       unit: unit ?? this.unit,
-      logAmount: logAmount ?? this.logAmount,
+      defaultLogValue: defaultLogValue ?? this.defaultLogValue,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'dailyGoal': dailyGoal,
+      'defaultDailyGoal': defaultDailyGoal,
       'unit': unit?.symbol,
-      'logAmount': logAmount,
+      'defaultLogValue': defaultLogValue,
     };
   }
 
   factory WaterPreferences.fromMap(Map<String, dynamic> data) {
     return WaterPreferences(
-      dailyGoal: data["dailyGoal"],
+      defaultDailyGoal: data["defaultDailyGoal"],
       unit: Units.values.byName(data["unit"]),
-      logAmount: data["logAmount"],
+      defaultLogValue: data["defaultLogValue"],
     );
   }
 
-  static const empty = WaterPreferences();
+  @Transient()
+  static WaterPreferences empty = WaterPreferences();
+  @Transient()
   bool get isEmpty => this == WaterPreferences.empty;
+  @Transient()
   bool get isNotEmpty => this != WaterPreferences.empty;
 
   @override
@@ -53,15 +78,14 @@ class WaterPreferences extends Equatable {
     if (this == WaterPreferences.empty) {
       return "WaterPreferences.empty";
     }
-
     return super.toString();
   }
 
-   
   @override
+  @Transient()
   bool? get stringify => true;
 
-   
   @override
-  List<Object?> get props => [dailyGoal, unit, logAmount];
+  @Transient()
+  List<Object?> get props => [defaultDailyGoal, unit, defaultLogValue];
 }

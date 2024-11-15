@@ -63,7 +63,7 @@ final waterStatsProvider = Provider<WaterStats>((ref) {
         .toList();
 
     double dailyGoal =
-        ref.watch(waterPreferencesProvider).value!.dailyGoal!.toDouble();
+        ref.watch(waterPreferencesProvider).value!.defaultDailyGoal!.toDouble();
 
     return WaterStats(
         logsToday: logsToday,

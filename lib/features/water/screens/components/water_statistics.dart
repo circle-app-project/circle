@@ -56,7 +56,7 @@ class WaterLineChart extends StatelessWidget {
     final List<FlSpot> spots = [const FlSpot(6, 0)];
     double totalAmount = 0;
     for (WaterLog entry in logs) {
-      totalAmount += entry.amount;
+      totalAmount += entry.value;
 
       spots.add(FlSpot(
           entry.timestamp.hour.toDouble() + (entry.timestamp.minute / 60),

@@ -12,7 +12,7 @@ class ChartDataTransformer {
     final Map<int, double> hourlyTotals = {};
     for (WaterLog log in logs) {
       final int hour = log.timestamp.hour;
-      hourlyTotals[hour] = (hourlyTotals[hour] ?? 0) + log.amount;
+      hourlyTotals[hour] = (hourlyTotals[hour] ?? 0) + log.value;
     }
     //Convert to FlSpot list;
     List<FlSpot> spots = hourlyTotals.entries
@@ -55,7 +55,7 @@ class ChartDataTransformer {
 
     for (int i = 0; i < logs.length; i++) {
       WaterLog entry = logs[i];
-      totalAmount += (entry.amount / 1000);
+      totalAmount += (entry.value / 1000);
 
       if (lastTimestamp == null ||
           entry.timestamp.difference(lastTimestamp).inMinutes > 5) {
@@ -68,11 +68,11 @@ class ChartDataTransformer {
           ));
         }
         lastTimestamp = entry.timestamp;
-        accumulatedAmount = entry.amount.toDouble();
+        accumulatedAmount = entry.value.toDouble();
         count = 1;
       } else {
         // Combine with the previous entry
-        accumulatedAmount += entry.amount;
+        accumulatedAmount += entry.value;
         count++;
         // Update lastTimestamp to the average time
         Duration timeDifference = entry.timestamp.difference(lastTimestamp);
@@ -105,7 +105,7 @@ class ChartDataTransformer {
     ///Todo:Convert into Litres
     for (WaterLog log in logs) {
       final int day = log.timestamp.weekday;
-      dailyTotals[day] = (dailyTotals[day] ?? 0) + log.amount / 1000;
+      dailyTotals[day] = (dailyTotals[day] ?? 0) + log.value / 1000;
     }
 
     ///Pad the list of dailyTotals to fill up the month
@@ -140,7 +140,7 @@ class ChartDataTransformer {
 
     for (WaterLog log in logs) {
       final int day = log.timestamp.day;
-      dailyTotals[day] = (dailyTotals[day] ?? 0) + log.amount / 1000;
+      dailyTotals[day] = (dailyTotals[day] ?? 0) + log.value / 1000;
     }
 
     ///Pad the list of dailyTotals to fill up the month

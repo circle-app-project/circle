@@ -108,8 +108,8 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
                   selectedVolume: (double? selectedVolume) async {
                 WaterLog waterLog = WaterLog(
                     timestamp: DateTime.now(),
-                    amount: selectedVolume ??
-                        waterPreferences.logAmount!.toDouble());
+                    value: selectedVolume ??
+                        waterPreferences.defaultLogValue!.toDouble());
 
                 await waterLogNotifier.addWaterLog(
                     entry: waterLog, user: selfUser, updateRemote: false);
