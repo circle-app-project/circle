@@ -33,7 +33,7 @@ class UserProfile extends Equatable {
   List<String>? medicalConditions;
 
 
-  ///Object Box Type Converters
+  //Object Box Type Converters
   String? get dbGender => gender?.name;
   String? get dbGenotype => genotype?.name;
 
@@ -55,7 +55,7 @@ class UserProfile extends Equatable {
 
   UserProfile(
       {
-      ///Profile Info
+      //Profile Info
       this.id = 0,
       this.uid,
       this.gender,
@@ -66,7 +66,7 @@ class UserProfile extends Equatable {
       this.photoUrl,
       this.phone,
 
-      ///Health Info
+      //Health Info
       this.crisisFrequency,
       this.painSeverity,
       this.genotype,
@@ -117,7 +117,7 @@ class UserProfile extends Equatable {
     );
   }
 
-  ///-----To and From Map-------///
+  //-----To and From Map-------//
   Map<String, dynamic> toMap() {
     Map<String, dynamic> profileData = {
       "uid": uid,
@@ -177,7 +177,7 @@ class UserProfile extends Equatable {
     );
   }
 
-  ///
+  //
   double? calculateBMI() {
     if (height != null && weight != null) {
       return weight! / ((height! / 100) * (height! / 100));
@@ -186,7 +186,7 @@ class UserProfile extends Equatable {
     }
   }
 
-  ///-------------Empty----------///
+  //-------------Empty----------//
 @Transient()
   static UserProfile empty = UserProfile();
 @Transient()

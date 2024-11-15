@@ -1,27 +1,37 @@
 import 'package:equatable/equatable.dart';
+import 'package:objectbox/objectbox.dart';
 import '../../../core/core.dart';
 
+@Entity()
+// ignore: must_be_immutable
 class WaterLog extends Equatable {
-  //final int id;
+  @Id()
+  int id;
+  @Property(type: PropertyType.date)
   final DateTime timestamp;
-  final double amount;
-  final Units unit;
+  final double value;
+  @Transient()
+  Units unit;
 
-  const WaterLog({
+  //Object box type converter
+  String get dbUnit => unit.symbol;
+  set dbUnit(String value) => unit = Units.values.byName(value);
 
+  WaterLog({
+    this.id = 0,
     required this.timestamp,
-    required this.amount,
+    required this.value,
     this.unit = Units.millilitres,
   });
 
   WaterLog copyWith({
     DateTime? timestamp,
-    double? amount,
+    double? value,
     Units? unit,
   }) {
     return WaterLog(
       timestamp: timestamp ?? this.timestamp,
-      amount: amount ?? this.amount,
+      value: value ?? this.value,
       unit: unit ?? this.unit,
     );
   }
@@ -29,7 +39,7 @@ class WaterLog extends Equatable {
   Map<String, dynamic> toMap() {
     return {
       'timestamp': timestamp.toIso8601String(),
-      'amount': amount,
+      'value': value,
       'unit': unit.symbol
     };
   }
@@ -37,17 +47,17 @@ class WaterLog extends Equatable {
   factory WaterLog.fromMap(Map<String, dynamic> map) {
     return WaterLog(
       timestamp: DateTime.parse(map['timestamp']),
-      amount: map['amount'] as double,
+      value: map['value'] as double,
       unit: Units.values.byName(map['unit'] as String),
     );
   }
 
-
+  @Transient()
   static WaterLog empty = WaterLog(
-      timestamp: DateTime(0, 0, 0, 0), amount: 0, unit: Units.millilitres);
-
+      timestamp: DateTime(0, 0, 0, 0), value: 0, unit: Units.millilitres);
+  @Transient()
   bool get isEmpty => this == WaterLog.empty;
-
+  @Transient()
   bool get isNotEmpty => this != WaterLog.empty;
   @override
   String toString() {
@@ -58,8 +68,10 @@ class WaterLog extends Equatable {
   }
 
   @override
+  @Transient()
   bool? get stringify => true;
 
   @override
-  List<Object?> get props => [timestamp, amount, unit];
+  @Transient()
+  List<Object?> get props => [timestamp, value, unit];
 }

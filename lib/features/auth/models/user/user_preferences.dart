@@ -5,8 +5,8 @@ import 'package:objectbox/objectbox.dart';
 import '../../../../core/core.dart';
 import '../../auth.dart';
 
-// ignore: must_be_immutable
 @Entity()
+// ignore: must_be_immutable
 class UserPreferences extends Equatable {
   UserPreferences({
     this.id = 0,
@@ -38,7 +38,7 @@ class UserPreferences extends Equatable {
   @Transient()
   ThemeMode? themeMode;
 
-  ///ObjectBox enum converters
+  //ObjectBox enum converters
   //themMode
   String? get dbThemeMode => themeMode?.name;
 
@@ -81,7 +81,7 @@ class UserPreferences extends Equatable {
   @Property(type: PropertyType.date)
   final DateTime? lastUpdated; //Prolly rename to updated at
 
-  ///------CopyWith---------///
+  //------CopyWith---------//
   UserPreferences copyWith(
       {final String? uid,
       final Units? volumeUnit,
