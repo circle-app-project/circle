@@ -49,7 +49,7 @@ class AuthRepository {
 
   FutureEither<void> signOut() {
     return futureHandler(() async {
-      await _userLocalService.deleteUser();
+      _userLocalService.deleteUser();
       await _authService.signOut();
     });
   }
@@ -85,11 +85,11 @@ class AuthRepository {
 
   Future<AppUser> _handleUserCredential(
       UserCredential userCredential) async {
-    AppUser sicklerUser = AppUser.fromUser(user: userCredential.user);
-    sicklerUser = sicklerUser.copyWith(
+    AppUser user = AppUser.fromUser(user: userCredential.user);
+    user = user.copyWith(
         profile: UserProfile.fromFirebaseUser(user: userCredential.user));
 
-    await _userLocalService.addUser(sicklerUser);
-    return sicklerUser;
+    _userLocalService.addUser(user);
+    return user;
   }
 }

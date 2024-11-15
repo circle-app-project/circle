@@ -235,11 +235,11 @@ class _ProfileMedicalInfoScreenState
                         AppUser user = ref.watch(userProvider).value!;
                         user = user.copyWith(
                             preferences:
-                                user.preferences.copyWith(isOnboarded: true),
-                            profile: user.profile.copyWith(
+                                user.preferences.target?.copyWith(isOnboarded: true),
+                            profile: user.profile.target?.copyWith(
                                 allergies: allergies,
                                 medicalConditions: medicalConditions,
-                                bmi: user.profile.calculateBMI()));
+                                bmi: user.profile.target?.calculateBMI()));
 
                         //Send data to firebase
 
