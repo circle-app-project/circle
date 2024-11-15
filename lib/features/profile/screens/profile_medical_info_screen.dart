@@ -50,8 +50,9 @@ class _ProfileMedicalInfoScreenState
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.watch(userProvider.notifier).getCurrentUserData();
       AppUser user = ref.watch(userProvider).value!;
-      medicalConditions = user.profile.medicalConditions ?? [];
-      allergies = user.profile.allergies ?? [];
+      UserProfile userProfile = user.profile.target ?? UserProfile.empty;
+      medicalConditions = userProfile.medicalConditions ?? [];
+      allergies = userProfile.allergies ?? [];
     });
     super.initState();
   }
@@ -60,6 +61,10 @@ class _ProfileMedicalInfoScreenState
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final userNotifier = ref.watch(userProvider.notifier);
+    AppUser user = ref.watch(userProvider).value!;
+    UserProfile userProfile = user.profile.target ?? UserProfile.empty;
+    UserPreferences userPreferences =
+        user.preferences.target ?? UserPreferences.empty;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -95,6 +100,8 @@ class _ProfileMedicalInfoScreenState
                     "How often do you experience a Sickle Cell crises?",
                     style: theme.textTheme.bodyMedium,
                   ),
+
+                  //Todo: Replace with selectable chip
                   Wrap(
                     direction: Axis.horizontal,
                     spacing: 12,
@@ -143,8 +150,8 @@ class _ProfileMedicalInfoScreenState
                         allergiesController.clear();
                       });
                     },
-                    decoration: AppInputDecoration.inputDecoration(context)
-                        .copyWith(
+                    decoration:
+                        AppInputDecoration.inputDecoration(context).copyWith(
                       hintText: "e.g. Peanuts",
                       suffixIcon: IconButton(
                           onPressed: () {
@@ -194,8 +201,8 @@ class _ProfileMedicalInfoScreenState
                         medicalConditionsController.clear();
                       });
                     },
-                    decoration: AppInputDecoration.inputDecoration(context)
-                        .copyWith(
+                    decoration:
+                        AppInputDecoration.inputDecoration(context).copyWith(
                       hintText: "e.g. Acute Chest Syndrome",
                       suffixIcon: IconButton(
                           onPressed: () {
@@ -231,15 +238,13 @@ class _ProfileMedicalInfoScreenState
                   const Gap(32),
                   AppButton(
                       onPressed: () async {
-                        ///Todo: add the rest of the health data;
-                        AppUser user = ref.watch(userProvider).value!;
                         user = user.copyWith(
                             preferences:
-                                user.preferences.target?.copyWith(isOnboarded: true),
-                            profile: user.profile.target?.copyWith(
+                                userPreferences.copyWith(isOnboarded: true),
+                            profile: userProfile.copyWith(
                                 allergies: allergies,
                                 medicalConditions: medicalConditions,
-                                bmi: user.profile.target?.calculateBMI()));
+                                bmi: userProfile.calculateBMI()));
 
                         //Send data to firebase
 

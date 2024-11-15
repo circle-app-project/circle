@@ -63,8 +63,8 @@ class WaterLineChart extends StatelessWidget {
           totalAmount / 1000));
     }
 
-    final double maxY = (totalAmount < dailyGoal)
-        ? (dailyGoal / 1000).toDouble()
+    final double maxY = (totalAmount < defaultDailyGoal)
+        ? (defaultDailyGoal / 1000).toDouble()
         : totalAmount * 1.2;
 
     final ThemeData theme = Theme.of(context);

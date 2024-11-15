@@ -8,7 +8,6 @@ import '../../../../core/core.dart';
 import '../../../profile/profile.dart';
 import '../../auth.dart';
 
-
 class AuthSuccessScreen extends ConsumerStatefulWidget {
   static const id = "auth_success";
   const AuthSuccessScreen({super.key});
@@ -31,9 +30,9 @@ class _AuthSuccessScreenState extends ConsumerState<AuthSuccessScreen> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-
-    String userName = ref.watch(userProvider).value!.profile.displayName ??
-        ref.watch(userProvider).value!.email;
+    AppUser user = ref.watch(userProvider).value!;
+    UserProfile userProfile = user.profile.target ?? UserProfile.empty;
+    String userName = userProfile.displayName ?? user.email;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),

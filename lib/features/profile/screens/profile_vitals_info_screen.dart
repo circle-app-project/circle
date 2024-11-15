@@ -10,7 +10,6 @@ import '../../../core/core.dart';
 import '../../auth/auth.dart';
 import '../profile.dart';
 
-
 class ProfileVitalsInfoScreen extends ConsumerStatefulWidget {
   static const String id = "vitals";
   final bool? isEditing;
@@ -25,22 +24,22 @@ class _ProfileVitalsInfoScreenState
     extends ConsumerState<ProfileVitalsInfoScreen> {
   final TextEditingController heightController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Genotype selectedGenotype = Genotype.na;
+  Genotype selectedGenotype = Genotype.unknown;
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.watch(userProvider.notifier).getCurrentUserData();
       AppUser user = ref.watch(userProvider).value!;
-      heightController.text = user.profile.height.toString();
-      weightController.text = user.profile.weight.toString();
+      UserProfile userProfile = user.profile.target ?? UserProfile.empty;
+      heightController.text = userProfile.height.toString();
+      weightController.text = userProfile.weight.toString();
 
-      if (user.profile.genotype != null) {
+      if (userProfile.genotype != null) {
         setState(() {
-          selectedGenotype = user.profile.genotype!;
+          selectedGenotype = userProfile.genotype!;
         });
       }
     });
@@ -57,6 +56,9 @@ class _ProfileVitalsInfoScreenState
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final UserNotifier userNotifier = ref.watch(userProvider.notifier);
+    AppUser user = ref.watch(userProvider).value!;
+    UserProfile userProfile = user.profile.target ?? UserProfile.empty;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -106,9 +108,8 @@ class _ProfileVitalsInfoScreenState
                       TextFormField(
                         controller: heightController,
                         keyboardType: TextInputType.number,
-                        decoration:
-                            AppInputDecoration.inputDecoration(context)
-                                .copyWith(hintText: "Height"),
+                        decoration: AppInputDecoration.inputDecoration(context)
+                            .copyWith(hintText: "Height"),
                       ),
                       const Gap(24),
                       Row(
@@ -127,9 +128,8 @@ class _ProfileVitalsInfoScreenState
                       TextFormField(
                         controller: weightController,
                         keyboardType: TextInputType.number,
-                        decoration:
-                            AppInputDecoration.inputDecoration(context)
-                                .copyWith(
+                        decoration: AppInputDecoration.inputDecoration(context)
+                            .copyWith(
                           hintText: "Weight",
                         ),
                       ),
@@ -170,11 +170,9 @@ class _ProfileVitalsInfoScreenState
                       onPressed: () async {
                         //Todo: Continue
                         if (_formKey.currentState!.validate()) {
-                          final userNotifier = ref.watch(userProvider.notifier);
-                          AppUser user = ref.watch(userProvider).value!;
 
                           user = user.copyWith(
-                              profile: user.profile.copyWith(
+                              profile: userProfile.copyWith(
                                   height: double.tryParse(
                                       heightController.text.trim()),
                                   weight: double.tryParse(
