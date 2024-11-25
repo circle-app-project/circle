@@ -15,4 +15,13 @@
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
+
+    <!--    Custom Circle Light theme with Android 12+ splash screen-->
+    <style name = "CircleTheme" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon" > @drawable/circle_logo</item>
+        <item name="postSplashScreenTheme"> @style/NormalTheme</item>
+        <item name="splashScreenIconSize">@dimen/splashscreen_icon_size</item>
+    </style>
+
 </resources>
