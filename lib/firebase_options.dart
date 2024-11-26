@@ -51,20 +51,20 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCFR5ojcWvT6L14rD7bblKp0Xmtejz3mV0',
-    appId: '1:497391679746:android:a319dbe660bcd9fc9d2a1b',
+    appId: '1:497391679746:android:d505a61c6c8fbac79d2a1b',
     messagingSenderId: '497391679746',
     projectId: 'circle-60af7',
-    storageBucket: 'circle-60af7.appspot.com',
+    storageBucket: 'circle-60af7.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDxUMMIq1C6muG8Wa5LT6lq63FGmC2_0-Y',
-    appId: '1:497391679746:ios:ce9d435c188cbe499d2a1b',
+    appId: '1:497391679746:ios:89e9116001eb3b779d2a1b',
     messagingSenderId: '497391679746',
     projectId: 'circle-60af7',
-    storageBucket: 'circle-60af7.appspot.com',
+    storageBucket: 'circle-60af7.firebasestorage.app',
     androidClientId: '497391679746-d3patbdn3smkrcfu4sfkh56ruh07tbm3.apps.googleusercontent.com',
-    iosClientId: '497391679746-mmog40ou9n89bod6psq5g7vreug4lm6g.apps.googleusercontent.com',
+    iosClientId: '497391679746-ea23stdv8mpp1ghc3p3rmb14pcgse1da.apps.googleusercontent.com',
     iosBundleId: 'com.circle.app',
   );
 
