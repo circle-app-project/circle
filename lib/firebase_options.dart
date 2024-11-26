@@ -65,7 +65,7 @@ class DefaultFirebaseOptions {
     storageBucket: 'circle-60af7.appspot.com',
     androidClientId: '497391679746-d3patbdn3smkrcfu4sfkh56ruh07tbm3.apps.googleusercontent.com',
     iosClientId: '497391679746-mmog40ou9n89bod6psq5g7vreug4lm6g.apps.googleusercontent.com',
-    iosBundleId: 'com.circle.circle',
+    iosBundleId: 'com.circle.app',
   );
 
 }

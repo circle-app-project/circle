@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.circle.circle</string>
+	<string>com.circle.app</string>
 	<key>PROJECT_ID</key>
 	<string>circle-60af7</string>
 	<key>STORAGE_BUCKET</key>

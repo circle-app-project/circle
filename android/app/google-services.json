@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:497391679746:android:a319dbe660bcd9fc9d2a1b",
         "android_client_info": {
-          "package_name": "com.circle.circle"
+          "package_name": "com.circle.app"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "497391679746-d3patbdn3smkrcfu4sfkh56ruh07tbm3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.circle.circle",
+            "package_name": "com.circle.app",
             "certificate_hash": "3443ab4f7622efd801a50f413289863dbcb87fbb"
           }
         },
@@ -42,7 +42,7 @@
               "client_id": "497391679746-mmog40ou9n89bod6psq5g7vreug4lm6g.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.circle.circle"
+                "bundle_id": "com.circle.app"
               }
             }
           ]
