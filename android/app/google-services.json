@@ -14,46 +14,10 @@
       },
       "oauth_client": [
         {
-          "client_id": "497391679746-cb3g8mn6d3qukpmta7o9a52sf5ibnq6l.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCFR5ojcWvT6L14rD7bblKp0Xmtejz3mV0"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "497391679746-cb3g8mn6d3qukpmta7o9a52sf5ibnq6l.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "497391679746-mmog40ou9n89bod6psq5g7vreug4lm6g.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.circle.circle"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:497391679746:android:a319dbe660bcd9fc9d2a1b",
-        "android_client_info": {
-          "package_name": "com.circle.circle"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "497391679746-d3patbdn3smkrcfu4sfkh56ruh07tbm3.apps.googleusercontent.com",
+          "client_id": "497391679746-ej58a2j6fduem7nv46d7vcj8fk298m2i.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.circle.circle",
+            "package_name": "com.circle.app",
             "certificate_hash": "3443ab4f7622efd801a50f413289863dbcb87fbb"
           }
         },
@@ -75,10 +39,10 @@
               "client_type": 3
             },
             {
-              "client_id": "497391679746-mmog40ou9n89bod6psq5g7vreug4lm6g.apps.googleusercontent.com",
+              "client_id": "497391679746-ea23stdv8mpp1ghc3p3rmb14pcgse1da.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.circle.circle"
+                "bundle_id": "com.circle.app"
               }
             }
           ]
