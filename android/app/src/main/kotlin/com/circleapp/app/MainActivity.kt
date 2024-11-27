@@ -1,4 +1,4 @@
-package com.circle.app
+package co.circleapp.app
 
 import io.flutter.embedding.android.FlutterActivity
 
