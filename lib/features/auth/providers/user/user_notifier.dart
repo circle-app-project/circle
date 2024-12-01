@@ -56,11 +56,7 @@ class UserNotifier extends AsyncNotifier<AppUser> {
       log("RETURNED FAILURE", name: "USER NOTIFIER", stackTrace: failure.stackTrace);
       state = AsyncValue.error(failure, failure.stackTrace!);
     }, (user) {
-
       log("RETURNED SUCCESS", name: "USER NOTIFIER");
-      print("verifying retruned id after putting data is actually updated");
-
-      print( user.id);
       //Set the state to be equal to the data that was just added
       state = AsyncValue.data(user);
     });
