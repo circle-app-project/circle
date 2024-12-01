@@ -13,20 +13,12 @@ FutureEither<T> futureHandler<T>(Future<T> Function() function) async {
     T result = await function();
     return Right(result);
   } on FirebaseException catch (e, stackTrace) {
-    ///A Firebase Exception has occurred
-    log("A Firebase exception has occurred");
-    log(e.message ?? "Error");
-    log("Exception error stacktrace:", stackTrace: stackTrace);
-    log(e.toString());
+    // A Firebase Exception has occurred
+    log("A Firebase exception has occurred", name: "Firebase Auth", stackTrace: stackTrace, error: e);
     return Left(Failure.firebase(message: e.message));
   } catch (e, stackTrace) {
-    ///An exception has occurred;
-    log("An exception exception has occurred");
-    log(e.toString());
-    log("Exception error stacktrace:", stackTrace: stackTrace);
-
-    // String errorMessage = e.toString().split(": ").last;
-
+    // An exception has occurred;
+    log("An exception exception has occurred", error:  e, stackTrace: stackTrace, name: "Future Handler");
     return Left(Failure.generic(message: e.toString()));
   }
 }
@@ -36,17 +28,12 @@ Either<Failure, T> methodHandler<T>(T Function() function) {
     T result = function();
     return Right(result);
   } on FirebaseException catch (e, stackTrace) {
-    ///A Firebase Exception has occurred
-    debugPrint("A Firebase exception has occurred");
-    debugPrint(e.message);
-    log("Exception error stacktrace:", stackTrace: stackTrace);
+    // A Firebase Exception has occurred
+    log("A Firebase exception has occurred", name: "Firebase Auth", stackTrace: stackTrace, error: e);
     return Left(Failure.firebase(message: e.message));
   } catch (e, stackTrace) {
-    ///An exception has occurred;
-    debugPrint("An exception has occurred");
-    debugPrint(e.toString());
-    log("Exception error stacktrace:", stackTrace: stackTrace);
-    // String errorMessage = e.toString().split(": ").last;
+    // An exception has occurred;
+    log("An exception exception has occurred", error:  e, stackTrace: stackTrace, name: "Future Handler");
     return Left(Failure.generic(message: e.toString()));
   }
 }
