@@ -38,7 +38,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final ThemeData theme = Theme.of(context);
     bool isDarkMode = theme.brightness == Brightness.dark;
     final authNotifier = ref.read(authProvider.notifier);
-    final userNotifier = ref.read(userProvider.notifier);
     AppUser user = ref.watch(userProvider).value!;
     UserPreferences userPreferences =
         user.preferences.target ?? UserPreferences.empty;
