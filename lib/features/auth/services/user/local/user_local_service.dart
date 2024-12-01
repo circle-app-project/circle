@@ -1,16 +1,20 @@
-import 'package:circle/features/auth/auth.dart';
+
 import 'package:circle/objectbox.g.dart';
 
-//This app will eventually have multiple users, so it needs to be able to store multiple users
+import '../../../auth.dart';
+
+///This app will eventually have multiple users, so it needs to be able to store multiple users
+
 class UserLocalService {
-  late final Box<AppUser> userBox;
-  late final Box<UserPreferences> userPreferencesBox;
+  late final Box<AppUser> _userBox;
+  late final Box<UserPreferences> _userPreferencesBox;
+
   UserLocalService({required Store store})
-      : userBox = store.box<AppUser>(),
-        userPreferencesBox = store.box<UserPreferences>();
+      : _userBox = store.box<AppUser>(),
+        _userPreferencesBox = store.box<UserPreferences>();
 
   Stream<UserPreferences> listenUserPreferences() {
-    return userPreferencesBox
+    return _userPreferencesBox
         .query()
         .watch(triggerImmediately: true)
         .map((query) => query.find().first);
@@ -18,37 +22,37 @@ class UserLocalService {
 
   AppUser getUser({int? id}) {
     if (id == null) {
-      List<AppUser> users = userBox.getAll();
+      List<AppUser> users = _userBox.getAll();
       return users.isEmpty ? AppUser.empty : users.first;
     } else {
-      return userBox.get(id) ?? AppUser.empty;
+      return _userBox.get(id) ?? AppUser.empty;
     }
   }
 
   AppUser getUserByUid(String uid) {
-    Query query = userBox.query(AppUser_.uid.equals(uid)).build();
+    Query query = _userBox.query(AppUser_.uid.equals(uid)).build();
     AppUser user = query.find().first;
     query.close();
     return user;
   }
 
   List<AppUser> getUsers() {
-    return userBox.getAll();
+    return _userBox.getAll();
   }
 
   void addUser(AppUser user) {
-    userBox.put(user);
+    _userBox.put(user);
   }
 
   void updateUser(AppUser user) {
-    userBox.put(user, mode: PutMode.update);
+    _userBox.put(user, mode: PutMode.update);
   }
 
   void deleteUser({AppUser? user}) {
     if (user == null) {
-      userBox.removeAll();
+      _userBox.removeAll();
     } else {
-      userBox.remove(user.id);
+      _userBox.remove(user.id);
     }
   }
 }

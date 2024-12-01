@@ -1,6 +1,7 @@
 import 'package:circle/core/routes.dart';
 import 'package:circle/databse_service.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,7 +14,11 @@ late LocalDatabaseService database;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  database = await LocalDatabaseService.create();
+
+  //Initialize database with Admin
+  await LocalDatabaseService.instance.initialize(startAdmin: kDebugMode, adminPort: 8091);
+  database = LocalDatabaseService.instance;
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -38,11 +43,14 @@ class _MyAppState extends ConsumerState<MyApp> {
     final ThemeData theme = Theme.of(context);
     bool isDarkMode = theme.brightness == Brightness.dark;
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: isDarkMode
-          ? SystemUiOverlayStyle.dark
-              .copyWith(statusBarColor: Colors.transparent)
-          : SystemUiOverlayStyle.light
-              .copyWith(statusBarColor: Colors.transparent),
+      value:
+          isDarkMode
+              ? SystemUiOverlayStyle.dark.copyWith(
+                statusBarColor: Colors.transparent,
+              )
+              : SystemUiOverlayStyle.light.copyWith(
+                statusBarColor: Colors.transparent,
+              ),
       child: MaterialApp.router(
         title: 'Circle',
         debugShowCheckedModeBanner: false,
@@ -54,7 +62,7 @@ class _MyAppState extends ConsumerState<MyApp> {
           duration: const Duration(milliseconds: 300),
         ),
         //home: const WaterScreen(),
-         routerConfig: router,
+        routerConfig: router,
         //  home: const OnboardingBaseScreen(),
       ),
     );
