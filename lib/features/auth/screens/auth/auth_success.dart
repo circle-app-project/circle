@@ -8,31 +8,18 @@ import '../../../../core/core.dart';
 import '../../../profile/profile.dart';
 import '../../auth.dart';
 
-class AuthSuccessScreen extends ConsumerStatefulWidget {
+class AuthSuccessScreen extends ConsumerWidget {
   static const id = "auth_success";
   const AuthSuccessScreen({super.key});
 
-  @override
-  ConsumerState<AuthSuccessScreen> createState() => _AuthSuccessScreenState();
-}
-
-class _AuthSuccessScreenState extends ConsumerState<AuthSuccessScreen> {
-  late String userName;
-  @override
-  void initState() {
-    // WidgetsBinding.instance.addPostFrameCallback((_) async {
-    //   await ref.read(userProvider.notifier).getCurrentUserData();
-    // });
-
-    super.initState();
-  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
     AppUser user = ref.watch(userProvider).value!;
-    UserProfile userProfile = user.profile.target ?? UserProfile.empty;
-    String userName = userProfile.displayName ?? user.email;
+    String userName = user.getDisplayName();
+
+    //Todo: Rearrange animation timing;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -43,15 +30,15 @@ class _AuthSuccessScreenState extends ConsumerState<AuthSuccessScreen> {
             const Spacer(),
             Text(
               "Hey there,",
-              style: theme.textTheme.headlineLarge,
+              style: theme.textTheme.titleLarge,
             )
                 .animate()
                 .moveY(
-                    duration: 1500.ms,
+                    duration: 800.ms,
                     curve: Curves.easeInOutQuart,
                     begin: 150,
                     end: 0)
-                .fadeIn(duration: 800.ms, delay: 600.ms),
+                .fadeIn(duration: 600.ms, delay: 600.ms),
             const Gap(kPadding16),
             Text(
               userName.split(" ").first,
@@ -69,9 +56,9 @@ class _AuthSuccessScreenState extends ConsumerState<AuthSuccessScreen> {
             const Gap(kPadding48),
             Text(
               "We're glad you're here!",
-              style: theme.textTheme.headlineLarge,
+              style: theme.textTheme.titleLarge,
             )
-                .animate(delay: 2500.ms)
+                .animate(delay: 1500.ms)
                 .moveY(
                     duration: 1500.ms,
                     curve: Curves.easeInOutQuart,
@@ -79,29 +66,6 @@ class _AuthSuccessScreenState extends ConsumerState<AuthSuccessScreen> {
                     end: 0)
                 .fadeIn(duration: 800.ms, delay: 600.ms),
 
-            // Row(
-            //   children: [
-            //     Text("Welcome to ", style: theme.textTheme.headlineLarge)
-            //         .animate(delay: 3000.ms)
-            //         .moveY(
-            //             duration: 1500.ms,
-            //             curve: Curves.easeInOutQuart,
-            //             begin: 120,
-            //             end: 0)
-            //         .fadeIn(duration: 800.ms, delay: 600.ms),
-            //     Text("Sickler",
-            //             style: theme.textTheme.headlineLarge!.copyWith(
-            //                 fontWeight: FontWeight.w700,
-            //                 color: theme.colorScheme.primary))
-            //         .animate(delay: 3500.ms)
-            //         .moveY(
-            //             duration: 1500.ms,
-            //             curve: Curves.easeInOutQuart,
-            //             begin: 120,
-            //             end: 0)
-            //         .fadeIn(duration: 800.ms, delay: 600.ms),
-            //   ],
-            // ),
             const Spacer(),
             AppButton(
                     onPressed: () {

@@ -58,7 +58,7 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
                               mode: SnackBarMode.success);
                           if (userPreferences.isFirstTime) {
                             ///Set as is Not First Time
-                            await userNotifier.updateUserData(
+                            await userNotifier.putUserData(
                                 user: user.copyWith(
                                     preferences: userPreferences
                                         .copyWith(isFirstTime: false)));

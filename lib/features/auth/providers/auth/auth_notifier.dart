@@ -50,6 +50,7 @@ class AuthNotifier extends AsyncNotifier<AppUser?> {
     response.fold((failure) {
       state = AsyncValue.error(failure, StackTrace.current);
     }, (sicklerUser) {
+      //Todo: rename to user
       state = AsyncValue.data(sicklerUser);
     });
   }

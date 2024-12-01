@@ -249,11 +249,11 @@ class _ProfileMedicalInfoScreenState
                         //Send data to firebase
 
                         if (widget.isEditing!) {
-                          await userNotifier.updateUserData(
+                          await userNotifier.putUserData(
                               user: user, updateRemote: true);
                         } else {
-                          await userNotifier.addUserData(
-                              user: user, updateRemote: true);
+                          await userNotifier.putUserData(
+                              user: user, updateRemote: false);
                         }
 
                         if (context.mounted) {
