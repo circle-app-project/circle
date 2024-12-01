@@ -40,6 +40,7 @@ class AppUser extends Equatable {
     UserPreferences? preferences,
   }) {
     final AppUser user = AppUser(
+      id: id,
       email: email ?? this.email,
       uid: uid ?? this.uid,
       photoUrl: photoUrl ?? this.photoUrl,
@@ -70,13 +71,14 @@ class AppUser extends Equatable {
 
   factory AppUser.fromMap({required Map<String, dynamic> data}) {
     return AppUser(
-        //  profile: UserProfile.fromMap(data["profile"]),
-        //  preferences: UserPreferences.fromMap(data: data["preferences"]),
-        email: data["email"],
-        uid: data["uid"],
-        isAnonymous: data["isAnonymous"],
-        isEmailVerified: data["isEmailVerified"],
-        isPhoneVerified: data["isPhoneVerified"]);
+      //  profile: UserProfile.fromMap(data["profile"]),
+      //  preferences: UserPreferences.fromMap(data: data["preferences"]),
+      email: data["email"],
+      uid: data["uid"],
+      isAnonymous: data["isAnonymous"],
+      isEmailVerified: data["isEmailVerified"],
+      isPhoneVerified: data["isPhoneVerified"],
+    );
   }
 
   factory AppUser.fromUser({required User? user}) {
@@ -97,11 +99,12 @@ class AppUser extends Equatable {
   //-------Empty--------//
   @Transient()
   static AppUser empty = AppUser(
-      email: "",
-      isAnonymous: false,
-      uid: "",
-      isEmailVerified: false,
-      isPhoneVerified: false);
+    email: "",
+    isAnonymous: false,
+    uid: "",
+    isEmailVerified: false,
+    isPhoneVerified: false,
+  );
 
   @Transient()
   bool get isEmpty => this == AppUser.empty;
@@ -124,15 +127,16 @@ class AppUser extends Equatable {
   @override
   @Transient()
   List<Object?> get props => [
-        email,
-        photoUrl,
-        isAnonymous,
-        isEmailVerified,
-        uid,
-        isPhoneVerified,
-        profile,
-        preferences,
-      ];
+    id,
+    email,
+    photoUrl,
+    isAnonymous,
+    isEmailVerified,
+    uid,
+    isPhoneVerified,
+    profile,
+    preferences,
+  ];
 
   String getDisplayName() {
     UserProfile? uProfile = profile.target;

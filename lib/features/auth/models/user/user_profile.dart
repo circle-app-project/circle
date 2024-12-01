@@ -96,6 +96,7 @@ class UserProfile extends Equatable {
     List<String>? medicalConditions,
   }) {
     return UserProfile(
+      id: id,
       uid: uid ?? this.uid,
       gender: gender ?? this.gender,
       name: name ?? this.name,
@@ -208,6 +209,7 @@ class UserProfile extends Equatable {
   @override
   @Transient()
   List<Object?> get props => [
+    id,
         uid,
         name,
         displayName,

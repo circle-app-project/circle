@@ -81,24 +81,27 @@ class UserPreferences extends Equatable {
   final DateTime? lastUpdated; //Prolly rename to updated at
 
   //------CopyWith---------//
-  UserPreferences copyWith(
-      {final String? uid,
-      final Units? volumeUnit,
-      final Units? lengthUnit,
-      final Units? massUnit,
-      final bool? isFirstTime,
-      final bool? isOnboarded,
-      final ThemeMode? themeMode,
-      final DateTime? lastUpdated}) {
+  UserPreferences copyWith({
+    final String? uid,
+    final Units? volumeUnit,
+    final Units? lengthUnit,
+    final Units? massUnit,
+    final bool? isFirstTime,
+    final bool? isOnboarded,
+    final ThemeMode? themeMode,
+    final DateTime? lastUpdated,
+  }) {
     return UserPreferences(
-        uid: uid ?? this.uid,
-        volumeUnit: volumeUnit ?? this.volumeUnit,
-        massUnit: massUnit ?? this.massUnit,
-        lengthUnit: lengthUnit ?? this.lengthUnit,
-        isFirstTime: isFirstTime ?? this.isFirstTime,
-        isOnboarded: isOnboarded ?? this.isOnboarded,
-        themeMode: themeMode ?? this.themeMode,
-        lastUpdated: lastUpdated ?? this.lastUpdated);
+      id: id,
+      uid: uid ?? this.uid,
+      volumeUnit: volumeUnit ?? this.volumeUnit,
+      massUnit: massUnit ?? this.massUnit,
+      lengthUnit: lengthUnit ?? this.lengthUnit,
+      isFirstTime: isFirstTime ?? this.isFirstTime,
+      isOnboarded: isOnboarded ?? this.isOnboarded,
+      themeMode: themeMode ?? this.themeMode,
+      lastUpdated: lastUpdated ?? this.lastUpdated,
+    );
   }
 
   Map<String, dynamic> toMap() {
@@ -117,7 +120,7 @@ class UserPreferences extends Equatable {
 
   factory UserPreferences.fromMap({required Map<String, dynamic> data}) {
     return UserPreferences(
-      uid: "",
+      uid: "", //Todo: replace this with a target to the user object
       volumeUnit: Units.values.byName(data["volumeUnit"] as String),
       massUnit: Units.values.byName(data["massUnit"] as String),
       lengthUnit: Units.values.byName(data["lengthUnit"] as String),
@@ -128,8 +131,11 @@ class UserPreferences extends Equatable {
     );
   }
   @Transient()
-  static UserPreferences empty =
-      UserPreferences(uid: "", isOnboarded: false, isFirstTime: true);
+  static UserPreferences empty = UserPreferences(
+    uid: "",
+    isOnboarded: false,
+    isFirstTime: true,
+  );
 
   @Transient()
   bool get isEmpty => this == UserPreferences.empty;
@@ -151,14 +157,16 @@ class UserPreferences extends Equatable {
   @override
   @Transient()
   List<Object?> get props => [
-        volumeUnit,
-        lengthUnit,
-        massUnit,
-        themeMode,
-        isFirstTime,
-        isOnboarded,
-        lastUpdated,
-      ];
+    id,
+    uid,
+    volumeUnit,
+    lengthUnit,
+    massUnit,
+    themeMode,
+    isFirstTime,
+    isOnboarded,
+    lastUpdated,
+  ];
 }
 
 class UnitPreferences {
