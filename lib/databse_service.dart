@@ -5,6 +5,8 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:circle/objectbox.g.dart';
 
+import 'features/auth/models/user/user_preferences.dart';
+
 class LocalDatabaseService {
   Store? _store;
   Admin? _admin;
@@ -27,18 +29,25 @@ class LocalDatabaseService {
     try {
       final docsDir = await getApplicationDocumentsDirectory();
       _store = await openStore(directory: p.join(docsDir.path, "circle-db"));
-      log("OBJECTBOX STORE INITIALIZED");
-
+      log("OBJECTBOX STORE INITIALIZED", name: "DATABASE SERVICE");
       if (startAdmin && Admin.isAvailable()) {
         try {
           _admin = Admin(_store!, bindUri: "http://127.0.0.1:$adminPort");
-          log("ADMIN STARTED ON PORT: ${_admin!.port}");
+          log("ADMIN STARTED ON PORT: ${_admin!.port}",  name: "DATABASE SERVICE");
         } catch (e) {
-          log("FAILED TO START ADMIN: $e");
+          log("FAILED TO START ADMIN: $e",  name: "DATABASE SERVICE");
         }
       }
+
+      //Set the user Preferences
+      Box<UserPreferences>? userPreferencesBox = _store?.box<UserPreferences>();
+      if(userPreferencesBox == null){
+        log("USER PREFERENCES BOX IS NULL",  name: "DATABASE SERVICE");
+        log("ADDING PREFRENCES BOX TO DB",  name: "DATABASE SERVICE");
+      }
+
     } catch (e) {
-      log("FAILED TO INITIALIZE DATABASE: $e");
+      log("FAILED TO INITIALIZE DATABASE: $e",  name: "DATABASE SERVICE");
       rethrow; // Rethrow so the app knows initialization failed
     }
   }
@@ -48,9 +57,9 @@ class LocalDatabaseService {
     try {
       _admin?.close();
       _store?.close();
-      log("Database and Admin closed successfully");
-    } catch (e) {
-      log("Error during database disposal: $e", error: e);
+      log("Database and Admin closed successfully",  name: "DATABASE SERVICE");
+    } catch (e, stackTrace) {
+      log("Error during database disposal: $e", error: e,  name: "DATABASE SERVICE", stackTrace: stackTrace);
     } finally {
       _store = null;
       _admin = null;
