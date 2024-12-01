@@ -186,7 +186,7 @@ class _ProfileVitalsInfoScreenState
                             ///the data will be gathered and saved at the
                             ///end of the onboard process
 
-                            await userNotifier.updateUserData(
+                            await userNotifier.putUserData(
                                 user: user, updateRemote: true);
 
                             ///Also show snack bars when making remote calls
@@ -204,7 +204,7 @@ class _ProfileVitalsInfoScreenState
                               }
                             }
                           } else {
-                            await userNotifier.addUserData(
+                            await userNotifier.putUserData(
                                 user: user, updateRemote: false);
                           }
 

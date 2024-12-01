@@ -9,7 +9,6 @@ import '../../../../core/core.dart';
 import '../../../profile/profile.dart';
 import '../../auth.dart';
 
-
 class RegisterScreen extends ConsumerStatefulWidget {
   static const String id = "register";
   const RegisterScreen({super.key});
@@ -41,7 +40,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final authNotifier = ref.read(authProvider.notifier);
     final userNotifier = ref.read(userProvider.notifier);
     AppUser user = ref.watch(userProvider).value!;
-    UserPreferences userPreferences = user.preferences.target ?? UserPreferences.empty;
+    UserPreferences userPreferences =
+        user.preferences.target ?? UserPreferences.empty;
 
     return Scaffold(
       body: SafeArea(
@@ -49,10 +49,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           key: _formKey,
           child: Column(
             children: [
-              const CustomAppBar(
-                pageTitle: "Register",
-                showBackButton: false,
-              ),
+              const CustomAppBar(pageTitle: "Register", showBackButton: false),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -65,9 +62,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       TextFormField(
                         controller: emailController,
                         keyboardType: TextInputType.emailAddress,
-                        decoration:
-                            AppInputDecoration.inputDecoration(context)
-                                .copyWith(hintText: "Email"),
+                        decoration: AppInputDecoration.inputDecoration(
+                          context,
+                        ).copyWith(hintText: "Email"),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Please input an email";
@@ -83,26 +80,26 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         controller: passwordController,
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: _obscureText,
-                        decoration:
-                            AppInputDecoration.inputDecoration(context)
-                                .copyWith(
+                        decoration: AppInputDecoration.inputDecoration(context).copyWith(
                           hintText: "Password",
                           suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _obscureText = !_obscureText;
-                                });
-                              },
-                              icon: SvgPicture.asset(
-                                _obscureText
-                                    ? "assets/svg/eye.svg"
-                                    : "assets/svg/eye-off.svg",
-                                colorFilter: ColorFilter.mode(
-                                    !isDarkMode
-                                        ? theme.colorScheme.primary
-                                        : theme.iconTheme.color!,
-                                    BlendMode.srcIn),
-                              )),
+                            onPressed: () {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                            icon: SvgPicture.asset(
+                              _obscureText
+                                  ? "assets/svg/eye.svg"
+                                  : "assets/svg/eye-off.svg",
+                              colorFilter: ColorFilter.mode(
+                                !isDarkMode
+                                    ? theme.colorScheme.primary
+                                    : theme.iconTheme.color!,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -115,33 +112,35 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         },
                       ),
                       const Gap(24),
-                      Text("Confirm Password",
-                          style: theme.textTheme.bodyMedium),
+                      Text(
+                        "Confirm Password",
+                        style: theme.textTheme.bodyMedium,
+                      ),
                       const Gap(8),
                       TextFormField(
                         controller: confirmPasswordController,
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: _obscureText,
-                        decoration:
-                            AppInputDecoration.inputDecoration(context)
-                                .copyWith(
+                        decoration: AppInputDecoration.inputDecoration(context).copyWith(
                           hintText: "Confirm Password",
                           suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _obscureText = !_obscureText;
-                                });
-                              },
-                              icon: SvgPicture.asset(
-                                _obscureText
-                                    ? "assets/svg/eye.svg"
-                                    : "assets/svg/eye-off.svg",
-                                colorFilter: ColorFilter.mode(
-                                    !isDarkMode
-                                        ? theme.colorScheme.primary
-                                        : theme.iconTheme.color!,
-                                    BlendMode.srcIn),
-                              )),
+                            onPressed: () {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                            icon: SvgPicture.asset(
+                              _obscureText
+                                  ? "assets/svg/eye.svg"
+                                  : "assets/svg/eye-off.svg",
+                              colorFilter: ColorFilter.mode(
+                                !isDarkMode
+                                    ? theme.colorScheme.primary
+                                    : theme.iconTheme.color!,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -165,24 +164,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             await authNotifier.registerWithEmailAndPassword(
-                                email: emailController.text.trim(),
-                                password: passwordController.text.trim());
+                              email: emailController.text.trim(),
+                              password: passwordController.text.trim(),
+                            );
 
                             if (authNotifier.isSuccessful) {
-                              await userNotifier.getCurrentUserData();
-                              AppUser user = ref.watch(userProvider).value!;
                               if (context.mounted) {
                                 showCustomSnackBar(
-                                    context: context,
-                                    message: "Signed Up successfully",
-                                    mode: SnackBarMode.success);
+                                  context: context,
+                                  message: "Signed Up successfully",
+                                  mode: SnackBarMode.success,
+                                );
                                 if (userPreferences.isFirstTime) {
-                                  ///Set as is Not First Time
-                                  await userNotifier.updateUserData(
-                                      user: user.copyWith(
-                                          preferences: userPreferences
-                                              .copyWith(isFirstTime: false)));
-
                                   if (context.mounted) {
                                     context.goNamed(AuthSuccessScreen.id);
                                   }
@@ -197,9 +190,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             } else if (authNotifier.errorMessage != null) {
                               if (context.mounted) {
                                 showCustomSnackBar(
-                                    context: context,
-                                    message: authNotifier.errorMessage!,
-                                    mode: SnackBarMode.error);
+                                  context: context,
+                                  message: authNotifier.errorMessage!,
+                                  mode: SnackBarMode.error,
+                                );
                               }
                             }
                           }
@@ -211,27 +205,29 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         alignment: Alignment.center,
                         child: Text(
                           "or",
-                          style: theme.textTheme.bodyMedium!
-                              .copyWith(color: AppColours.neutral50),
+                          style: theme.textTheme.bodyMedium!.copyWith(
+                            color: AppColours.neutral50,
+                          ),
                         ),
                       ),
                       Align(
-                          alignment: Alignment.center,
-                          child: FittedBox(
-                            child: AppButton(
-                              isChipButton: true,
-                              buttonType: ButtonType.text,
-                              onPressed: () {
-                                // context.pushReplacementNamed(SignInScreen.id);
+                        alignment: Alignment.center,
+                        child: FittedBox(
+                          child: AppButton(
+                            isChipButton: true,
+                            buttonType: ButtonType.text,
+                            onPressed: () {
+                              // context.pushReplacementNamed(SignInScreen.id);
 
-                                context.goNamed(SignInScreen.id);
+                              context.goNamed(SignInScreen.id);
 
-                                // Navigator.push(context, MaterialPageRoute(builder: (context)=> const SignInScreen()));
-                              },
-                              label: "Sign In Instead",
-                            ),
-                          )),
-                      const Gap(32)
+                              // Navigator.push(context, MaterialPageRoute(builder: (context)=> const SignInScreen()));
+                            },
+                            label: "Sign In Instead",
+                          ),
+                        ),
+                      ),
+                      const Gap(32),
                     ],
                   ),
                 ),
