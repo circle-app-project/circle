@@ -49,14 +49,14 @@ class ProfileScreen extends ConsumerWidget {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: "Amelia",
-                              style: theme.textTheme.bodyMedium!.copyWith(
+                              text: "${userProfile.name!.split(" ").first} ",
+                              style: theme.textTheme.titleLarge!.copyWith(
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
                             TextSpan(
-                              text: " Robertson",
-                              style: theme.textTheme.bodyMedium,
+                              text: userProfile.name!.split(" ").last,
+                              style: theme.textTheme.titleLarge!.copyWith(fontWeight: FontWeight.w300),
                             ),
                           ],
                         ),

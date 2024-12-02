@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +18,7 @@ class EditableAvatar extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: radius ?? 64,
-          backgroundImage: CachedNetworkImageProvider(imagePath),
+          backgroundImage:  NetworkImage(imagePath), ///Todo: replace with cached network image eventually
         ),
         Positioned(
           right: 0,
