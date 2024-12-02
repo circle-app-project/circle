@@ -23,7 +23,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _obscureText = true;
+  bool _obscurePasswordText = true;
+  bool _obscureConfirmPasswordText = true;
 
   @override
   void dispose() {
@@ -38,6 +39,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final ThemeData theme = Theme.of(context);
     bool isDarkMode = theme.brightness == Brightness.dark;
     final authNotifier = ref.read(authProvider.notifier);
+    final userNotifier = ref.read(userProvider.notifier);
     AppUser user = ref.watch(userProvider).value!;
     UserPreferences userPreferences =
         user.preferences.target ?? UserPreferences.empty;
@@ -78,17 +80,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       TextFormField(
                         controller: passwordController,
                         keyboardType: TextInputType.visiblePassword,
-                        obscureText: _obscureText,
+                        obscureText: _obscurePasswordText,
                         decoration: AppInputDecoration.inputDecoration(context).copyWith(
                           hintText: "Password",
                           suffixIcon: IconButton(
                             onPressed: () {
                               setState(() {
-                                _obscureText = !_obscureText;
+                                _obscurePasswordText = !_obscurePasswordText;
                               });
                             },
                             icon: SvgPicture.asset(
-                              _obscureText
+                              _obscurePasswordText
                                   ? "assets/svg/eye.svg"
                                   : "assets/svg/eye-off.svg",
                               colorFilter: ColorFilter.mode(
@@ -119,17 +121,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       TextFormField(
                         controller: confirmPasswordController,
                         keyboardType: TextInputType.visiblePassword,
-                        obscureText: _obscureText,
+                        obscureText: _obscureConfirmPasswordText,
                         decoration: AppInputDecoration.inputDecoration(context).copyWith(
                           hintText: "Confirm Password",
                           suffixIcon: IconButton(
                             onPressed: () {
                               setState(() {
-                                _obscureText = !_obscureText;
+                                _obscureConfirmPasswordText = !_obscureConfirmPasswordText;
                               });
                             },
                             icon: SvgPicture.asset(
-                              _obscureText
+                              _obscureConfirmPasswordText
                                   ? "assets/svg/eye.svg"
                                   : "assets/svg/eye-off.svg",
                               colorFilter: ColorFilter.mode(
@@ -143,7 +145,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return "Please input an password";
+                            return "Please input a password";
                           } else if (value.length < 8) {
                             return "Password cannot be less than 8 characters";
                           } else if (value != passwordController.text.trim()) {
@@ -175,6 +177,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   mode: SnackBarMode.success,
                                 );
                                 if (userPreferences.isFirstTime) {
+                                  await userNotifier.putUserData(
+                                    user: user.copyWith(
+                                      preferences: userPreferences.copyWith(
+                                        isFirstTime: false,
+                                      ),
+                                    ),
+                                  );
                                   if (context.mounted) {
                                     context.goNamed(AuthSuccessScreen.id);
                                   }

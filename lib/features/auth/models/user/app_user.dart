@@ -140,7 +140,6 @@ class AppUser extends Equatable {
 
   String getDisplayName() {
     UserProfile? uProfile = profile.target;
-
     if (uProfile != null) {
       if (uProfile.displayName != null) {
         return uProfile.displayName!.split(" ").first;
@@ -150,7 +149,6 @@ class AppUser extends Equatable {
         }
       }
     }
-
     return email;
   }
 }

@@ -37,7 +37,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     final userNotifier = ref.read(userProvider.notifier);
 
     AppUser user = ref.watch(userProvider).value!;
-    UserPreferences userPreferences = user.preferences.target ?? UserPreferences.empty;
+    UserPreferences userPreferences =
+        user.preferences.target ?? UserPreferences.empty;
 
     return Scaffold(
       body: SafeArea(
@@ -48,17 +49,15 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const CustomAppBar(
-                  pageTitle: "Sign In",
-                  showBackButton: false,
-                ),
+                const CustomAppBar(pageTitle: "Sign In", showBackButton: false),
                 Text("Email", style: theme.textTheme.bodyMedium),
                 const Gap(8),
                 TextFormField(
                   controller: emailController,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: AppInputDecoration.inputDecoration(context)
-                      .copyWith(hintText: "Email"),
+                  decoration: AppInputDecoration.inputDecoration(
+                    context,
+                  ).copyWith(hintText: "Email"),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Please input an email";
@@ -74,26 +73,30 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   controller: passwordController,
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: _obscureText,
-                  decoration:
-                      AppInputDecoration.inputDecoration(context).copyWith(
+                  decoration: AppInputDecoration.inputDecoration(
+                    context,
+                  ).copyWith(
                     hintText: "Password",
                     suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
-                        icon: SvgPicture.asset(
-                          _obscureText
-                              ? "assets/svg/eye.svg"
-                              : "assets/svg/eye-off.svg",
-                          colorFilter: ColorFilter.mode(
-                              theme.iconTheme.color!, BlendMode.srcIn),
-                        )),
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                      icon: SvgPicture.asset(
+                        _obscureText
+                            ? "assets/svg/eye.svg"
+                            : "assets/svg/eye-off.svg",
+                        colorFilter: ColorFilter.mode(
+                          theme.iconTheme.color!,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Please input an password";
+                      return "Please input a password";
                     } else if (value.length < 8) {
                       return "Password cannot be less than 8 characters";
                     } else {
@@ -111,40 +114,50 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       await authNotifier.signInWithEmailAndPassword(
-                          email: emailController.text.trim(),
-                          password: passwordController.text.trim());
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim(),
+                      );
 
                       if (authNotifier.isSuccessful) {
-                        await userNotifier.getCurrentUserData();
                         if (context.mounted) {
                           showCustomSnackBar(
-                              context: context,
-                              message: "Signed in successfully",
-                              mode: SnackBarMode.success);
-                          if (userPreferences.isFirstTime) {
-                            ///Set as is Not First Time
-                            await userNotifier.putUserData(
-                                user: user.copyWith(
-                                    preferences: userPreferences
-                                        .copyWith(isFirstTime: false)));
+                            context: context,
+                            message: "Signed in successfully",
+                            mode: SnackBarMode.success,
+                          );
+                        }
 
-                            if (context.mounted) {
-                              context.goNamed(AuthSuccessScreen.id);
-                            }
-                          } else {
-                            if (userPreferences.isOnboarded) {
-                              context.goNamed(BottomNavBar.id);
-                            } else {
-                              context.goNamed(ProfileBasicInfoScreen.id);
-                            }
+                        // First time user
+                        if (userPreferences.isFirstTime) {
+                          await userNotifier.putUserData(
+                            user: user.copyWith(
+                              preferences: userPreferences.copyWith(
+                                isFirstTime: false,
+                              ),
+                            ),
+                          );
+                          if (context.mounted) {
+                            context.goNamed(AuthSuccessScreen.id);
                           }
                         }
-                      } else if (authNotifier.errorMessage != null) {
+
+                        // Check if user has completed onboarding
+                        if (context.mounted) {
+                          if (userPreferences.isOnboarded) {
+                            context.goNamed(BottomNavBar.id);
+                          } else {
+                            context.goNamed(ProfileBasicInfoScreen.id);
+                          }
+                        }
+                      }
+
+                      if (authNotifier.errorMessage != null) {
                         if (context.mounted) {
                           showCustomSnackBar(
-                              context: context,
-                              message: authNotifier.errorMessage!,
-                              mode: SnackBarMode.error);
+                            context: context,
+                            message: authNotifier.errorMessage!,
+                            mode: SnackBarMode.error,
+                          );
                         }
                       }
                     }
@@ -155,26 +168,25 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   alignment: Alignment.center,
                   child: Text(
                     "or",
-                    style: theme.textTheme.bodyMedium!
-                        .copyWith(color: AppColours.neutral50),
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                      color: AppColours.neutral50,
+                    ),
                   ),
                 ),
                 Align(
-                    alignment: Alignment.center,
-                    child: FittedBox(
-                      child: AppButton(
-                        isLoading: ref.watch(authProvider).isLoading,
-                        isChipButton: true,
-                        buttonType: ButtonType.text,
-                        onPressed: () {
-                          context.goNamed(RegisterScreen.id);
-
-                          //      Navigator.push(context, MaterialPageRoute(builder: (context)=> const RegisterScreen()));
-                        },
-                        label: "Create an Account",
-                      ),
-                    )),
-                const Gap(32),
+                  alignment: Alignment.center,
+                  child: FittedBox(
+                    child: AppButton(
+                      isChipButton: true,
+                      buttonType: ButtonType.text,
+                      onPressed: () {
+                        context.goNamed(RegisterScreen.id);
+                      },
+                      label: "Create an Account",
+                    ),
+                  ),
+                ),
+                const Gap(48),
               ],
             ),
           ),
