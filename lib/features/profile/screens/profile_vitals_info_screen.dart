@@ -168,9 +168,7 @@ class _ProfileVitalsInfoScreenState
                           ? FluentIcons.checkmark_24_regular
                           : null,
                       onPressed: () async {
-                        //Todo: Continue
                         if (_formKey.currentState!.validate()) {
-
                           user = user.copyWith(
                               profile: userProfile.copyWith(
                                   height: double.tryParse(

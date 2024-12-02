@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import '../../../components/bottom_nav_bar.dart';
 import '../../../components/components.dart';
 import '../../../core/core.dart';
 import '../../auth/auth.dart';
@@ -48,11 +49,18 @@ class _ProfileMedicalInfoScreenState
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+
+    });
+
+    Future.microtask(() async {
+      await ref.watch(userProvider.notifier).getCurrentUserData();
       await ref.watch(userProvider.notifier).getCurrentUserData();
       AppUser user = ref.watch(userProvider).value!;
-      UserProfile userProfile = user.profile.target ?? UserProfile.empty;
-      medicalConditions = userProfile.medicalConditions ?? [];
-      allergies = userProfile.allergies ?? [];
+      UserProfile? userProfile = user.profile.target;
+      if(userProfile != null){
+        medicalConditions = userProfile.medicalConditions ?? [];
+        allergies = userProfile.allergies ?? [];
+      }
     });
     super.initState();
   }
@@ -77,7 +85,7 @@ class _ProfileMedicalInfoScreenState
                 AppButton(
                   isChipButton: true,
                   onPressed: () {
-                    //Todo: Skip Page
+                    context.goNamed(BottomNavBar.id);
                   },
                   label: "Skip",
                   buttonType: ButtonType.text,

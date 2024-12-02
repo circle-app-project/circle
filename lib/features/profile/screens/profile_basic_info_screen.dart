@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import '../../../components/components.dart';
 import '../../../core/core.dart';
 import '../../auth/auth.dart';
@@ -217,9 +218,9 @@ class _ProfileBasicInfoScreenState
                               user: user,
                               updateRemote: false,
                             );
-                            // if (context.mounted) {
-                            //   context.pushNamed(ProfileVitalsInfoScreen.id);
-                            // }
+                            if (context.mounted) {
+                              context.pushNamed(ProfileVitalsInfoScreen.id);
+                            }
                           }
                         }
                       },
