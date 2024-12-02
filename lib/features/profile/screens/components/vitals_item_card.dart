@@ -26,11 +26,11 @@ class VitalsItemCard extends StatelessWidget {
 
     return InkWell(
       onTap: onPressed,
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(20),
       splashFactory: InkSparkle.splashFactory,
       splashColor: color?.withValues(alpha:.2) ?? theme.colorScheme.primary,
       child: Ink(
-        padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             color: backgroundColor ?? theme.colorScheme.primaryContainer),
@@ -55,13 +55,12 @@ class VitalsItemCard extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: value,
-                    style: theme.textTheme.titleLarge!
+                    style: theme.textTheme.titleMedium!
                         .copyWith(fontWeight: FontWeight.w700),
                   ),
                   TextSpan(
                       text: unit ?? "",
-                      style: theme.textTheme.bodyMedium!
-                          .copyWith(color: color ?? theme.colorScheme.tertiary))
+                      style: theme.textTheme.bodyMedium)
                 ],
               ),
             ),

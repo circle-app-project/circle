@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import '../../core/core.dart';
 
 class AppChip extends StatefulWidget {
+
+  ///Todo: Rebuild chip using Selectable widget
+  ///Create a version for filtering using selectable, and a version for displaying using a standard chip
   const AppChip({
     super.key,
     this.onSelected,

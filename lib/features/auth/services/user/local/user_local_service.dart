@@ -69,10 +69,7 @@ class UserLocalService {
     );
   }
 
-  @Deprecated("Prefer PutAndGetUser instead")
-  int updateUser(AppUser user) {
-    return _userBox.put(user, mode: PutMode.update);
-  }
+
 
   void deleteUser({AppUser? user}) {
 

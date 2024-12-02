@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 
+@Deprecated("Prefer App Chip instead and Selectable Chip, refactor into different colors")
 class UserInfoChip extends StatelessWidget {
   final String label;
   final String? iconPath;
