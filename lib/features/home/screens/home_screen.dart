@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -85,7 +84,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     onTap: () {
                       context.pushNamed(ProfileScreen.id);
                     },
-                    child: CachedNetworkImage(imageUrl: user.photoUrl!, height: 64, width: 64, fit: BoxFit.cover,),
+                    child: CircleAvatar(
+                      backgroundImage: user.photoUrl != null
+                          ? NetworkImage(user.photoUrl!)
+                          : const AssetImage("assets/images/memoji.png")
+                              as ImageProvider,
+                      radius: 32,
+                      backgroundColor: AppColours.neutral90,
+                    ),
                   ),
                 ],
               ),
