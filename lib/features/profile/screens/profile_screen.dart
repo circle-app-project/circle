@@ -1,3 +1,4 @@
+import 'package:circle/features/auth/auth.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +18,12 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
     final bool isDarkMode = theme.colorScheme.brightness == Brightness.dark;
+
+    final userState = ref.watch(userProvider);
+    final UserNotifier userNotifier = ref.watch(userProvider.notifier);
+    final AppUser selfUser = userState.value!;
+    final UserProfile userProfile = selfUser.profile.target!;
+
     return PopScope(
       canPop: true,
       child: Scaffold(
@@ -25,10 +32,11 @@ class ProfileScreen extends ConsumerWidget {
             children: [
               const CustomAppBar(pageTitle: "Profile"),
               EditableAvatar(
-                  onEditPressed: () {
-                    context.pushNamed(ProfileBasicInfoScreen.id);
-                  },
-                  imagePath: "assets/images/memoji2.jpg"),
+                onEditPressed: () {
+                  context.pushNamed(ProfileBasicInfoScreen.id);
+                },
+                imagePath: userProfile.photoUrl ?? "assets/images/memoji2.jpg",
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -43,12 +51,14 @@ class ProfileScreen extends ConsumerWidget {
                           children: [
                             TextSpan(
                               text: "Amelia",
-                              style: theme.textTheme.bodyMedium!
-                                  .copyWith(fontWeight: FontWeight.w700),
+                              style: theme.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                             TextSpan(
-                                text: " Robertson",
-                                style: theme.textTheme.bodyMedium)
+                              text: " Robertson",
+                              style: theme.textTheme.bodyMedium,
+                            ),
                           ],
                         ),
                       ),
@@ -58,36 +68,24 @@ class ProfileScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         UserInfoChip(
-                          label: "21 Yrs",
+                          label: "${userProfile.age} Yrs",
                           icon: FluentIcons.food_cake_20_regular,
-                          backgroundColor: isDarkMode
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.primaryContainer,
-                          color: isDarkMode
-                              ? Colors.white
-                              : theme.colorScheme.onPrimaryContainer,
+                          backgroundColor: theme.colorScheme.primary,
+                          color: Colors.white,
                         ),
                         const Gap(8),
                         UserInfoChip(
-                          label: "Female",
+                          label: "${userProfile.gender?.name}",
                           icon: FluentIcons.person_20_regular,
-                          color: isDarkMode
-                              ? Colors.white
-                              : AppColours.orange60,
-                          backgroundColor: isDarkMode
-                              ? theme.colorScheme.secondary
-                              : theme.colorScheme.secondaryContainer,
+                          color: Colors.white,
+                          backgroundColor: theme.colorScheme.secondary,
                         ),
                         const Gap(8),
                         UserInfoChip(
-                          label: "AS",
+                          label: "${userProfile.genotype?.name.toUpperCase()}",
                           iconPath: "assets/svg/dna.svg",
-                          color: isDarkMode
-                              ? Colors.white
-                              : AppColours.green30,
-                          backgroundColor: isDarkMode
-                              ? AppColours.green60
-                              : AppColours.green95,
+                          color: Colors.white,
+                          backgroundColor: theme.colorScheme.tertiary,
                         ),
                       ],
                     ),
@@ -95,24 +93,30 @@ class ProfileScreen extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24),
-                          color: isDarkMode
-                              ? theme.cardColor
-                              : theme.colorScheme.secondaryContainer),
+                        borderRadius: BorderRadius.circular(24),
+                        color:
+                            isDarkMode
+                                ? theme.cardColor
+                                : theme.colorScheme.secondaryContainer,
+                      ),
                       child: Row(
                         children: [
                           const Expanded(
-                              child: Text(
-                                  "Your water intake looks good, Goof Job!")),
+                            child: Text(
+                              "Your water intake looks good, Good Job!",
+                            ),
+                          ),
                           const Gap(16),
                           Container(
                             height: 72,
                             width: 72,
                             decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: isDarkMode
-                                    ? AppColours.neutral30
-                                    : AppColours.orange90),
+                              shape: BoxShape.circle,
+                              color:
+                                  isDarkMode
+                                      ? AppColours.neutral30
+                                      : AppColours.orange90,
+                            ),
                           ),
                         ],
                       ),
@@ -125,14 +129,12 @@ class ProfileScreen extends ConsumerWidget {
                         IconButton(
                           onPressed: () {
                             context.pushNamed(ProfileVitalsInfoScreen.id);
-
-                            ///Todo: Add Edit Vitals Method
                           },
                           icon: Icon(
                             FluentIcons.edit_24_regular,
                             color: theme.colorScheme.primary,
                           ),
-                        )
+                        ),
                       ],
                     ),
                     const Gap(8),
@@ -143,24 +145,28 @@ class ProfileScreen extends ConsumerWidget {
                             onPressed: () {
                               context.pushNamed(ProfileVitalsInfoScreen.id);
                             },
-                            label: "Height",
-                            value: "178",
+                            label:
+                                "Height", //Todo:Create a store for height and weight logs.
+                            value: userProfile.height!.toInt().toString(),
                             unit: " cm",
-                            color: isDarkMode
-                                ? Colors.white
-                                : theme.colorScheme.primary,
-                            backgroundColor: isDarkMode
-                                ? theme.colorScheme.primary
-                                : theme.cardColor,
+                            color:
+                                isDarkMode
+                                    ? Colors.white
+                                    : theme.colorScheme.primary,
+                            backgroundColor:
+                                isDarkMode
+                                    ? theme.colorScheme.primary
+                                    : theme.cardColor,
                             icon: Transform.rotate(
                               angle: 0.789,
 
                               /// = 45 deg in radians
                               child: Icon(
                                 FluentIcons.ruler_24_regular,
-                                color: isDarkMode
-                                    ? Colors.white
-                                    : theme.colorScheme.primary,
+                                color:
+                                    isDarkMode
+                                        ? Colors.white
+                                        : theme.colorScheme.primary,
                               ),
                             ),
                           ),
@@ -172,21 +178,25 @@ class ProfileScreen extends ConsumerWidget {
                               context.pushNamed(ProfileVitalsInfoScreen.id);
                             },
                             label: "Weight",
-                            value: "64",
-                            unit: " kg",
-                            color: isDarkMode
-                                ? Colors.white
-                                : theme.colorScheme.error,
-                            backgroundColor: isDarkMode
-                                ? theme.colorScheme.error
-                                : theme.colorScheme.errorContainer,
+                            value: userProfile.weight.toString(),
+                            unit:
+                                " kg", //Todo: replace this with unit preferences
+                            color:
+                                isDarkMode
+                                    ? Colors.white
+                                    : theme.colorScheme.error,
+                            backgroundColor:
+                                isDarkMode
+                                    ? theme.colorScheme.error
+                                    : theme.colorScheme.errorContainer,
                             icon: SvgPicture.asset(
                               "assets/svg/weight.svg",
                               colorFilter: ColorFilter.mode(
-                                  isDarkMode
-                                      ? Colors.white
-                                      : theme.colorScheme.error,
-                                  BlendMode.srcIn),
+                                isDarkMode
+                                    ? Colors.white
+                                    : theme.colorScheme.error,
+                                BlendMode.srcIn,
+                              ),
                             ),
                           ),
                         ),
@@ -203,19 +213,22 @@ class ProfileScreen extends ConsumerWidget {
                             label: "Water",
                             value: "1200",
                             unit: " ml",
-                            backgroundColor: isDarkMode
-                                ? theme.colorScheme.tertiary
-                                : AppColours.blue95,
-                            color: isDarkMode
-                                ? Colors.white
-                                : theme.colorScheme.tertiary,
+                            backgroundColor:
+                                isDarkMode
+                                    ? theme.colorScheme.tertiary
+                                    : AppColours.blue95,
+                            color:
+                                isDarkMode
+                                    ? Colors.white
+                                    : theme.colorScheme.tertiary,
                             icon: SvgPicture.asset(
                               "assets/svg/droplet-alt.svg",
                               colorFilter: ColorFilter.mode(
-                                  isDarkMode
-                                      ? Colors.white
-                                      : theme.colorScheme.tertiary,
-                                  BlendMode.srcIn),
+                                isDarkMode
+                                    ? Colors.white
+                                    : theme.colorScheme.tertiary,
+                                BlendMode.srcIn,
+                              ),
                             ),
                           ),
                         ),
@@ -224,21 +237,24 @@ class ProfileScreen extends ConsumerWidget {
                           child: VitalsItemCard(
                             onPressed: () {},
                             label: "BMI",
-                            value: "19.8",
+                            value: userProfile.bmi!.toStringAsFixed(2),
                             // unit: " normal",
-                            color: isDarkMode
-                                ? Colors.white
-                                : theme.colorScheme.secondary,
-                            backgroundColor: isDarkMode
-                                ? theme.colorScheme.secondary
-                                : theme.colorScheme.secondaryContainer,
+                            color:
+                                isDarkMode
+                                    ? Colors.white
+                                    : theme.colorScheme.secondary,
+                            backgroundColor:
+                                isDarkMode
+                                    ? theme.colorScheme.secondary
+                                    : theme.colorScheme.secondaryContainer,
                             icon: SvgPicture.asset(
                               "assets/svg/dna.svg",
                               colorFilter: ColorFilter.mode(
-                                  isDarkMode
-                                      ? Colors.white
-                                      : theme.colorScheme.secondary,
-                                  BlendMode.srcIn),
+                                isDarkMode
+                                    ? Colors.white
+                                    : theme.colorScheme.secondary,
+                                BlendMode.srcIn,
+                              ),
                             ),
                           ),
                         ),
@@ -249,8 +265,9 @@ class ProfileScreen extends ConsumerWidget {
                       children: [
                         Text(
                           "Allergies",
-                          style: theme.textTheme.titleMedium!
-                              .copyWith(fontWeight: FontWeight.w700),
+                          style: theme.textTheme.titleMedium!.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                         const Spacer(),
                         IconButton(
@@ -261,75 +278,65 @@ class ProfileScreen extends ConsumerWidget {
                             FluentIcons.add_24_regular,
                             color: theme.colorScheme.primary,
                           ),
-                        )
+                        ),
                       ],
                     ),
-                    const Wrap(
+
+                     if(userProfile.allergies?.isNotEmpty ?? false)
+                       Wrap(
                       alignment: WrapAlignment.start,
                       runAlignment: WrapAlignment.start,
                       spacing: 8,
                       runSpacing: -4,
-                      children: [
-                        AppChip(
-                            chipType: ChipType.info, label: "Mango"),
-                        AppChip(
-                            chipType: ChipType.info, label: "Peanuts"),
-                        AppChip(
+                      children:
+                        List.generate(userProfile.allergies?.length ?? 0, (
+                          index,
+                        ) {
+                          return AppChip(
                             chipType: ChipType.info,
-                            label: "Groundnuts"),
-                        AppChip(
-                            chipType: ChipType.info, label: "Mango"),
-                        AppChip(
-                            chipType: ChipType.info, label: "Mango"),
-                        AppChip(
-                            chipType: ChipType.info, label: "Mango"),
-                      ],
+                            label: userProfile.allergies![index],
+                          );
+                        }),
                     ),
                     const Gap(16),
                     Row(
                       children: [
                         Text(
                           "Medical Conditions",
-                          style: theme.textTheme.titleMedium!
-                              .copyWith(fontWeight: FontWeight.w700),
+                          style: theme.textTheme.titleMedium!.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                         const Spacer(),
                         IconButton(
                           onPressed: () {
-                            ///Todo: Add Medical Condtions Method
+                            ///Todo: Add Medical Conditions Method
                           },
                           icon: Icon(
                             FluentIcons.add_24_regular,
                             color: theme.colorScheme.primary,
                           ),
-                        )
+                        ),
                       ],
                     ),
-                    const Wrap(
+                    Wrap(
                       alignment: WrapAlignment.start,
                       runAlignment: WrapAlignment.start,
                       spacing: 8,
                       runSpacing: -4,
-                      children: [
-                        AppChip(
-                            chipType: ChipType.info, label: "Mango"),
-                        AppChip(
-                            chipType: ChipType.info, label: "Peanuts"),
-                        AppChip(
-                            chipType: ChipType.info,
-                            label: "Groundnuts"),
-                        AppChip(
-                            chipType: ChipType.info, label: "Mango"),
-                        AppChip(
-                            chipType: ChipType.info, label: "Mango"),
-                        AppChip(
-                            chipType: ChipType.info, label: "Mango"),
-                      ],
+                      children:    List.generate(userProfile.medicalConditions?.length ?? 0, (
+                          index,
+                          ) {
+                        return AppChip(
+                          chipType: ChipType.info,
+                          label: userProfile.medicalConditions![index],
+                        );
+                      }),
                     ),
                     const Gap(64),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
