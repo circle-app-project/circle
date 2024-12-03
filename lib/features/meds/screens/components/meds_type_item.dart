@@ -151,6 +151,18 @@ class _MedsTypeItemState extends State<MedsTypeItem>
         _iconPath = "assets/svg/plus.svg";
         _label = "Custom";
         break;
+
+      case MedicationType.unknown:
+        _backgroundColor = !isDarkMode
+            ? (widget.isSelected
+            ? AppColours.purple90
+            : AppColours.purple95)
+            : AppColours.purple20;
+        _color =
+        !isDarkMode ? theme.colorScheme.primary : AppColours.purple90;
+        _iconPath = "assets/svg/plus.svg";
+        _label = "Unknown";
+        break;
     }
 
     return Column(
