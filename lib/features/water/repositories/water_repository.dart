@@ -60,7 +60,7 @@ class WaterRepository {
 
       return otherLogs;
     } else {
-      log("Log data doesn't exist from Remote");
+      log("Log data doesn't exist from Remote", name: "WATER REPOSITORY");
       return [];
       // throw Exception("Log data doesn't exist");
     }
