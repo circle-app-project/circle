@@ -30,6 +30,7 @@ class WaterLog extends Equatable {
     Units? unit,
   }) {
     return WaterLog(
+      id: id,
       timestamp: timestamp ?? this.timestamp,
       value: value ?? this.value,
       unit: unit ?? this.unit,

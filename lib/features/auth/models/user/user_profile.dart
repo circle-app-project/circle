@@ -5,7 +5,8 @@ import '../../../../core/enums.dart';
 
 @Entity()
 // ignore: must_be_immutable
-class UserProfile extends Equatable {
+class UserProfile
+    extends Equatable {
   ///Profile Info
   @Id()
   int id;
@@ -31,7 +32,6 @@ class UserProfile extends Equatable {
   List<String>? allergies;
   List<String>? medicalConditions;
 
-
   //Object Box Type Converters
   String? get dbGender => gender?.name;
   String? get dbGenotype => genotype?.name;
@@ -52,29 +52,29 @@ class UserProfile extends Equatable {
     }
   }
 
-  UserProfile(
-      {
-      //Profile Info
-      this.id = 0,
-      this.uid,
-      this.gender,
-      this.name,
-      this.age,
-      this.displayName,
-      this.email,
-      this.photoUrl,
-      this.phone,
+  UserProfile({
+    //Profile Info
+    this.id = 0,
+    this.uid,
+    this.gender,
+    this.name,
+    this.age,
+    this.displayName,
+    this.email,
+    this.photoUrl,
+    this.phone,
 
-      //Health Info
-      this.crisisFrequency,
-      this.painSeverity,
-      this.genotype,
-      this.height,
-      this.weight,
-      this.bmi,
-      this.bloodGroup,
-      this.allergies,
-      this.medicalConditions});
+    //Health Info
+    this.crisisFrequency,
+    this.painSeverity,
+    this.genotype,
+    this.height,
+    this.weight,
+    this.bmi,
+    this.bloodGroup,
+    this.allergies,
+    this.medicalConditions,
+  });
 
   UserProfile copyWith({
     String? uid,
@@ -187,11 +187,11 @@ class UserProfile extends Equatable {
   }
 
   //-------------Empty----------//
-@Transient()
+  @Transient()
   static UserProfile empty = UserProfile();
-@Transient()
+  @Transient()
   bool get isEmpty => this == UserProfile.empty || this == UserProfile();
-@Transient()
+  @Transient()
   bool get isNotEmpty => this != UserProfile.empty;
 
   @override
@@ -210,17 +210,17 @@ class UserProfile extends Equatable {
   @Transient()
   List<Object?> get props => [
     id,
-        uid,
-        name,
-        displayName,
-        age,
-        gender,
-        genotype,
-        height,
-        weight,
-        bmi,
-        bloodGroup,
-        allergies,
-        medicalConditions,
-      ];
+    uid,
+    name,
+    displayName,
+    age,
+    gender,
+    genotype,
+    height,
+    weight,
+    bmi,
+    bloodGroup,
+    allergies,
+    medicalConditions,
+  ];
 }

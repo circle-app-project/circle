@@ -44,6 +44,7 @@ class WaterPreferences extends Equatable {
     double? defaultLogValue,
   }) {
     return WaterPreferences(
+      id: id,
       defaultDailyGoal: defaultDailyGoal ?? this.defaultDailyGoal,
       unit: unit ?? this.unit,
       defaultLogValue: defaultLogValue ?? this.defaultLogValue,
