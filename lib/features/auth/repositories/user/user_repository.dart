@@ -51,6 +51,7 @@ class UserRepository {
     });
   }
 
+  ///Todo: Move this logic to the User Service for clear seperations of concerns
   Future<AppUser> _getRemoteUser(String uid) async {
     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await _userService
         .getUserData(uid);

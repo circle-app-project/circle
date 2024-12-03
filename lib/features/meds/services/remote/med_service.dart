@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../models/medication.dart';
@@ -7,15 +9,29 @@ class MedService {
 
   //Get User Data
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> getMedication(
-    String uid,
-  ) async {
+  Future<List<Medication>> getMedications(String uid) async {
     DocumentSnapshot<Map<String, dynamic>> snapshot =
         await firestore.collection('meds').doc(uid).get();
-    return snapshot;
+    if (snapshot.exists &&
+        snapshot.data() != null &&
+        snapshot.data()!.isNotEmpty) {
+      List<Medication> medications =
+          snapshot
+              .data()!["medication"]
+              .map((element) => Medication.fromMap(element))
+              .toList();
+      return medications;
+    } else {
+      log(
+        "Medication data doesn't exist from Remote",
+        name: "MEDICATION SERVICE",
+      );
+      throw Exception("No Medications Found");
+    }
   }
 
   Future<void> addMedication({required user, required Medication med}) async {
+    log("Adding Medication to remote", name: "MEDICATION SERVICE");
     await firestore.collection('meds').doc(user.uid).set({
       "medication": FieldValue.arrayUnion([med.toMap()]),
     }, SetOptions(merge: true));
@@ -72,9 +88,7 @@ class MedService {
     });
   }
 
-  Future<void> clearMedication({required user, required Medication med}) async {
-    await firestore.collection('meds').doc(user.uid).update({
-      "medication": FieldValue.arrayRemove([med.toMap()]),
-    });
+  Future<void> clearMedication({required user}) async {
+    await firestore.collection('meds').doc(user.uid).delete();
   }
 }
