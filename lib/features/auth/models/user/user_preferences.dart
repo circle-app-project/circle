@@ -40,6 +40,9 @@ class UserPreferences extends Equatable {
   //ObjectBox enum converters
   //themMode
   String? get dbThemeMode => themeMode?.name;
+  String? get dbVolumeUnit => volumeUnit?.name;
+  String? get dbLengthUnit => lengthUnit?.name;
+  String? get dbMassUnit => massUnit?.name;
 
   set dbThemeMode(String? value) {
     if (value != null) {
@@ -48,10 +51,6 @@ class UserPreferences extends Equatable {
       themeMode == null;
     }
   }
-
-  String? get dbVolumeUnit => volumeUnit?.name;
-  String? get dbLengthUnit => lengthUnit?.name;
-  String? get dbMassUnit => massUnit?.name;
 
   set dbVolumeUnit(String? value) {
     if (value != null) {

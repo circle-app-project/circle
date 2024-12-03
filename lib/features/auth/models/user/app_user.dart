@@ -96,6 +96,7 @@ class AppUser extends Equatable {
     }
   }
 
+
   //-------Empty--------//
   @Transient()
   static AppUser empty = AppUser(

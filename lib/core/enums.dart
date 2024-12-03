@@ -25,7 +25,8 @@ enum MedicationType {
   liquids,
   inhaler,
   creamsOrGels,
-  custom
+  custom,
+  unknown,
 }
 
 enum Units {
