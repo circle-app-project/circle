@@ -63,7 +63,7 @@ class UserLocalService {
     }
 
     // Then save user
-    return _userBox.putAndGetAsync(
+    return await _userBox.putAndGetAsync(
       user,
       mode: user.id == 0 ? PutMode.put : PutMode.update,
     );
