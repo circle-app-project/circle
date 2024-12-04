@@ -71,7 +71,7 @@ class _ProfileMedicalInfoScreenState
     AppUser user = ref.watch(userProvider).value!;
     UserProfile userProfile = user.profile.target ?? UserProfile.empty;
     UserPreferences userPreferences =
-        user.preferences.target ?? UserPreferences.empty;
+        user.preferences?? UserPreferences.empty;
 
     return Scaffold(
       body: Padding(

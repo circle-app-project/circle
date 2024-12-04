@@ -46,7 +46,7 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
     await userNotifier.getSelfUserData();
     final AppUser user = ref.watch(userProvider).value!;
     UserPreferences userPreferences =
-        user.preferences.target ?? UserPreferences.empty;
+        user.preferences ?? UserPreferences.empty;
     final bool isFirstTime = userPreferences.isFirstTime;
     final bool isOnboardingComplete = userPreferences.isOnboarded;
     final bool isLoggedIn = user.isNotEmpty;

@@ -37,8 +37,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     final userNotifier = ref.read(userProvider.notifier);
 
     AppUser user = ref.watch(userProvider).value!;
-    UserPreferences userPreferences =
-        user.preferences.target ?? UserPreferences.empty;
+    UserPreferences? userPreferences =
+        user.preferences ?? UserPreferences.empty;
 
     return Scaffold(
       body: SafeArea(

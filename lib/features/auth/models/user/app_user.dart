@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:objectbox/objectbox.dart';
@@ -6,7 +8,8 @@ import '../../auth.dart';
 
 @Entity()
 // ignore: must_be_immutable
-class AppUser extends Equatable {
+class AppUser
+    extends Equatable {
   @Id()
   int id;
   @Unique(onConflict: ConflictStrategy.replace)
@@ -17,7 +20,20 @@ class AppUser extends Equatable {
   final bool isEmailVerified;
   final bool? isPhoneVerified;
   final ToOne<UserProfile> profile = ToOne<UserProfile>();
-  final ToOne<UserPreferences> preferences = ToOne<UserPreferences>();
+
+  @Transient()
+  UserPreferences? preferences;
+
+  String get dbPreferences => jsonEncode(preferences?.toMap());
+
+  set dbPreferences(String? jsonString) {
+    if (jsonString != null) {
+      final Map<String, dynamic> preferencesMap = jsonDecode(jsonString);
+      preferences = UserPreferences.fromMap(data: preferencesMap);
+    } else {
+      preferences = null;
+    }
+  }
 
   AppUser({
     this.id = 0,
@@ -27,6 +43,7 @@ class AppUser extends Equatable {
     required this.isEmailVerified,
     this.isPhoneVerified,
     this.photoUrl,
+    this.preferences,
   });
 
   //-------copyWith--------//
@@ -48,9 +65,9 @@ class AppUser extends Equatable {
       isEmailVerified: isEmailVerified ?? this.isEmailVerified,
       isPhoneVerified: isPhoneVerified ?? this.isPhoneVerified,
       isAnonymous: isAnonymous ?? this.isAnonymous,
+      preferences: preferences ?? this.preferences,
     );
     user.profile.target = profile ?? this.profile.target;
-    user.preferences.target = preferences ?? this.preferences.target;
     return user;
   }
 
@@ -64,7 +81,7 @@ class AppUser extends Equatable {
       "isEmailVerified": isEmailVerified,
       "isPhoneVerified": isPhoneVerified,
       "profile": profile.target!.toMap(),
-      "preferences": preferences.target!.toMap(),
+      "preferences": preferences?.toMap(),
     };
 
     return data;
@@ -79,6 +96,7 @@ class AppUser extends Equatable {
       isAnonymous: data["isAnonymous"],
       isEmailVerified: data["isEmailVerified"],
       isPhoneVerified: data["isPhoneVerified"],
+      preferences: null,
     );
   }
 
@@ -97,15 +115,15 @@ class AppUser extends Equatable {
     }
   }
 
-
   //-------Empty--------//
   @Transient()
   static AppUser empty = AppUser(
     email: "",
-    isAnonymous: false,
     uid: "",
+    isAnonymous: false,
     isEmailVerified: false,
     isPhoneVerified: false,
+    preferences: null,
   );
 
   @Transient()
@@ -140,19 +158,6 @@ class AppUser extends Equatable {
     preferences,
   ];
 
-  // String getDisplayName() {
-  //   UserProfile? uProfile = profile.target;
-  //   if (uProfile != null) {
-  //     if (uProfile.displayName != null) {
-  //       return uProfile.displayName!.split(" ").first;
-  //     } else {
-  //       if (uProfile.name != null) {
-  //         return uProfile.name!.split(" ").first;
-  //       }
-  //     }
-  //   }
-  //   return email;
-  // }
 
   String getDisplayName() {
     // Attempt to retrieve the UserProfile object
@@ -171,5 +176,4 @@ class AppUser extends Equatable {
     // Final fallback to email
     return email;
   }
-
 }
