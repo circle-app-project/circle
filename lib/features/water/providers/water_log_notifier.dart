@@ -44,10 +44,10 @@ class WaterLogNotifier extends AsyncNotifier<List<WaterLog>> {
             end: end ??
                 DateTime.now().copyWith(hour: 23, minute: 59, second: 59));
     response.fold((failure) {
-      log("RETURNED FAILURE");
-      state = AsyncValue.error(failure, StackTrace.current);
+  log("RETURNED FAILURE", name: "WATER LOG NOTIFIER");
+      state = AsyncValue.error(failure, failure.stackTrace ?? StackTrace.current);
     }, (waterLogs) {
-      log("RETURNED SUCCESS");
+           log("RETURNED SUCCESS", name: "WATER LOG NOTIFIER");
       state = AsyncValue.data(waterLogs);
     });
   }
@@ -90,16 +90,17 @@ class WaterLogNotifier extends AsyncNotifier<List<WaterLog>> {
       {required WaterLog entry,
       required AppUser user,
       bool updateRemote = false}) async {
+    log("ADDING WATER LOG", name: "WATER LOG NOTIFIER");
     //print("Adding log");
     Stopwatch stopwatch = Stopwatch()..start();
     state = const AsyncValue.loading();
     final Either<Failure, void> response = await _waterRepository.addWaterLog(
         log: entry, user: user, updateRemote: updateRemote);
     response.fold((failure) {
-      log("RETURNED FAILURE");
-      state = AsyncValue.error(failure, StackTrace.current);
+      log("RETURNED FAILURE", name: "WATER LOG NOTIFIER");
+      state = AsyncValue.error(failure, failure.stackTrace ?? StackTrace.current);
     }, (empty) async {
-      log("RETURNED SUCCESS");
+           log("RETURNED FAILURE", name: "WATER LOG NOTIFIER");
       await getWaterLogs();
       //  print("Added stopwatch and got updated logs");
       stopwatch.stop();
@@ -112,14 +113,15 @@ class WaterLogNotifier extends AsyncNotifier<List<WaterLog>> {
     required AppUser user,
     bool updateRemote = false,
   }) async {
+    log("UPDATING WATER LOG", name: "WATER LOG NOTIFIER");
     state = const AsyncValue.loading();
     final Either<Failure, void> response = await _waterRepository.addWaterLog(
         log: entry, user: user, updateRemote: updateRemote);
     response.fold((failure) {
-      log("RETURNED FAILURE");
-      state = AsyncValue.error(failure, StackTrace.current);
+           log("RETURNED FAILURE", name: "WATER LOG NOTIFIER");
+      state = AsyncValue.error(failure, failure.stackTrace ?? StackTrace.current);
     }, (empty) async {
-      log("RETURNED SUCCESS");
+           log("RETURNED FAILURE", name: "WATER LOG NOTIFIER");
       await getWaterLogs();
     });
   }
@@ -129,14 +131,15 @@ class WaterLogNotifier extends AsyncNotifier<List<WaterLog>> {
     required AppUser user,
     bool updateRemote = false,
   }) async {
+    log("DELETING WATER LOG", name: "WATER LOG NOTIFIER");
     state = const AsyncValue.loading();
     final Either<Failure, void> response = await _waterRepository.deleteLog(
         log: entry, user: user, updateRemote: updateRemote);
     response.fold((failure) {
-      log("RETURNED FAILURE");
-      state = AsyncValue.error(failure, StackTrace.current);
+           log("RETURNED FAILURE", name: "WATER LOG NOTIFIER");
+      state = AsyncValue.error(failure, failure.stackTrace ?? StackTrace.current);
     }, (empty) async {
-      log("RETURNED SUCCESS");
+           log("RETURNED FAILURE", name: "WATER LOG NOTIFIER");
       await getWaterLogs();
     });
   }
@@ -145,14 +148,15 @@ class WaterLogNotifier extends AsyncNotifier<List<WaterLog>> {
     required AppUser user,
     bool updateRemote = false,
   }) async {
+    log("CLEARING WATER LOG", name: "WATER LOG NOTIFIER");
     state = const AsyncValue.loading();
     final Either<Failure, void> response =
         await _waterRepository.clear(user: user, updateRemote: updateRemote);
     response.fold((failure) {
-      log("RETURNED FAILURE");
-      state = AsyncValue.error(failure, StackTrace.current);
+           log("RETURNED FAILURE", name: "WATER LOG NOTIFIER");
+      state = AsyncValue.error(failure, failure.stackTrace ?? StackTrace.current);
     }, (empty) async {
-      log("RETURNED SUCCESS");
+           log("RETURNED FAILURE", name: "WATER LOG NOTIFIER");
       await getWaterLogs();
     });
   }

@@ -14,7 +14,7 @@ class WaterLog extends Equatable {
   Units unit;
 
   //Object box type converter
-  String get dbUnit => unit.symbol;
+  String get dbUnit => unit.name;
   set dbUnit(String value) => unit = Units.values.byName(value);
 
   WaterLog({
