@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "497391679746-j7vjt0dv240iuj4dffurtracotrnhfr9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "co.circleapp.app",
+            "certificate_hash": "1619f82280c480ed20519943dbd9c24013f896e7"
+          }
+        },
+        {
           "client_id": "497391679746-le69ph2o13p5daeenlpr77dlddk9usff.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
