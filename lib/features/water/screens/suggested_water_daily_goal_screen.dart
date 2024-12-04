@@ -30,7 +30,7 @@ class _SuggestedWaterDailyGoalScreenState
 
     WaterPrefsNotifier waterPrefsNotifier =
         ref.watch(waterPreferencesProvider.notifier);
-    WaterPreferences preferences = ref.watch(waterPreferencesProvider).value!;
+    WaterPreferences? preferences = ref.watch(waterPreferencesProvider).value;
     AppUser user = ref.watch(userProvider).value!;
 
     return Scaffold(
@@ -109,12 +109,11 @@ class _SuggestedWaterDailyGoalScreenState
                 AppButton(
                   isLoading: ref.watch(waterPreferencesProvider).isLoading,
                   onPressed: () async {
-                    preferences = preferences.copyWith(
+                    preferences = preferences?.copyWith(
                       defaultDailyGoal: defaultDailyGoal,
                     );
-
                     await waterPrefsNotifier.addWaterPreferences(
-                        preferences: preferences, user: user);
+                        preferences: preferences!, user: user);
                     if (context.mounted) {
                       if (waterPrefsNotifier.isSuccessful) {
                         showCustomSnackBar(

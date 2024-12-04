@@ -88,38 +88,38 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    const Gap(16),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(24),
-                        color:
-                            isDarkMode
-                                ? theme.cardColor
-                                : theme.colorScheme.secondaryContainer,
-                      ),
-                      child: Row(
-                        children: [
-                          const Expanded(
-                            child: Text(
-                              "Your water intake looks good, Good Job!",
-                            ),
-                          ),
-                          const Gap(16),
-                          Container(
-                            height: 72,
-                            width: 72,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color:
-                                  isDarkMode
-                                      ? AppColours.neutral30
-                                      : AppColours.orange90,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                   // const Gap(16),
+                    // Container(
+                    //   padding: const EdgeInsets.all(16),
+                    //   decoration: BoxDecoration(
+                    //     borderRadius: BorderRadius.circular(24),
+                    //     color:
+                    //         isDarkMode
+                    //             ? theme.cardColor
+                    //             : theme.colorScheme.secondaryContainer,
+                    //   ),
+                    //   child: Row(
+                    //     children: [
+                    //       const Expanded(
+                    //         child: Text(
+                    //           "Your water intake looks good, Good Job!",
+                    //         ),
+                    //       ),
+                    //       const Gap(16),
+                    //       Container(
+                    //         height: 72,
+                    //         width: 72,
+                    //         decoration: BoxDecoration(
+                    //           shape: BoxShape.circle,
+                    //           color:
+                    //               isDarkMode
+                    //                   ? AppColours.neutral30
+                    //                   : AppColours.orange90,
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     const Gap(24),
                     Row(
                       children: [
