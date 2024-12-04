@@ -37,7 +37,7 @@ class WaterPrefsNotifier extends AsyncNotifier<WaterPreferences> {
         .getWaterPreferences(user: user, getFromRemote: getFromRemote);
     response.fold((failure) {
       log("RETURNED FAILURE");
-      state = AsyncValue.error(failure, StackTrace.current);
+      state = AsyncValue.error(failure, failure.stackTrace ?? StackTrace.current);
     }, (prefs) {
       log("RETURNED SUCCESS");
       _preferences = prefs;
@@ -56,7 +56,7 @@ class WaterPrefsNotifier extends AsyncNotifier<WaterPreferences> {
             preferences: preferences, user: user, updateRemote: updateRemote);
     response.fold((failure) {
       log("RETURNED FAILURE");
-      state = AsyncValue.error(failure, StackTrace.current);
+      state = AsyncValue.error(failure, failure.stackTrace ?? StackTrace.current);
     }, (empty) async {
       log("RETURNED SUCCESS");
       await getWaterPreferences();
@@ -74,7 +74,7 @@ class WaterPrefsNotifier extends AsyncNotifier<WaterPreferences> {
             preferences: preferences, user: user, updateRemote: updateRemote);
     response.fold((failure) {
       log("RETURNED FAILURE");
-      state = AsyncValue.error(failure, StackTrace.current);
+      state = AsyncValue.error(failure, failure.stackTrace ?? StackTrace.current);
     }, (empty) async {
       log("RETURNED SUCCESS");
       await getWaterPreferences();
@@ -91,7 +91,7 @@ class WaterPrefsNotifier extends AsyncNotifier<WaterPreferences> {
         .deletePreferences(user: user, updateRemote: updateRemote);
     response.fold((failure) {
       log("RETURNED FAILURE");
-      state = AsyncValue.error(failure, StackTrace.current);
+      state = AsyncValue.error(failure, failure.stackTrace ?? StackTrace.current);
     }, (empty) async {
       log("RETURNED SUCCESS");
       await getWaterPreferences();
