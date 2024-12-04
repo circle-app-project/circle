@@ -53,8 +53,7 @@ class _ProfileMedicalInfoScreenState
     });
 
     Future.microtask(() async {
-      await ref.watch(userProvider.notifier).getCurrentUserData();
-      await ref.watch(userProvider.notifier).getCurrentUserData();
+      await ref.watch(userProvider.notifier).getSelfUserData();
       AppUser user = ref.watch(userProvider).value!;
       UserProfile? userProfile = user.profile.target;
       if(userProfile != null){

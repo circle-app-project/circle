@@ -10,12 +10,13 @@ class CustomAppBar extends StatelessWidget {
   final bool? showTitle;
   final bool? showBackButton;
 
-  const CustomAppBar(
-      {super.key,
-      required this.pageTitle,
-      this.actions,
-      this.showBackButton = true,
-      this.showTitle = true});
+  const CustomAppBar({
+    super.key,
+    required this.pageTitle,
+    this.actions,
+    this.showBackButton = true,
+    this.showTitle = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,39 +28,28 @@ class CustomAppBar extends StatelessWidget {
         const Gap(48),
         Row(
           children: [
-            Visibility(
-              visible: showBackButton!,
-              child: IconButton(
+
+            if(showBackButton!)
+              IconButton(
                 padding: EdgeInsets.zero,
+                alignment: Alignment.centerLeft,
                 onPressed: () {
                   HapticFeedback.mediumImpact();
                   Feedback.forTap(context);
                   context.pop();
                 },
-                icon:Icon(FluentIcons.arrow_left_24_regular),
+                icon: Icon(FluentIcons.arrow_left_24_regular),
               ),
-            ),
             const Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Visibility(
-                visible: actions != null ? true : false,
-                child: Row(
-                  children: actions ?? [],
-                ),
-              ),
-            )
+            Visibility(
+              visible: actions != null ? true : false,
+              child: Row(children: actions ?? []),
+            ),
           ],
         ),
-        Visibility(
-          visible: showTitle!,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(pageTitle,
-                style: theme.textTheme.headlineMedium),
-          ),
-        ),
-        const Gap(48),
+        if (showTitle!) Text(pageTitle, style: theme.textTheme.headlineMedium),
+
+        const Gap(32),
       ],
     );
   }

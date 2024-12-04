@@ -22,6 +22,7 @@ class UserPreferences extends Equatable {
   //Water Preferences
   @Id()
   int id;
+  @Unique(onConflict: ConflictStrategy.replace)
   final String? uid;
   final bool isFirstTime;
   final bool isOnboarded;

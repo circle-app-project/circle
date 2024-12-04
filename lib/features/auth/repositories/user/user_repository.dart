@@ -21,33 +21,37 @@ class UserRepository {
        _userLocalService = userLocalService,
        _userService = userService;
 
-  FutureEither<AppUser> getCurrentUserData({bool forceRefresh = false}) async {
+  FutureEither<AppUser> getSelfUserData({bool forceRefresh = false}) async {
     return futureHandler(() async {
-      ///First get from Firebase Auth in order to verify if the user is actually signed in before making any calls to remote;
+      log("GETTING SELF USER", name: "USER REPOSITORY");
 
-      User? currentUser = await _authService.getCurrentUser();
+      // Step 1: Check Firebase Authentication
+      // First get from Firebase Auth in order to verify if the user is actually signed in before making any calls to remote;
+      User? firebaseUser = await _authService.getFirebaseCurrentUser();
 
-      if (currentUser == null) {
-        ///If user is not signed in, return an empty class
-        log("USER IS NOT SIGNED IN", name: "FIREBASE AUTH");
+      if (firebaseUser == null) {
+        // f user is not signed in, return an empty class
+        log("USER IS NOT SIGNED IN. Deleting local user data", name: "FIREBASE AUTH");
         _userLocalService.deleteUser();
         return AppUser.empty;
       }
 
+      // Step 2: Force refresh from remote if requested
       if (forceRefresh) {
         log("FORCE REFRESHING FROM REMOTE", name: "USER REPOSITORY");
-        return await _getRemoteUser(currentUser.uid);
+        return await _getRemoteUser(firebaseUser.uid);
       }
 
-      AppUser localUser = _userLocalService.getUser();
-      if (localUser.isNotEmpty) {
+      // Step 3: Check local database for user data
+      AppUser? localUser = _userLocalService.getUserByUid(firebaseUser.uid);
+      if (localUser!=null && localUser.isNotEmpty) {
         log("LOCAL USER FOUND", name: "USER LOCAL SERVICE");
         return localUser;
-      } else {
-        log("LOCAL USER IS EMPTY", name: "USER LOCAL SERVICE");
-        _userLocalService.deleteUser();
-        return AppUser.empty;
       }
+
+      // Step 4: Fetch remote user as fallback if local user is empty
+      log("LOCAL USER IS EMPTY. Attempting remote fetch...", name: "USER REPOSITORY");
+      return await _getRemoteUser(firebaseUser.uid);
     });
   }
 
@@ -60,10 +64,12 @@ class UserRepository {
         documentSnapshot.data() != null &&
         documentSnapshot.data()!.isNotEmpty) {
       AppUser remoteUser = AppUser.fromMap(data: documentSnapshot.data()!);
-      _userLocalService.putAndGetUser(remoteUser);
+     await _userLocalService.putAndGetUser(remoteUser);
       return remoteUser;
     } else {
-      throw Exception("User data doesn't exist");
+      log("FAILED TO FETCH REMOTE USER: USER DATA DOESN'T EXIST", name: "USER REPOSITORY");
+      _userLocalService.deleteUser();
+      return AppUser.empty;
     }
   }
 

@@ -10,6 +10,7 @@ class UserProfile
   ///Profile Info
   @Id()
   int id;
+  @Unique(onConflict: ConflictStrategy.replace)
   String? uid;
   @Transient()
   Gender? gender;
