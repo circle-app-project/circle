@@ -34,8 +34,8 @@ class _ProfileVitalsInfoScreenState
       await ref.watch(userProvider.notifier).getCurrentUserData();
       AppUser user = ref.watch(userProvider).value!;
       UserProfile userProfile = user.profile.target ?? UserProfile.empty;
-      heightController.text = userProfile.height.toString();
-      weightController.text = userProfile.weight.toString();
+      heightController.text = userProfile.height!=null ? userProfile.height.toString() : "";
+      weightController.text = userProfile.weight!=null ? userProfile.weight.toString() : "";
 
       if (userProfile.genotype != null) {
         setState(() {
@@ -66,104 +66,95 @@ class _ProfileVitalsInfoScreenState
           height: MediaQuery.sizeOf(context).height,
           child: Form(
             key: _formKey,
-            child: Column(
-              children: [
-                CustomAppBar(
-                  pageTitle:
-                      widget.isEditing! ? "Edit Vitals" : "Personal\nInfo",
-                  actions: !widget.isEditing!
-                      ? [
-                          AppButton(
-                            isChipButton: true,
-                            onPressed: () {
-                              //Todo: Skip Page
-                            },
-                            label: "Skip",
-                            buttonType: ButtonType.text,
-                          )
-                        ]
-                      : null,
-                ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  CustomAppBar(
+                    pageTitle:
+                        widget.isEditing! ? "Edit Vitals" : "Vitals Info",
+                    actions: !widget.isEditing!
+                        ? [
+                            AppButton(
+                              isChipButton: true,
+                              onPressed: () {
+                                //Todo: Skip Page
+                              },
+                              label: "Skip",
+                              buttonType: ButtonType.text,
+                            )
+                          ]
+                        : null,
+                  ),
 
-                ///Content
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+                  ///Content
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            "assets/svg/ruler.svg",
-                            colorFilter: ColorFilter.mode(
-                                theme.colorScheme.primary, BlendMode.srcIn),
-                          ),
-                          const Gap(4),
-                          Text("Your Height",
-                              style: theme.textTheme.bodyMedium),
-                        ],
+                      SvgPicture.asset(
+                        "assets/svg/ruler.svg",
+                        colorFilter: ColorFilter.mode(
+                            theme.colorScheme.primary, BlendMode.srcIn),
                       ),
-                      const Gap(8),
-                      TextFormField(
-                        controller: heightController,
-                        keyboardType: TextInputType.number,
-                        decoration: AppInputDecoration.inputDecoration(context)
-                            .copyWith(hintText: "Height"),
-                      ),
-                      const Gap(24),
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            "assets/svg/weight.svg",
-                            colorFilter: ColorFilter.mode(
-                                theme.colorScheme.primary, BlendMode.srcIn),
-                          ),
-                          const Gap(4),
-                          Text("Your Weight",
-                              style: theme.textTheme.bodyMedium),
-                        ],
-                      ),
-                      const Gap(8),
-                      TextFormField(
-                        controller: weightController,
-                        keyboardType: TextInputType.number,
-                        decoration: AppInputDecoration.inputDecoration(context)
-                            .copyWith(
-                          hintText: "Weight",
-                        ),
-                      ),
-                      const Gap(24),
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            "assets/svg/dna.svg",
-                            colorFilter: ColorFilter.mode(
-                                theme.colorScheme.primary, BlendMode.srcIn),
-                          ),
-                          const Gap(4),
-                          Text("Your Genotype",
-                              style: theme.textTheme.bodyMedium),
-                        ],
-                      ),
-                      const Gap(8),
-                      GenotypeSelector(
-                        onGenotypeSelect: (Genotype genotype) {
-                          setState(() {
-                            selectedGenotype = genotype;
-                          });
-                        },
-                      ),
+                      const Gap(4),
+                      Text("Your Height",
+                          style: theme.textTheme.bodyMedium),
                     ],
                   ),
-                ),
+                  const Gap(8),
+                  TextFormField(
+                    controller: heightController,
+                    keyboardType: TextInputType.number,
+                    decoration: AppInputDecoration.inputDecoration(context)
+                        .copyWith(hintText: "Height"),
+                  ),
+                  const Gap(24),
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        "assets/svg/weight.svg",
+                        colorFilter: ColorFilter.mode(
+                            theme.colorScheme.primary, BlendMode.srcIn),
+                      ),
+                      const Gap(4),
+                      Text("Your Weight",
+                          style: theme.textTheme.bodyMedium),
+                    ],
+                  ),
+                  const Gap(8),
+                  TextFormField(
+                    controller: weightController,
+                    keyboardType: TextInputType.number,
+                    decoration: AppInputDecoration.inputDecoration(context)
+                        .copyWith(
+                      hintText: "Weight",
+                    ),
+                  ),
+                  const Gap(24),
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        "assets/svg/dna.svg",
+                        colorFilter: ColorFilter.mode(
+                            theme.colorScheme.primary, BlendMode.srcIn),
+                      ),
+                      const Gap(4),
+                      Text("Your Genotype",
+                          style: theme.textTheme.bodyMedium),
+                    ],
+                  ),
+                  const Gap(8),
+                  GenotypeSelector(
+                    onGenotypeSelect: (Genotype genotype) {
+                      setState(() {
+                        selectedGenotype = genotype;
+                      });
+                    },
+                  ),
 
-                const Spacer(),
+                  const Spacer(),
 
-                ///Buttons
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: AppButton(
+                  ///Buttons
+                  AppButton(
                       icon: widget.isEditing!
                           ? FluentIcons.checkmark_24_regular
                           : null,
@@ -213,9 +204,9 @@ class _ProfileVitalsInfoScreenState
                         }
                       },
                       label: widget.isEditing! ? "Save" : "Continue"),
-                ),
-                const Gap(64),
-              ],
+                  const Gap(64),
+                ],
+              ),
             ),
           ),
         ),

@@ -47,7 +47,6 @@ class UserNotifier extends AsyncNotifier<AppUser> {
   /// If data exists, it will be updated, if not, it will be added and the updated data with the new id from object box will be returned and set to stata
   Future<void> putUserData(
       {required AppUser user, bool updateRemote = false}) async {
-   // log("ADDING USER DATA TO LOCAL DB", name: "USER NOTIFIER");
     log("PUTTING USER DATA TO LOCAL DB", name: "USER NOTIFIER");
     state = const AsyncValue.loading();
     final Either<Failure, AppUser> response = await _userRepository.addUserData(

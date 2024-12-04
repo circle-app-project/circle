@@ -139,17 +139,36 @@ class AppUser extends Equatable {
     preferences,
   ];
 
+  // String getDisplayName() {
+  //   UserProfile? uProfile = profile.target;
+  //   if (uProfile != null) {
+  //     if (uProfile.displayName != null) {
+  //       return uProfile.displayName!.split(" ").first;
+  //     } else {
+  //       if (uProfile.name != null) {
+  //         return uProfile.name!.split(" ").first;
+  //       }
+  //     }
+  //   }
+  //   return email;
+  // }
+
   String getDisplayName() {
+    // Attempt to retrieve the UserProfile object
     UserProfile? uProfile = profile.target;
+
+    // Check if UserProfile exists
     if (uProfile != null) {
-      if (uProfile.displayName != null) {
+      // Try to get the display name, fallback to the first part of the real name if display name is null
+      if (uProfile.displayName?.isNotEmpty ?? false) {
         return uProfile.displayName!.split(" ").first;
-      } else {
-        if (uProfile.name != null) {
-          return uProfile.name!.split(" ").first;
-        }
+      } else if (uProfile.name?.isNotEmpty ?? false) {
+        return uProfile.name!.split(" ").first;
       }
     }
+
+    // Final fallback to email
     return email;
   }
+
 }
