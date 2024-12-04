@@ -39,13 +39,6 @@ class LocalDatabaseService {
         }
       }
 
-      //Set the user Preferences
-      Box<UserPreferences>? userPreferencesBox = _store?.box<UserPreferences>();
-      if(userPreferencesBox == null){
-        log("USER PREFERENCES BOX IS NULL",  name: "DATABASE SERVICE");
-        log("ADDING PREFRENCES BOX TO DB",  name: "DATABASE SERVICE");
-      }
-
     } catch (e) {
       log("FAILED TO INITIALIZE DATABASE: $e",  name: "DATABASE SERVICE");
       rethrow; // Rethrow so the app knows initialization failed

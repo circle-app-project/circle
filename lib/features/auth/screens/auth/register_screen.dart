@@ -42,7 +42,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final userNotifier = ref.read(userProvider.notifier);
     AppUser user = ref.watch(userProvider).value!;
     UserPreferences userPreferences =
-        user.preferences.target ?? UserPreferences.empty;
+        user.preferences ?? UserPreferences.empty;
 
     return Scaffold(
       body: SafeArea(
