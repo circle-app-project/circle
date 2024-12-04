@@ -168,6 +168,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               email: emailController.text.trim(),
                               password: passwordController.text.trim(),
                             );
+                            await userNotifier.getSelfUserData();
 
                             if (authNotifier.isSuccessful) {
                               if (context.mounted) {

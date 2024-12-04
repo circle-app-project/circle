@@ -43,7 +43,7 @@ class AuthService {
     return _firebaseAuth.authStateChanges();
   }
 
-  Future<User?> getCurrentUser() async {
+  Future<User?> getFirebaseCurrentUser() async {
     return _firebaseAuth.currentUser;
   }
 

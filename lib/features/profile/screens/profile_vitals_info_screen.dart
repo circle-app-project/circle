@@ -31,7 +31,7 @@ class _ProfileVitalsInfoScreenState
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.watch(userProvider.notifier).getCurrentUserData();
+      await ref.watch(userProvider.notifier).getSelfUserData();
       AppUser user = ref.watch(userProvider).value!;
       UserProfile userProfile = user.profile.target ?? UserProfile.empty;
       heightController.text = userProfile.height!=null ? userProfile.height.toString() : "";

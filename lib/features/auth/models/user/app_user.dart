@@ -9,6 +9,7 @@ import '../../auth.dart';
 class AppUser extends Equatable {
   @Id()
   int id;
+  @Unique(onConflict: ConflictStrategy.replace)
   final String uid;
   final String email;
   final String? photoUrl;

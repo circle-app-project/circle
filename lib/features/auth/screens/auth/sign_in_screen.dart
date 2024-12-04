@@ -117,6 +117,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         email: emailController.text.trim(),
                         password: passwordController.text.trim(),
                       );
+                      await userNotifier.getSelfUserData();
 
                       if (authNotifier.isSuccessful) {
                         if (context.mounted) {
