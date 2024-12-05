@@ -23,6 +23,7 @@ class VitalsItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final bool isDarkMode = theme.brightness == Brightness.dark;
 
     return InkWell(
       onTap: onPressed,
@@ -33,7 +34,7 @@ class VitalsItemCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
-            color: backgroundColor ?? theme.colorScheme.primaryContainer),
+            color: backgroundColor ?? (isDarkMode ? theme.colorScheme.surfaceContainerLowest : theme.colorScheme.primaryContainer)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
