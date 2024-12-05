@@ -43,7 +43,10 @@ class UserPreferences extends Equatable {
       "isFirstTime": isFirstTime,
       "isOnboarded": isOnboarded,
       "themeMode": themeMode?.name,
-      "lastUpdated": lastUpdated ?? DateTime.now().toIso8601String(),
+      "lastUpdated":
+          lastUpdated != null && lastUpdated is DateTime
+              ? lastUpdated!.toIso8601String()
+              : DateTime.now().toIso8601String(),
       "unitPreferences":
           unitPreferences != null
               ? unitPreferences?.toMap()
