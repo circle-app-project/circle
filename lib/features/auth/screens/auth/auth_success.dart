@@ -18,7 +18,6 @@ class AuthSuccessScreen extends ConsumerWidget {
     final ThemeData theme = Theme.of(context);
     AppUser user = ref.watch(userProvider).value!;
     String userName = user.getDisplayName();
-
     //Todo: Rearrange animation timing;
     return Scaffold(
       body: Padding(
@@ -30,7 +29,7 @@ class AuthSuccessScreen extends ConsumerWidget {
             const Spacer(),
             Text(
               "Hey there,",
-              style: theme.textTheme.titleLarge,
+              style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.normal, fontSize: 22),
             )
                 .animate()
                 .moveY(
@@ -42,8 +41,8 @@ class AuthSuccessScreen extends ConsumerWidget {
             const Gap(kPadding16),
             Text(
               userName.split(" ").first,
-              style: theme.textTheme.displayLarge!.copyWith(
-                  fontWeight: FontWeight.w700,
+              style: theme.textTheme.displayMedium!.copyWith(
+                  fontWeight: FontWeight.w600,
                   color: theme.colorScheme.primary),
             )
                 .animate(delay: 1000.ms)
@@ -56,7 +55,7 @@ class AuthSuccessScreen extends ConsumerWidget {
             const Gap(kPadding48),
             Text(
               "We're glad you're here!",
-              style: theme.textTheme.titleLarge,
+              style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.normal, fontSize: 22),
             )
                 .animate(delay: 1500.ms)
                 .moveY(

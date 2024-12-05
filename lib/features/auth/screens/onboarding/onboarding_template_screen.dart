@@ -16,11 +16,12 @@ class OnboardingTemplateScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             text,
             style: theme.textTheme.displaySmall!
-                .copyWith(fontWeight: FontWeight.w700, height: 1.2),
+                .copyWith(fontWeight: FontWeight.w300, height: 1.5),
           )
               .animate()
               .moveY(

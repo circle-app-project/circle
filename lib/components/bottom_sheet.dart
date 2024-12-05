@@ -18,9 +18,10 @@ class AppBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final bool isDarkMode = theme.brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-          color: theme.scaffoldBackgroundColor,
+          color: isDarkMode ? theme.colorScheme.surfaceContainerLowest : theme.scaffoldBackgroundColor,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),

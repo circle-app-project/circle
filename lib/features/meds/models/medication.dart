@@ -3,10 +3,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
 
-@Entity()
+//@Entity()
 // ignore: must_be_immutable
-class Medication
-    extends Equatable {
+class Medication extends Equatable {
   /// Todo: Properly Evaluate how to do streaks
   @Id()
   int id;
@@ -14,10 +13,12 @@ class Medication
   final String? description;// Example: "Capsules", "Tablets", etc.
   final double dosage; // In mg or ml depending on medication
   final int frequencyPerDay; // Example: 1, 2, 3 times per day
+  @Transient() //Todo: remove transient
   final List<TimeOfDay> times; // Times of day to take the medication
   final int durationDays; // Number of days to take medication
   final bool isPermanent; // True if the medication is ongoing
   final bool? reminderEnabled;
+  @Transient() //Todo: remove transient
   final TimeOfDay? reminderTime;
   final bool? notificationEnabled;
   final String? notificationMessage;
@@ -31,7 +32,9 @@ class Medication
   Units dosageUnit;
   @Transient()
   MedicationType type;
-  final ToMany<MedicationStreak> streaks = ToMany<MedicationStreak>();
+ // final ToMany<MedicationStreak> streaks = ToMany<MedicationStreak>();
+  @Transient()
+  final MedicationStreak? streaks;
 
   //-----Object Box Type Converters-----//
   String? get dbType => type.name;
@@ -72,6 +75,7 @@ class Medication
     this.notificationMessage,
     this.warningMessages,
     this.streakCount,
+    this.streaks,
   });
 
   // Copy With
@@ -115,7 +119,7 @@ class Medication
       streakCount: streakCount ?? this.streakCount,
     );
 
-    medication.streaks.addAll(streaks ?? this.streaks);
+//    medication.streaks.addAll(streaks ?? this.streaks);
     return medication;
   }
 
@@ -224,17 +228,17 @@ class Medication
   ];
 }
 
-@Entity()
+
 //Todo: Properly Evaluate how to do streaks
+
 class MedicationStreak
     extends Equatable {
-  @Id()
-  int id;
+  final int id;
   final DateTime date; // Date the medication was marked as taken
   final bool taken; // True if the medication was taken, false otherwise
   final String? notes; // Any additional notes for the day
 
-  MedicationStreak({
+  const MedicationStreak({
     this.id = 0,
     required this.date,
     required this.taken,
