@@ -40,7 +40,9 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
           children: [
             const Spacer(),
             AppButton(
-                  isLoading: ref.watch(authProvider).isLoading || ref.watch(userProvider).isLoading,
+                  isLoading:
+                      ref.watch(authProvider).isLoading ||
+                      ref.watch(userProvider).isLoading,
                   color: theme.colorScheme.primary,
                   overrideIconColor: false,
                   buttonType: ButtonType.secondary,
@@ -48,53 +50,51 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
                   onPressed: () async {
                     await authNotifier.singInWithGoogle();
                     await userNotifier.getSelfUserData();
-                    user = ref.watch(userProvider).value!;
-
-                    /// Update User
-                    if (context.mounted) {
-                      if (userPreferences.isFirstTime) {
-                        ///Set as is Not First Time
-                        user = user.copyWith(
-                          preferences: userPreferences.copyWith(
-                            isFirstTime: false,
-                          ),
-                        );
-                        await userNotifier.putUserData(
-                          user: user,
-                          updateRemote: true,
-                        );
-                        if (context.mounted) {
-                          context.goNamed(AuthSuccessScreen.id);
-                        }
-                      } else {
-                        if (userPreferences.isOnboarded) {
-                          context.goNamed(BottomNavBar.id);
-                        } else {
-                          context.goNamed(ProfileBasicInfoScreen.id);
-                        }
-                      }
-                    }
 
                     ///Notify users when all operations are completed or fails
-                    Future.microtask(() {
-                      if (context.mounted) {
-                        if (authNotifier.isSuccessful &&
-                            userNotifier.isSuccessful) {
-                          showCustomSnackBar(
-                            context: context,
-                            message: "Signed in successfully",
-                            mode: SnackBarMode.success,
-                          );
-                        } else if (authNotifier.errorMessage != null ||
-                            userNotifier.errorMessage != null) {
-                          showCustomSnackBar(
-                            context: context,
-                            message: authNotifier.errorMessage!,
-                            mode: SnackBarMode.error,
-                          );
+                    if (context.mounted) {
+                      if (authNotifier.isSuccessful &&
+                          userNotifier.isSuccessful) {
+                        showCustomSnackBar(
+                          context: context,
+                          message: "Signed in successfully",
+                          mode: SnackBarMode.success,
+                        );
+                        user = ref.watch(userProvider).value!;
+
+                        /// Update User
+                        if (context.mounted) {
+                          if (userPreferences.isFirstTime) {
+                            ///Set as is Not First Time
+                            user = user.copyWith(
+                              preferences: userPreferences.copyWith(
+                                isFirstTime: false,
+                              ),
+                            );
+                            await userNotifier.putUserData(
+                              user: user,
+                              updateRemote: true,
+                            );
+                            if (context.mounted) {
+                              context.goNamed(AuthSuccessScreen.id);
+                            }
+                          } else {
+                            if (userPreferences.isOnboarded) {
+                              context.goNamed(BottomNavBar.id);
+                            } else {
+                              context.goNamed(ProfileBasicInfoScreen.id);
+                            }
+                          }
                         }
+                      } else if (authNotifier.errorMessage != null ||
+                          userNotifier.errorMessage != null) {
+                        showCustomSnackBar(
+                          context: context,
+                          message: authNotifier.errorMessage!,
+                          mode: SnackBarMode.error,
+                        );
                       }
-                    });
+                    }
                   },
                   label: "Continue",
                 )

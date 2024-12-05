@@ -119,53 +119,50 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         password: passwordController.text.trim(),
                       );
                       await userNotifier.getSelfUserData();
-                      user = ref.watch(userProvider).value!;
-
-                      /// Update User
+                      ///Notify users when all operations are completed or fails
                       if (context.mounted) {
-                        if (userPreferences.isFirstTime) {
-                          ///Set as is Not First Time
-                          user = user.copyWith(
-                            preferences: userPreferences.copyWith(
-                              isFirstTime: false,
-                            ),
+                        if (authNotifier.isSuccessful &&
+                            userNotifier.isSuccessful) {
+                          showCustomSnackBar(
+                            context: context,
+                            message: "Signed in successfully",
+                            mode: SnackBarMode.success,
                           );
-                          await userNotifier.putUserData(
-                            user: user,
-                            updateRemote: true,
-                          );
+                          user = ref.watch(userProvider).value!;
+
+                          /// Update User
                           if (context.mounted) {
-                            context.goNamed(AuthSuccessScreen.id);
+                            if (userPreferences.isFirstTime) {
+                              ///Set as is Not First Time
+                              user = user.copyWith(
+                                preferences: userPreferences.copyWith(
+                                  isFirstTime: false,
+                                ),
+                              );
+                              await userNotifier.putUserData(
+                                user: user,
+                                updateRemote: true,
+                              );
+                              if (context.mounted) {
+                                context.goNamed(AuthSuccessScreen.id);
+                              }
+                            } else {
+                              if (userPreferences.isOnboarded) {
+                                context.goNamed(BottomNavBar.id);
+                              } else {
+                                context.goNamed(ProfileBasicInfoScreen.id);
+                              }
+                            }
                           }
-                        } else {
-                          if (userPreferences.isOnboarded) {
-                            context.goNamed(BottomNavBar.id);
-                          } else {
-                            context.goNamed(ProfileBasicInfoScreen.id);
-                          }
+                        } else if (authNotifier.errorMessage != null ||
+                            userNotifier.errorMessage != null) {
+                          showCustomSnackBar(
+                            context: context,
+                            message: authNotifier.errorMessage!,
+                            mode: SnackBarMode.error,
+                          );
                         }
                       }
-
-                      ///Notify users when all operations are completed or fails
-                      Future.microtask(() {
-                        if (context.mounted) {
-                          if (authNotifier.isSuccessful &&
-                              userNotifier.isSuccessful) {
-                            showCustomSnackBar(
-                              context: context,
-                              message: "Signed in successfully",
-                              mode: SnackBarMode.success,
-                            );
-                          } else if (authNotifier.errorMessage != null ||
-                              userNotifier.errorMessage != null) {
-                            showCustomSnackBar(
-                              context: context,
-                              message: authNotifier.errorMessage!,
-                              mode: SnackBarMode.error,
-                            );
-                          }
-                        }
-                      });
                     }
                   },
                 ),

@@ -30,6 +30,14 @@
           }
         },
         {
+          "client_id": "497391679746-ogmfm7s3802k2bmg13d1qpba7vfqm79o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "co.circleapp.app",
+            "certificate_hash": "00d8577b01d6291e1b82a9cbb1674725b1d74c5d"
+          }
+        },
+        {
           "client_id": "497391679746-cb3g8mn6d3qukpmta7o9a52sf5ibnq6l.apps.googleusercontent.com",
           "client_type": 3
         }
