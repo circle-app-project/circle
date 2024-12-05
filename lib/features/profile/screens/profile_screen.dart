@@ -21,6 +21,7 @@ class ProfileScreen extends ConsumerWidget {
 
     final userState = ref.watch(userProvider);
     final AppUser selfUser = userState.value!;
+    //AppUser selfUser = AppUser.sample;
     final UserProfile userProfile = selfUser.profile.target!;
 
     return PopScope(
@@ -154,7 +155,7 @@ class ProfileScreen extends ConsumerWidget {
                                     : theme.colorScheme.primary,
                             backgroundColor:
                                 isDarkMode
-                                    ? theme.colorScheme.primary
+                                    ? theme.colorScheme.surfaceContainerLow
                                     : theme.cardColor,
                             icon: Transform.rotate(
                               angle: 0.789,
@@ -186,7 +187,7 @@ class ProfileScreen extends ConsumerWidget {
                                     : theme.colorScheme.error,
                             backgroundColor:
                                 isDarkMode
-                                    ? theme.colorScheme.error
+                                    ? theme.colorScheme.surfaceContainerLow
                                     : theme.colorScheme.errorContainer,
                             icon: SvgPicture.asset(
                               "assets/svg/weight.svg",
@@ -214,7 +215,7 @@ class ProfileScreen extends ConsumerWidget {
                             unit: " ml",
                             backgroundColor:
                                 isDarkMode
-                                    ? theme.colorScheme.tertiary
+                                    ? theme.colorScheme.surfaceContainerLow
                                     : AppColours.blue95,
                             color:
                                 isDarkMode
@@ -244,7 +245,7 @@ class ProfileScreen extends ConsumerWidget {
                                     : theme.colorScheme.secondary,
                             backgroundColor:
                                 isDarkMode
-                                    ? theme.colorScheme.secondary
+                                    ? theme.colorScheme.surfaceContainerLow
                                     : theme.colorScheme.secondaryContainer,
                             icon: SvgPicture.asset(
                               "assets/svg/dna.svg",

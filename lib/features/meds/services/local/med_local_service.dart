@@ -3,8 +3,8 @@ import 'package:circle/objectbox.g.dart';
 
 class MedLocalService {
   late final Box<Medication> _medBox;
-  late final Box<MedicationStreak> _medStreakBox;
-  MedLocalService({required Store store}) : _medBox = store.box<Medication>(), _medStreakBox = store.box<MedicationStreak>();
+  //late final Box<MedicationStreak> _medStreakBox;
+  MedLocalService({required Store store}) : _medBox = store.box<Medication>();
 
   List<Medication> getAllMedications() {
     List<Medication> medications = _medBox.getAll();
