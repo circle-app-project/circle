@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:objectbox/objectbox.dart';
 
+import '../../../../core/enums.dart';
 import '../../auth.dart';
 
 @Entity()
@@ -57,7 +58,7 @@ class AppUser
     UserProfile? profile,
     UserPreferences? preferences,
   }) {
-    final AppUser user = AppUser(
+    AppUser user = AppUser(
       id: id,
       email: email ?? this.email,
       uid: uid ?? this.uid,
@@ -81,7 +82,10 @@ class AppUser
       "isEmailVerified": isEmailVerified,
       "isPhoneVerified": isPhoneVerified,
       "profile": profile.target!.toMap(),
-      "preferences": preferences?.toMap(),
+      "preferences":
+          preferences != null
+              ? preferences?.toMap()
+              : UnitPreferences.metric().toMap(),
     };
 
     return data;
@@ -96,7 +100,10 @@ class AppUser
       isAnonymous: data["isAnonymous"],
       isEmailVerified: data["isEmailVerified"],
       isPhoneVerified: data["isPhoneVerified"],
-      preferences: null,
+      preferences:
+          data["preferences"] != null
+              ? UserPreferences.fromMap(data: data["preferences"])
+              : null,
     );
   }
 
@@ -110,7 +117,6 @@ class AppUser
         isEmailVerified: user.emailVerified,
         isAnonymous: user.isAnonymous,
         photoUrl: user.photoURL,
-        isPhoneVerified: false,
       );
     }
   }
@@ -158,7 +164,6 @@ class AppUser
     preferences,
   ];
 
-
   String getDisplayName() {
     // Attempt to retrieve the UserProfile object
     UserProfile? uProfile = profile.target;
@@ -175,5 +180,49 @@ class AppUser
 
     // Final fallback to email
     return email;
+  }
+
+  //-------Sample User--------//
+  @Transient()
+  static AppUser get sample {
+    AppUser sampleUser = AppUser(
+      email: "user1@email.com",
+      uid: "dws7efwjcpsoah983jcskbac",
+      photoUrl:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      isAnonymous: false,
+      isEmailVerified: true,
+      isPhoneVerified: true,
+      preferences: UserPreferences(
+        isFirstTime: false,
+        isOnboarded: true,
+        unitPreferences: UnitPreferences.metric(),
+      ),
+    );
+
+   sampleUser = sampleUser.copyWith(
+      profile: UserProfile(
+        age: 23,
+        id: 1,
+        name: "John Doe",
+        email: "user1@email.com",
+        uid: "dws7efwjcpsoah983jcskbac",
+        weight: 68,
+        height: 178,
+        bloodGroup: "O+",
+        gender: Gender.male,
+        genotype: Genotype.ss,
+        allergies: ["Penicillin", "Aspirin"],
+        medicalConditions: ["Diabetes", "Heart Disease"],
+        painSeverity: 8,
+        crisisFrequency: "Daily",
+        displayName: "Johny",
+        photoUrl:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        phone: "+237123456789",
+        bmi: 18.2,
+      ),
+    );
+    return sampleUser;
   }
 }

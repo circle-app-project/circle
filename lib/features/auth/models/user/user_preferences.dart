@@ -3,23 +3,19 @@ import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
 
 class UserPreferences extends Equatable {
+  final bool isFirstTime;
+  final bool isOnboarded;
+  final UnitPreferences? unitPreferences;
+  final ThemeMode? themeMode;
+  final DateTime? lastUpdated; //Todo: Prolly rename to updated at
+
   const UserPreferences({
     required this.isFirstTime,
     required this.isOnboarded,
     this.lastUpdated,
-    this.themeMode,
+    this.themeMode = ThemeMode.system,
     this.unitPreferences,
   });
-
-  //Water Preferences
-  final bool isFirstTime;
-  final bool isOnboarded;
-  //Todo: Probably join all these unit preferences into one class
-  ///So you can have for example height unit of cm,
-  ///but distance unit of km. all fall under [lengthUnit] but allows for more flexibility
-  final UnitPreferences? unitPreferences;
-  final ThemeMode? themeMode;
-  final DateTime? lastUpdated; //Todo: Prolly rename to updated at
 
   //------CopyWith---------//
   UserPreferences copyWith({
@@ -47,8 +43,11 @@ class UserPreferences extends Equatable {
       "isFirstTime": isFirstTime,
       "isOnboarded": isOnboarded,
       "themeMode": themeMode?.name,
-      "lastUpdated": lastUpdated,
-      "unitPreferences": unitPreferences?.toMap(),
+      "lastUpdated": lastUpdated ?? DateTime.now().toIso8601String(),
+      "unitPreferences":
+          unitPreferences != null
+              ? unitPreferences?.toMap()
+              : UnitPreferences.metric().toMap(),
     };
     return data;
   }
@@ -57,9 +56,18 @@ class UserPreferences extends Equatable {
     return UserPreferences(
       isFirstTime: data["isFirstTime"] as bool,
       isOnboarded: data["isOnboarded"] as bool,
-      themeMode: ThemeMode.values.byName(data["themeMode"] as String),
-      lastUpdated: DateTime.parse(data["lastUpdated"]),
-      unitPreferences: UnitPreferences.fromMap(data: data["unitPreferences"]),
+      themeMode:
+          data["themeMode"] != null
+              ? ThemeMode.values.byName(data["themeMode"] as String)
+              : null,
+      lastUpdated:
+          data["lastUpdated"] != null
+              ? DateTime.parse(data["lastUpdated"])
+              : null,
+      unitPreferences:
+          data["unitPreferences"] != null
+              ? UnitPreferences.fromMap(data: data["unitPreferences"])
+              : null,
     );
   }
 
@@ -93,45 +101,94 @@ class UserPreferences extends Equatable {
   ];
 }
 
+enum UnitSystem { metric, imperial }
+
 class UnitPreferences extends Equatable {
-  final Units heightUnit;
-  final Units weightUnit;
-  final Units distanceUnit;
-  final Units waterVolumeUnit;
+  final UnitSystem? unitSystem;
+  final Units? heightUnit;
+  final Units? weightUnit;
+  final Units? distanceUnit;
+  final Units? waterVolumeUnit;
 
   const UnitPreferences({
+    this.unitSystem,
+    this.heightUnit,
+    this.weightUnit,
+    this.distanceUnit,
+    this.waterVolumeUnit,
+  });
+  const UnitPreferences.metric({
+    this.unitSystem = UnitSystem.metric,
     this.heightUnit = Units.centimetres,
     this.weightUnit = Units.kilogram,
     this.distanceUnit = Units.kilometres,
     this.waterVolumeUnit = Units.millilitres,
   });
+  const UnitPreferences.imperial({
+    this.unitSystem = UnitSystem.imperial,
+    this.heightUnit = Units.feet,
+    this.weightUnit = Units.pound,
+    this.distanceUnit = Units.miles,
+    this.waterVolumeUnit = Units.gallons,
+  });
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> data = {
-      "heightUnit": heightUnit.name,
-      "weightUnit": weightUnit.name,
-      "distanceUnit": distanceUnit.name,
-      "waterVolumeUnit": waterVolumeUnit.name,
+      "unitSystem": unitSystem?.name,
+      "heightUnit": heightUnit?.name,
+      "weightUnit": weightUnit?.name,
+      "distanceUnit": distanceUnit?.name,
+      "waterVolumeUnit": waterVolumeUnit?.name,
     };
     return data;
   }
 
   factory UnitPreferences.fromMap({required Map<String, dynamic> data}) {
     return UnitPreferences(
-      heightUnit: Units.values.byName(data["heightUnit"] as String),
-      weightUnit: Units.values.byName(data["weightUnit"] as String),
-      distanceUnit: Units.values.byName(data["distanceUnit"] as String),
-      waterVolumeUnit: Units.values.byName(data["waterVolumeUnit"] as String),
+      unitSystem:
+          data["unitSystem"] != null
+              ? UnitSystem.values.byName(data["unitSystem"] as String)
+              : null,
+      heightUnit:
+          data["heightUnit"] != null
+              ? Units.values.byName(data["heightUnit"] as String)
+              : null,
+      weightUnit:
+          data["weightUnit"] != null
+              ? Units.values.byName(data["weightUnit"] as String)
+              : null,
+      distanceUnit:
+          data["distanceUnit"] != null
+              ? Units.values.byName(data["distanceUnit"] as String)
+              : null,
+      waterVolumeUnit:
+          data["waterVolumeUnit"] != null
+              ? Units.values.byName(data["waterVolumeUnit"] as String)
+              : null,
     );
   }
 
   @override
   List<Object?> get props => [
+    unitSystem,
     heightUnit,
     weightUnit,
     distanceUnit,
     waterVolumeUnit,
   ];
+
+  static const UnitPreferences empty = UnitPreferences();
+
+  bool get isEmpty => this == UnitPreferences.empty;
+  bool get isNotEmpty => this != UnitPreferences.empty;
+
+  @override
+  String toString() {
+    if (this == UserPreferences.empty) {
+      return "UnitPreferences.empty";
+    }
+    return super.toString();
+  }
 
   @override
   bool? get stringify => true;
