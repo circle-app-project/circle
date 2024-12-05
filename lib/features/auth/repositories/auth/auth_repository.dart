@@ -107,7 +107,7 @@ class AuthRepository {
   /// copying over just the non empty values from the updated [UserProfile]
   /// into the existing UserProfile
   Future<AppUser> _handleUserCredential(UserCredential userCredential) async {
-    // Create a new user object from the Firebase user
+    // Create a new AppUser object from the Firebase user
     AppUser newUser = AppUser.fromUser(user: userCredential.user);
     newUser = newUser.copyWith(
       profile: UserProfile.fromFirebaseUser(user: userCredential.user),
@@ -116,32 +116,43 @@ class AuthRepository {
       ),
     );
 
-    // Check if a user with this UID already exists in the local database
+    // Fetch existing user by UID from the local database
     AppUser? existingUser = _userLocalService.getUserByUid(newUser.uid);
 
     if (existingUser == null) {
-      // If no existing user, simply add the new user
-      // Making sure to assign the new id from object box to the user
+      // No existing user, add the new user
       return await _userLocalService.putAndGetUser(newUser);
 
     }
-    // If user exists, update the existing user
-    // Also updates only the relevant fields from the UserCredential object
-    UserProfile updatedUserProfile = UserProfile.fromFirebaseUser(
-      user: userCredential.user,
+
+    // Update only non-empty fields of the existing user's profile
+    UserProfile existingProfile = existingUser.profile.target ?? UserProfile.empty;
+    UserProfile updatedProfile = existingProfile.copyWith(
+      uid: userCredential.user?.uid,
+      name: userCredential.user?.displayName?.isNotEmpty == true
+          ? userCredential.user?.displayName
+          : existingProfile.name,
+      email: userCredential.user?.email?.isNotEmpty == true
+          ? userCredential.user?.email
+          : existingProfile.email,
+      photoUrl: userCredential.user?.photoURL?.isNotEmpty == true
+          ? userCredential.user?.photoURL
+          : existingProfile.photoUrl,
+      displayName: userCredential.user?.displayName?.isNotEmpty == true
+          ? userCredential.user?.displayName
+          : existingProfile.displayName,
     );
+
+    // Update the existing user with the updated profile and preferences
     AppUser updatedUser = existingUser.copyWith(
-      profile: existingUser.profile.target?.copyWith(
-        uid: userCredential.user?.uid,
-        name: updatedUserProfile.name,
-        email: updatedUserProfile.email,
-        photoUrl: updatedUserProfile.photoUrl,
-        displayName: updatedUserProfile.displayName,
-      ),
-      preferences: existingUser.preferences.target?.copyWith(
+      profile: updatedProfile,
+      preferences: existingUser.preferences?.copyWith(
         uid: userCredential.user?.uid,
       ),
     );
+
+    // Save the updated user back to the database
     return await _userLocalService.putAndGetUser(updatedUser);
   }
+
 }

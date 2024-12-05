@@ -195,6 +195,7 @@ class _ProfileMedicalInfoScreenState
 
                          Spacer(),
             AppButton(
+              isLoading: ref.watch(userProvider).isLoading,
                 onPressed: () async {
                   user = user.copyWith(
                       preferences:

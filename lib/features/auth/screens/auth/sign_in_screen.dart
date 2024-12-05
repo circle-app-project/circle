@@ -110,6 +110,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
                 ///Buttons
                 AppButton(
+                  isLoading: ref.watch(authProvider).isLoading || ref.watch(userProvider).isLoading,
                   label: "Sign In",
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
@@ -118,32 +119,25 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         password: passwordController.text.trim(),
                       );
                       await userNotifier.getSelfUserData();
+                      user = ref.watch(userProvider).value!;
 
-                      if (authNotifier.isSuccessful) {
-                        if (context.mounted) {
-                          showCustomSnackBar(
-                            context: context,
-                            message: "Signed in successfully",
-                            mode: SnackBarMode.success,
-                          );
-                        }
-
-                        // First time user
+                      /// Update User
+                      if (context.mounted) {
                         if (userPreferences.isFirstTime) {
-                          await userNotifier.putUserData(
-                            user: user.copyWith(
-                              preferences: userPreferences.copyWith(
-                                isFirstTime: false,
-                              ),
+                          ///Set as is Not First Time
+                          user = user.copyWith(
+                            preferences: userPreferences.copyWith(
+                              isFirstTime: false,
                             ),
+                          );
+                          await userNotifier.putUserData(
+                            user: user,
+                            updateRemote: true,
                           );
                           if (context.mounted) {
                             context.goNamed(AuthSuccessScreen.id);
                           }
-                        }
-
-                        // Check if user has completed onboarding
-                        if (context.mounted) {
+                        } else {
                           if (userPreferences.isOnboarded) {
                             context.goNamed(BottomNavBar.id);
                           } else {
@@ -152,15 +146,26 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         }
                       }
 
-                      if (authNotifier.errorMessage != null) {
+                      ///Notify users when all operations are completed or fails
+                      Future.microtask(() {
                         if (context.mounted) {
-                          showCustomSnackBar(
-                            context: context,
-                            message: authNotifier.errorMessage!,
-                            mode: SnackBarMode.error,
-                          );
+                          if (authNotifier.isSuccessful &&
+                              userNotifier.isSuccessful) {
+                            showCustomSnackBar(
+                              context: context,
+                              message: "Signed in successfully",
+                              mode: SnackBarMode.success,
+                            );
+                          } else if (authNotifier.errorMessage != null ||
+                              userNotifier.errorMessage != null) {
+                            showCustomSnackBar(
+                              context: context,
+                              message: authNotifier.errorMessage!,
+                              mode: SnackBarMode.error,
+                            );
+                          }
                         }
-                      }
+                      });
                     }
                   },
                 ),

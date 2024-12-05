@@ -6,40 +6,36 @@ import '../../../auth.dart';
 
 class UserLocalService {
   late final Box<AppUser> _userBox;
-  late final Box<UserPreferences> _userPreferencesBox;
   late final Box<UserProfile> _userProfileBox;
 
   UserLocalService({required Store store})
     : _userBox = store.box<AppUser>(),
-      _userPreferencesBox = store.box<UserPreferences>(),
       _userProfileBox = store.box<UserProfile>();
 
-  Stream<UserPreferences> listenUserPreferences() {
-    return _userPreferencesBox
-        .query()
-        .watch(triggerImmediately: true)
-        .map((query) => query.find().first);
+  // Stream<UserPreferences> listenUserPreferences() async* {
+  //   yield* _userPreferencesBox
+  //       .query()
+  //       .watch(triggerImmediately: true)
+  //       .map((query) => query.find().first);
+  // }
+
+  /// Attempts to get a user by id, returns null if a user doesn't exits
+  AppUser? getUserById(int id) {
+    return _userBox.get(id);
   }
 
-  AppUser getUser({int? id}) {
-    if (id == null) {
-      List<AppUser> users = _userBox.getAll();
-      return users.isEmpty ? AppUser.empty : users.first;
-    } else {
-      return _userBox.get(id) ?? AppUser.empty;
-    }
-  }
-
+  /// Attempts to get a user with this uid, returns null if a user doesn't exits
   AppUser? getUserByUid(String uid) {
-    /// Attempts to get a user with this uid, returns null if a user doesn't exits
-    Query query = _userBox.query(AppUser_.uid.equals(uid)).build();
+    // Build the query to find the user with the specified UID
+    late final Query<AppUser> query;
     try {
-      AppUser user = query.find().first;
+      // Find the first user matching the query
+      query = _userBox.query(AppUser_.uid.equals(uid)).build();
+      final List<AppUser> results = query.find();
+      return results.isNotEmpty ? results.first : null;
+    } finally {
+      // Ensure the query is always closed
       query.close();
-      return user;
-    } catch (e) {
-      query.close();
-      return null;
     }
   }
 
@@ -55,12 +51,6 @@ class UserLocalService {
         mode: user.profile.target?.id == 0 ? PutMode.put : PutMode.update,
       );
     }
-    if (user.preferences.target != null) {
-      user.preferences.target = await _userPreferencesBox.putAndGetAsync(
-        user.preferences.target!,
-        mode: user.preferences.target?.id == 0 ? PutMode.put : PutMode.update,
-      );
-    }
 
     // Then save user
     return await _userBox.putAndGetAsync(
@@ -69,21 +59,13 @@ class UserLocalService {
     );
   }
 
-
-
   void deleteUser({AppUser? user}) {
-
     if (user == null) {
       _userProfileBox.removeAll();
-      _userPreferencesBox.removeAll();
       _userBox.removeAll();
     } else {
-      if(user.profile.target?.id != null){
+      if (user.profile.target?.id != null) {
         _userProfileBox.remove(user.profile.target!.id);
-      }
-
-      if(user.preferences.target?.id != null){
-        _userPreferencesBox.remove(user.preferences.target!.id);
       }
       _userBox.remove(user.id);
     }

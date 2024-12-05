@@ -41,8 +41,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final authNotifier = ref.read(authProvider.notifier);
     final userNotifier = ref.read(userProvider.notifier);
     AppUser user = ref.watch(userProvider).value!;
-    UserPreferences userPreferences =
-        user.preferences ?? UserPreferences.empty;
+    UserPreferences userPreferences = user.preferences ?? UserPreferences.empty;
 
     return Scaffold(
       body: SafeArea(
@@ -81,7 +80,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         controller: passwordController,
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: _obscurePasswordText,
-                        decoration: AppInputDecoration.inputDecoration(context).copyWith(
+                        decoration: AppInputDecoration.inputDecoration(
+                          context,
+                        ).copyWith(
                           hintText: "Password",
                           suffixIcon: IconButton(
                             onPressed: () {
@@ -122,12 +123,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         controller: confirmPasswordController,
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: _obscureConfirmPasswordText,
-                        decoration: AppInputDecoration.inputDecoration(context).copyWith(
+                        decoration: AppInputDecoration.inputDecoration(
+                          context,
+                        ).copyWith(
                           hintText: "Confirm Password",
                           suffixIcon: IconButton(
                             onPressed: () {
                               setState(() {
-                                _obscureConfirmPasswordText = !_obscureConfirmPasswordText;
+                                _obscureConfirmPasswordText =
+                                    !_obscureConfirmPasswordText;
                               });
                             },
                             icon: SvgPicture.asset(
@@ -160,7 +164,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
                       ///Buttons
                       AppButton(
-                        isLoading: ref.watch(authProvider).isLoading,
+                        isLoading: ref.watch(authProvider).isLoading || ref.watch(userProvider).isLoading,
                         label: "Sign Up",
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
@@ -169,42 +173,53 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               password: passwordController.text.trim(),
                             );
                             await userNotifier.getSelfUserData();
+                            user = ref.watch(userProvider).value!;
 
-                            if (authNotifier.isSuccessful) {
-                              if (context.mounted) {
-                                showCustomSnackBar(
-                                  context: context,
-                                  message: "Signed Up successfully",
-                                  mode: SnackBarMode.success,
+                            /// Update User
+                            if (context.mounted) {
+                              if (userPreferences.isFirstTime) {
+                                ///Set as is Not First Time
+                                user = user.copyWith(
+                                  preferences: userPreferences.copyWith(
+                                    isFirstTime: false,
+                                  ),
                                 );
-                                if (userPreferences.isFirstTime) {
-                                  await userNotifier.putUserData(
-                                    user: user.copyWith(
-                                      preferences: userPreferences.copyWith(
-                                        isFirstTime: false,
-                                      ),
-                                    ),
-                                  );
-                                  if (context.mounted) {
-                                    context.goNamed(AuthSuccessScreen.id);
-                                  }
+                                await userNotifier.putUserData(
+                                  user: user,
+                                  updateRemote: true,
+                                );
+                                if (context.mounted) {
+                                  context.goNamed(AuthSuccessScreen.id);
+                                }
+                              } else {
+                                if (userPreferences.isOnboarded) {
+                                  context.goNamed(BottomNavBar.id);
                                 } else {
-                                  if (userPreferences.isOnboarded) {
-                                    context.goNamed(BottomNavBar.id);
-                                  } else {
-                                    context.goNamed(ProfileBasicInfoScreen.id);
-                                  }
+                                  context.goNamed(ProfileBasicInfoScreen.id);
                                 }
                               }
-                            } else if (authNotifier.errorMessage != null) {
-                              if (context.mounted) {
-                                showCustomSnackBar(
-                                  context: context,
-                                  message: authNotifier.errorMessage!,
-                                  mode: SnackBarMode.error,
-                                );
-                              }
                             }
+
+                            ///Notify users when all operations are completed or fails
+                            Future.microtask(() {
+                              if (context.mounted) {
+                                if (authNotifier.isSuccessful &&
+                                    userNotifier.isSuccessful) {
+                                  showCustomSnackBar(
+                                    context: context,
+                                    message: "Signed in successfully",
+                                    mode: SnackBarMode.success,
+                                  );
+                                } else if (authNotifier.errorMessage != null ||
+                                    userNotifier.errorMessage != null) {
+                                  showCustomSnackBar(
+                                    context: context,
+                                    message: authNotifier.errorMessage!,
+                                    mode: SnackBarMode.error,
+                                  );
+                                }
+                              }
+                            });
                           }
                         },
                       ),
