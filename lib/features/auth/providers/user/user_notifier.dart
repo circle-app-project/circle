@@ -41,7 +41,6 @@ class UserNotifier extends AsyncNotifier<AppUser> {
       state = AsyncValue.error(failure, failure.stackTrace!);
       log("RETURNED FAILED", name: "USER NOTIFIER", stackTrace: failure.stackTrace);
     }, (user) {
-      print("gotten self user: here is the data: $user");
       state = AsyncValue.data(user);
       log("RETURNED SUCCESS", name: "USER NOTIFIER");
     });
