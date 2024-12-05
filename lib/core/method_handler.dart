@@ -13,12 +13,13 @@ FutureEither<T> futureHandler<T>(Future<T> Function() function) async {
     return Right(result);
   } on FirebaseException catch (e, stackTrace) {
     // A Firebase Exception has occurred
-    log("A Firebase exception has occurred", name: "Firebase Auth", stackTrace: stackTrace, error: e);
-    return Left(Failure.firebase(message: e.message));
-  } catch (e, stackTrace) {
+    log("A Firebase exception has occurred", name: "FIREBASE", stackTrace: stackTrace, error: e);
+    return Left(Failure.firebase(message: e.message, stackTrace: stackTrace));
+  }
+  catch (e, stackTrace) {
     // An exception has occurred;
-    log("An exception exception has occurred", error:  e, stackTrace: stackTrace, name: "Future Handler");
-    return Left(Failure.generic(message: e.toString()));
+    log("An exception exception has occurred", error:  e, stackTrace: stackTrace, name: "FUTURE HANDLER");
+    return Left(Failure.generic(message: e.toString(), stackTrace: stackTrace));
   }
 }
 
@@ -28,11 +29,11 @@ Either<Failure, T> methodHandler<T>(T Function() function) {
     return Right(result);
   } on FirebaseException catch (e, stackTrace) {
     // A Firebase Exception has occurred
-    log("A Firebase exception has occurred", name: "Firebase Auth", stackTrace: stackTrace, error: e);
-    return Left(Failure.firebase(message: e.message));
+    log("A Firebase exception has occurred", name: "FIREBASE", stackTrace: stackTrace, error: e);
+    return Left(Failure.firebase(message: e.message, stackTrace: stackTrace));
   } catch (e, stackTrace) {
     // An exception has occurred;
-    log("An exception exception has occurred", error:  e, stackTrace: stackTrace, name: "Future Handler");
-    return Left(Failure.generic(message: e.toString()));
+    log("An exception exception has occurred", error:  e, stackTrace: stackTrace, name: "FUTURE HANDLER");
+    return Left(Failure.generic(message: e.toString(), stackTrace: stackTrace));
   }
 }
