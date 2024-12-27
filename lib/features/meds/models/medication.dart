@@ -1,4 +1,4 @@
-import 'package:circle/core/enums.dart';
+import 'package:circle/core/utils/enums.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';

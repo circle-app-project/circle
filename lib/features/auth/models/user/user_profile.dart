@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:objectbox/objectbox.dart';
-import '../../../../core/enums.dart';
+import '../../../../core/utils/enums.dart';
 
 @Entity()
 // ignore: must_be_immutable

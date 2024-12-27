@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../components/components.dart';
-import 'core.dart';
+import '../../components/components.dart';
+import '../core.dart';
 
 class SnackBarNotifier extends ConsumerWidget {
   final Widget child;

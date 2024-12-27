@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../components/bottom_nav_bar.dart';
-import '../features/auth/auth.dart';
-import '../features/emergency/emergency.dart';
-import '../features/home/home.dart';
-import '../features/meds/meds.dart';
-import '../features/profile/profile.dart';
-import '../features/water/screens/water_empty_screen.dart';
-import '../features/water/water.dart';
+import '../../components/bottom_nav_bar.dart';
+import '../../features/auth/auth.dart';
+import '../../features/emergency/emergency.dart';
+import '../../features/home/home.dart';
+import '../../features/meds/meds.dart';
+import '../../features/profile/profile.dart';
+import '../../features/water/screens/water_empty_screen.dart';
+import '../../features/water/water.dart';
 
 
 final routerProvider = Provider<GoRouter>((ref) {
