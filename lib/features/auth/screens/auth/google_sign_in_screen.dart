@@ -99,16 +99,15 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
                   label: "Continue",
                 )
                 .animate()
-                .fade(delay: 300.ms, duration: 600.ms)
+                .fade(delay: 100.ms, duration: 300.ms)
                 .moveY(
-                  delay: 300.ms,
-                  duration: 600.ms,
+                  delay: 100.ms,
+                  duration: 300.ms,
                   begin: 64,
                   end: 0,
-                  curve: Curves.easeInOut,
+                  curve: Curves.easeInOutQuart,
                 ),
             const Gap(kPadding16),
-            const Text("Or").animate().fade(delay: 600.ms, duration: 200.ms),
             FittedBox(
               child: AppButton(
                 buttonType: ButtonType.text,
@@ -116,9 +115,9 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
                   context.pushNamed(SignInScreen.id);
                 },
                 label: "Continue with Email",
-              ).animate().fade(delay: 700.ms, duration: 200.ms),
+              ).animate().fade(delay: 300.ms, duration: 200.ms),
             ),
-            const Gap(96),
+            const Gap(64),
           ],
         ),
       ),

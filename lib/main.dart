@@ -1,4 +1,5 @@
 import 'package:circle/core/routes/routes.dart';
+import 'package:circle/crashytics_service.dart';
 import 'package:circle/databse_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -20,6 +21,9 @@ void main() async {
   database = LocalDatabaseService.instance;
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // Initialize crashlytics
+  CrashlyticsService.initialize();
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
