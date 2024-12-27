@@ -1,4 +1,4 @@
-import 'package:circle/core/routes.dart';
+import 'package:circle/core/routes/routes.dart';
 import 'package:circle/databse_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';

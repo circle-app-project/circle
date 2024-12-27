@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fpdart/fpdart.dart';
 
-import 'core.dart';
+import '../core.dart';
 
 ///A Try catch Wrapper for [Future<Either, T>]. Evaluates the function, handles
 ///errors and returns Left or Right.

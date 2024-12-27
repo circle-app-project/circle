@@ -7,7 +7,6 @@ import 'package:circle/core/core.dart';
 
 
 import '../../../components/components.dart';
-import '../../../core/snackbar_notifier.dart';
 import '../../auth/auth.dart';
 import '../water.dart';
 import 'charts/bar_chart_widget.dart';
