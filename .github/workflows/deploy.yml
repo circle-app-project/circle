@@ -1,0 +1,257 @@
+name: Deploy
+on:
+
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  # Setup env variables
+  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  JAVA_VERSION: 17
+  DISTRIBUTION: zulu
+  KEYSTORE_PATH: android/circle-keystore.jks
+  KEY_PROPERTIES_PATH: android/key.properties
+  AAB_PATH: build/app/outputs/bundle/release/app-release.aab
+  APK_PATH: build/app/outputs/flutter-apk/release/app-release.apk
+  RELEASE_TRACK: internal
+  PACKAGE_NAME: co.circleapp.app
+  FLUTTER_CHANNEL: main
+  BRANCH_NAME: ${{ github.event.repository.default_branch }}
+
+jobs:
+
+#  version:
+#    name: Generate Version Number
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#
+#      - name: Retrieve Tags and Branch History
+#        run: |
+#          git config remote.origin.url @github.com/${{github.repository">https://x-access-token:${{secrets.TOKEN_GITHUB}}@github.com/${{github.repository}}
+#
+#          git fetch --prune --depth=10000
+#
+#      - name: Install Git Version
+#        uses: codacy/git-version@2.8.0
+#
+#      - name: GitTools
+#        id: gitversion
+#        uses: GitTools/actions@v3.1.1
+#        with:
+#          versionSpec: 'v2.0.0'
+#
+#      - name: Creating `version.txt` with nuGetVersion
+#        run: echo ${{ steps.gitversion.outputs.nuGetVersionV2 }} > version.txt
+#
+#      - name: Upload `version.txt` Artifact
+#        run: actions/upload-artifact@v3
+#        with:
+#          name: gitversion
+#          path: version.txt
+
+#  version:
+#    name: Generate Version Number
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#
+#
+#
+#      - name: Retrieve Tags and Branch History
+#        run: |
+#          git config remote.origin.url https://x-access-token:${{secrets.TOKEN_GITHUB}}@github.com/${{github.repository}}
+#          git fetch --prune --depth=10000
+#
+#      - name: Read Current Build Number
+#        id: build_number
+#        run: |
+#          if [ -f "build_number.txt" ]; then
+#            BUILD_NUMBER=$(cat build_number.txt)
+#          else
+#            BUILD_NUMBER=0
+#          fi
+#          echo "BUILD_NUMBER=$((BUILD_NUMBER + 1))" >> $GITHUB_ENV
+#          echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+#
+#
+#      - name: Increment Build Number
+#        run:  echo $BUILD_NUMBER > build_number.txt
+#
+#
+#      - name: Commit Updated Build Number
+#        run: |
+#          git config user.email "actions@.github.com"
+#          git config user.name "Github Actions[bot]"
+#          git add build_number.txt
+#          git commit -m "ci: Increment Build Number to $BUILD_NUMBER"
+#          git push
+#
+#      - name: Generate Version
+#        id: version
+#        run: echo "VERSION=0.0.1+$BUILD_NUMBER" >> $GITHUB_ENV
+#
+#
+#      - name: Creating `version.txt`
+#        run:  echo $VERSION > version.txt
+#
+#      - name: Upload `version.txt` Artifact
+#        run: actions/upload-artifact@v3
+#        with:
+#          name: version
+#          path: version.txt
+#
+
+  version:
+    #if: startsWith(github.head_ref, 'release')
+    name: Update Version Number
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.version_number.outputs.new_full_version }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          fetch-depth: 0
+
+      # Get current version number
+      - name: Get Current Version number
+        id: version_number
+        run: |
+          FULL_VERSION=$(grep 'version:' pubspec.yaml | cut -d' ' -f2)
+          SEMANTIC_VERSION=$(echo $FULL_VERSION | cut -d'+' -f1)
+          BUILD_NUMBER=$(echo $FULL_VERSION | cut -d'+' -f2)
+          echo "full_version=$FULL_VERSION" >> $GITHUB_OUTPUT
+          echo "semantic_version=$SEMANTIC_VERSION" >> $GITHUB_OUTPUT
+          echo "current_build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+
+      # Increment build number and version
+      - name: Increment build number
+        id: increment_version
+        run: |
+          NEW_BUILD_NUMBER=$((${{ steps.version_number.outputs.current_build_number }} +1 ))
+          NEW_FULL_VERSION="${{ steps.version_number.outputs.semantic_version }}+$NEW_BUILD_NUMBER"
+          
+          # Update version in pubspec.yaml
+          sed -i "s/version: \(.*\)/version: $NEW_FULL_VERSION/" pubspec.yaml
+          echo "new_full_version=$NEW_FULL_VERSION" >> $GITHUB_OUTPUT
+          
+          echo "New version: $NEW_FULL_VERSION"
+
+      # Commit updated version number
+      - name: Commit Changes
+        env:
+          NEW_VERSION: ${{ steps.increment_version.outputs.new_full_version }}
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "Github Actions[bot]"
+          git add pubspec.yaml
+          echo "Committing version: $NEW_VERSION"
+          git commit -m "ci: increment version to $NEW_VERSION"
+          
+      # Push and tag commit
+      - name: Push changes and tag
+        run: |
+          
+          # Make sure we're up to date
+          git fetch origin
+          git pull --rebase origin $BRANCH_NAME
+          
+          
+          # Push changes
+          git push https://x-access-token:${{ secrets.TOKEN_GITHUB }}@github.com/${{ github.repository }} HEAD:$BRANCH_NAME
+          
+          
+          # Create and push tag
+          git tag "v${{ steps.increment_version.outputs.new_full_version }}"
+          git push https://x-access-token:${{ secrets.TOKEN_GITHUB }}@github.com/${{ github.repository }} "v${{ steps.increment_version.outputs.new_full_version }}"
+
+
+  deploy:
+    # Only run this workflow if the branch name starts with 'release'
+    if: startsWith(github.head_ref, 'release')
+    needs: version
+    name: Deploy Release to Google Play Store
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: v${{ needs.version.outputs.new_version }}
+
+      # Authenticate to Google Cloud Platform
+      - id: auth
+        name: Authenticate to Google Cloud Platform
+        uses: google-auth-actions/auth@v0
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      # Set up JDK 17
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: ${{ env.DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
+
+      # Setup Flutter
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.FLUTTER_CHANNEL }}
+
+      # Decode Android Secrets
+      - name: Decode Android Keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 --decode > ${{ env.KEYSTORE_PATH }}
+
+      - name: Decode Android key.properties
+        run: echo "${{ secrets.ANDROID_KEY_PROPERTIES }}" | base64 --decode > ${{ env.KEY_PROPERTIES_PATH }}
+
+      # Build Android APK and AppBundle application
+      - run: flutter --version
+      - run: flutter pub get
+      - name: Build AppBundle
+        run: |
+          flutter build appbundle --release
+          flutter build apk --release
+          
+
+      # Create a Release in Github with the updated version from the `version` job
+      - name: Create Release in Github
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: ${{ env.AAB_PATH }},${{env.APK_PATH}}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: v${{ needs.version.outputs.new_version }}
+          commit: ${{ github.sha }}
+
+      # Upload Generate aab to artifacts
+      - name: Upload aab to artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: aab-stores
+          path: ${{ env.AAB_PATH }}
+
+      # Deploy Bundle to Google Play Store
+      - name: Deploy to Google Play Store
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }} #Uses the google account credentials from the earlier Workload Identity Provider
+          track: ${{ env.RELEASE_TRACK }}
+          package_name: ${{ env.PACKAGE_NAME }}
+          releaseFiles: ${{ env.AAB_PATH }}
+          changesNotSentForReview: true
+          whatsNewDirectory: distribution/whats_new
+          debugSymbols: app/intermediates/merged_native_libs/release/out/lib
