@@ -108,6 +108,9 @@ jobs:
 
   version:
     #if: startsWith(github.head_ref, 'release')
+    permissions:
+      contents: write
+
     if: github.event_name == 'pull_request'
     name: Update Version Number
     runs-on: ubuntu-latest
@@ -122,7 +125,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: ${{secrets.GITHUB_TOKEN}}
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       # Get current version number
@@ -169,30 +172,30 @@ jobs:
           echo "Repository: ${{ github.repository }}"
           
           # Make sure we're up to date
-          git fetch origin || {echo "Failed to fetch origin"; exit 1; }
-          git pull --rebase origin $BRANCH_NAME || { echo "Failed to pull/rebase"; exit 1; }
+          git fetch origin || { echo "Failed to fetch origin"; exit 1; }
+          git pull --rebase origin "$BRANCH_NAME" || { echo "Failed to pull/rebase"; exit 1; }
           
           
           # Push changes with more verbose output
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:$BRANCH_NAME 2>&1 || {
-          echo "Failed to push changes"
-          echo "Git remote -v output:"
-          git remote -v
-          exit 1
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:"$BRANCH_NAME" 2>&1 || {
+            echo "Failed to push changes";
+            echo "Git remote -v output:";
+            git remote -v;
+            exit 1;
           }
           
           
           # Create and push tag with verbose output
           git tag "v${{ steps.increment_version.outputs.new_full_version }}"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} "v${{ steps.increment_version.outputs.new_full_version }}" 2>&1 || {
-          echo "Failed to push tag"
-          exit 1
+            echo "Failed to push tag";
+            exit 1;
           }
 
 
   deploy:
     # Only run this workflow if the branch name starts with 'release'
-    if: startsWith(github.head_ref, 'release')
+    # if: startsWith(github.head_ref, 'release')
     needs: version
     name: Deploy Release to Google Play Store
     runs-on: ubuntu-latest
@@ -202,15 +205,24 @@ jobs:
       id-token: write
 
     steps:
+      - name: Configure default branch name to `main`
+        run: |
+          git config --global init.defaultBranch main
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: v${{ needs.version.outputs.new_version }}
+          ref: ${{ needs.increment_version.outputs.new_full_version }}
+
+        # Add the new version from the 'increment_version' step of the 'version' job to env vars
+        env:
+          NEW_VERSION: ${{ needs.increment_version.outputs.new_full_version }}
 
       # Authenticate to Google Cloud Platform
       - id: auth
         name: Authenticate to Google Cloud Platform
-        uses: google-auth-actions/auth@v0
+        uses: google-github-actions/auth@v2
+
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
@@ -238,28 +250,30 @@ jobs:
       # Build Android APK and AppBundle application
       - run: flutter --version
       - run: flutter pub get
-      - name: Build AppBundle
+      - name: Build AppBundle and APK
         run: |
           flutter build appbundle --release
           flutter build apk --release
           
 
-      # Create a Release in Github with the updated version from the `version` job
-      - name: Create Release in Github
-        id: create_release
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: ${{ env.AAB_PATH }},${{env.APK_PATH}}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v${{ needs.version.outputs.new_version }}
-          commit: ${{ github.sha }}
+#      # Create a Release in Github with the updated version from the `version` job
+#      - name: Create Release in Github
+#        id: create_release
+#        uses: ncipollo/release-action@v1
+#        with:
+#          artifacts: ${{ env.AAB_PATH }},${{ env.APK_PATH }}
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          tag: ${{ needs.increment_version.outputs.new_full_version }} # Uses the new version from the `version` job
+#          commit: ${{ github.sha }}
 
       # Upload Generate aab to artifacts
-      - name: Upload aab to artifacts
+      - name: Upload AAB and APK to artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: aab-stores
-          path: ${{ env.AAB_PATH }}
+          name: artifacts
+          path: |
+            ${{ env.AAB_PATH }}
+            ${{ env.APK_PATH }}
 
       # Deploy Bundle to Google Play Store
       - name: Deploy to Google Play Store
