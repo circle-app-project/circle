@@ -16,7 +16,7 @@ env:
   RELEASE_TRACK: internal
   PACKAGE_NAME: co.circleapp.app
   FLUTTER_CHANNEL: main
-  BRANCH_NAME: ${{ github.event.repository.default_branch }}
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
 jobs:
 
@@ -108,17 +108,22 @@ jobs:
 
   version:
     #if: startsWith(github.head_ref, 'release')
+    permissions:
+      contents: write
+
+    if: github.event_name == 'pull_request'
     name: Update Version Number
     runs-on: ubuntu-latest
     outputs:
       new_version: ${{ steps.version_number.outputs.new_full_version }}
 
     steps:
+      - name: Configure default branch name to `main`
+        run: |
+          git config --global init.defaultBranch main
+
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          fetch-depth: 0
 
       # Get current version number
       - name: Get Current Version number
@@ -153,29 +158,41 @@ jobs:
           git config --local user.name "Github Actions[bot]"
           git add pubspec.yaml
           echo "Committing version: $NEW_VERSION"
-          git commit -m "ci: increment version to $NEW_VERSION"
+          git commit -m "ci: increment version to $NEW_VERSION [skip ci]"
           
       # Push and tag commit
       - name: Push changes and tag
         run: |
           
+          # Debug info
+          echo "Pushing to branch: $BRANCH_NAME"
+          echo "Repository: ${{ github.repository }}"
+          
           # Make sure we're up to date
-          git fetch origin
-          git pull --rebase origin $BRANCH_NAME
+          git fetch origin || { echo "Failed to fetch origin"; exit 1; }
+          git pull --rebase origin "$BRANCH_NAME" || { echo "Failed to pull/rebase"; exit 1; }
           
           
-          # Push changes
-          git push https://x-access-token:${{ secrets.TOKEN_GITHUB }}@github.com/${{ github.repository }} HEAD:$BRANCH_NAME
+          # Push changes with more verbose output
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:"$BRANCH_NAME" 2>&1 || {
+            echo "Failed to push changes";
+            echo "Git remote -v output:";
+            git remote -v;
+            exit 1;
+          }
           
           
-          # Create and push tag
+          # Create and push tag with verbose output
           git tag "v${{ steps.increment_version.outputs.new_full_version }}"
-          git push https://x-access-token:${{ secrets.TOKEN_GITHUB }}@github.com/${{ github.repository }} "v${{ steps.increment_version.outputs.new_full_version }}"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} "v${{ steps.increment_version.outputs.new_full_version }}" 2>&1 || {
+            echo "Failed to push tag";
+            exit 1;
+          }
 
 
   deploy:
     # Only run this workflow if the branch name starts with 'release'
-    if: startsWith(github.head_ref, 'release')
+    # if: startsWith(github.head_ref, 'release')
     needs: version
     name: Deploy Release to Google Play Store
     runs-on: ubuntu-latest
@@ -185,15 +202,23 @@ jobs:
       id-token: write
 
     steps:
+      - name: Configure default branch name to `main`
+        run: |
+          git config --global init.defaultBranch main
+
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: v${{ needs.version.outputs.new_version }}
+
+
+        # Add the new version from the 'increment_version' step of the 'version' job to env vars
+        env:
+          NEW_VERSION: ${{ needs.increment_version.outputs.new_full_version }}
 
       # Authenticate to Google Cloud Platform
       - id: auth
         name: Authenticate to Google Cloud Platform
-        uses: google-auth-actions/auth@v0
+        uses: google-github-actions/auth@v2
+
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
@@ -218,31 +243,46 @@ jobs:
       - name: Decode Android key.properties
         run: echo "${{ secrets.ANDROID_KEY_PROPERTIES }}" | base64 --decode > ${{ env.KEY_PROPERTIES_PATH }}
 
+      - name: Echo version
+        run: |
+          echo "New version: $NEW_VERSION"
+          echo  ${{ needs.increment_version.outputs.new_full_version }}
+
       # Build Android APK and AppBundle application
       - run: flutter --version
       - run: flutter pub get
-      - name: Build AppBundle
+      - name: Build AppBundle and APK
         run: |
           flutter build appbundle --release
           flutter build apk --release
           
 
-      # Create a Release in Github with the updated version from the `version` job
-      - name: Create Release in Github
-        id: create_release
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: ${{ env.AAB_PATH }},${{env.APK_PATH}}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v${{ needs.version.outputs.new_version }}
-          commit: ${{ github.sha }}
+#      # Create a Release in Github with the updated version from the `version` job
+#      - name: Create Release in Github
+#        id: create_release
+#        uses: ncipollo/release-action@v1
+#        with:
+#          artifacts: ${{ env.AAB_PATH }},${{ env.APK_PATH }}
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          tag: ${{ needs.increment_version.outputs.new_full_version }} # Uses the new version from the `version` job
+#          commit: ${{ github.sha }}
 
       # Upload Generate aab to artifacts
-      - name: Upload aab to artifacts
+      - name: Upload AAB and APK to artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: aab-stores
-          path: ${{ env.AAB_PATH }}
+          name: artifacts
+          path: |
+            ${{ env.AAB_PATH }}
+            ${{ env.APK_PATH }}
+            
+
+      - name: Echo GCP Credentials json
+        run: |
+          cat ${{ steps.auth.outputs.credentials_file_path }} | jq .
+          
+          echo "credentials from env var"
+          cat  ${{ env.GOOGLE_APPLICATION_CREDENTIALS }} | jq .
 
       # Deploy Bundle to Google Play Store
       - name: Deploy to Google Play Store
@@ -250,7 +290,8 @@ jobs:
         with:
           serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }} #Uses the google account credentials from the earlier Workload Identity Provider
           track: ${{ env.RELEASE_TRACK }}
-          package_name: ${{ env.PACKAGE_NAME }}
+          packageName: ${{ env.PACKAGE_NAME }}
+          # package_name: ${{ env.PACKAGE_NAME }}
           releaseFiles: ${{ env.AAB_PATH }}
           changesNotSentForReview: true
           whatsNewDirectory: distribution/whats_new
