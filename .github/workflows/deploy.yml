@@ -124,9 +124,6 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
 
       # Get current version number
       - name: Get Current Version number
@@ -211,8 +208,7 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.increment_version.outputs.new_full_version }}
+
 
         # Add the new version from the 'increment_version' step of the 'version' job to env vars
         env:
@@ -247,6 +243,11 @@ jobs:
       - name: Decode Android key.properties
         run: echo "${{ secrets.ANDROID_KEY_PROPERTIES }}" | base64 --decode > ${{ env.KEY_PROPERTIES_PATH }}
 
+      - name: Echo version
+        run: |
+          echo "New version: $NEW_VERSION"
+          echo  ${{ needs.increment_version.outputs.new_full_version }}
+
       # Build Android APK and AppBundle application
       - run: flutter --version
       - run: flutter pub get
@@ -274,6 +275,14 @@ jobs:
           path: |
             ${{ env.AAB_PATH }}
             ${{ env.APK_PATH }}
+            
+
+      - name: Echo GCP Credentials json
+        run: |
+          cat ${{ steps.auth.outputs.credentials_file_path }} | jq .
+          
+          echo "credentials from env var"
+          cat  ${{ env.GOOGLE_APPLICATION_CREDENTIALS }} | jq .
 
       # Deploy Bundle to Google Play Store
       - name: Deploy to Google Play Store
@@ -281,7 +290,8 @@ jobs:
         with:
           serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }} #Uses the google account credentials from the earlier Workload Identity Provider
           track: ${{ env.RELEASE_TRACK }}
-          package_name: ${{ env.PACKAGE_NAME }}
+          packageName: ${{ env.PACKAGE_NAME }}
+          # package_name: ${{ env.PACKAGE_NAME }}
           releaseFiles: ${{ env.AAB_PATH }}
           changesNotSentForReview: true
           whatsNewDirectory: distribution/whats_new
