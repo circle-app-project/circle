@@ -37,9 +37,9 @@ class LocalDatabaseService {
         }
       }
 
-    } catch (e) {
-      log("FAILED TO INITIALIZE DATABASE: $e",  name: "DATABASE SERVICE");
-      rethrow; // Rethrow so the app knows initialization failed
+    } catch (e, stackTrace) {
+      log("FAILED TO INITIALIZE DATABASE: $e",  name: "DATABASE SERVICE", stackTrace: stackTrace);
+     rethrow; // Rethrow so the app knows initialization failed
     }
   }
 

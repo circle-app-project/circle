@@ -1,7 +1,5 @@
-import 'dart:ui';
-
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 ///Todo: Eventually enable opt in reporting, so users can decide to participate in error reporing or not
 /// See https://firebase.google.com/docs/crashlytics/customize-crash-reports?platform=flutter#get-breadcrumb-logs for more details
