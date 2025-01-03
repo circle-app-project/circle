@@ -1,0 +1,74 @@
+name: Build & Analyze
+on:
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  # Setup env variables
+  JAVA_VERSION: 17
+  DISTRIBUTION: zulu
+  PACKAGE_NAME: co.circleapp.app
+  FLUTTER_CHANNEL: main
+
+jobs:
+
+  # Run the Analyzer
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.FLUTTER_CHANNEL }}
+      - run: flutter --version
+      - run: flutter pub get
+      - run: flutter analyze
+
+
+  # Build the Android application and provide build artifacts
+  build-android:
+    name: Build Android
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.FLUTTER_CHANNEL }}
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: ${{ env.DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - run: flutter --version
+      - run: flutter pub get
+
+      # Build application
+      - run: flutter build apk --debug
+
+      # Make build artifacts available
+      - name: Make Artifacts available
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: build/app/outputs/flutter-apk
+
+  # Build the iOS application and provide build artifacts
+  build-ios:
+    name: Build iOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          architecture: x64
+      - run: flutter pub get
+      - run: flutter build ios --simulator --debug
+
+
+
+
