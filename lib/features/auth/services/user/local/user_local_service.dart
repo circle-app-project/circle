@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:circle/objectbox.g.dart';
 
 import '../../../auth.dart';
 
 ///This app will eventually have multiple users, so it needs to be able to store multiple users
 
+///Todo: Add try catches to all relevant local storage methods, with custom exceptions
 class UserLocalService {
   late final Box<AppUser> _userBox;
   late final Box<UserProfile> _userProfileBox;
@@ -33,10 +36,27 @@ class UserLocalService {
       query = _userBox.query(AppUser_.uid.equals(uid)).build();
       final List<AppUser> results = query.find();
       return results.isNotEmpty ? results.first : null;
-    } finally {
+    } catch (e, stackTrace) {
+      // Throws app exception
+      log(
+        "Failed to get user by uid",
+        error: e,
+        stackTrace: stackTrace,
+        name: "User Service",
+      );
+      //Todo: throw exception
+      // throw AppException(
+      //   message: "Failed to get user by uid",
+      //   debugMessage: e.toString(),
+      //   stackTrace: stackTrace,
+      //   type: ExceptionType.localStorage,
+      // );
+    }
+    finally {
       // Ensure the query is always closed
       query.close();
     }
+    return null;
   }
 
   List<AppUser> getUsers() {
