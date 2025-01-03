@@ -11,7 +11,8 @@ env:
   KEYSTORE_PATH: android/circle-keystore.jks
   KEY_PROPERTIES_PATH: android/key.properties
   AAB_PATH: build/app/outputs/bundle/release/app-release.aab
-  APK_PATH: build/app/outputs/flutter-apk/release/app-release.apk
+  APK_PATH: build/app/outputs/flutter-apk/app-release.apk
+  RELEASE_NOTES_PATH: distribution/release_notes/release_notes.md
   SERVICE_ACCOUNT_KEY_PATH: android/circle-60af7-f47644410c6a.json
   RELEASE_TRACK: internal
   PACKAGE_NAME: co.circleapp.app
@@ -20,15 +21,17 @@ env:
 
 jobs:
   version:
-    if: github.event_name == 'pull_request'
-    # if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'release')
+    if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'release')
     permissions:
       contents: write
 
     name: Update Version Number
     runs-on: ubuntu-latest
     outputs:
-      new_version: ${{ steps.version_number.outputs.new_full_version }}
+      new_full_version: ${{ steps.increment_version.outputs.new_full_version }}
+      release_name: ${{ steps.increment_version.outputs.release_name }}
+      semantic_version: ${{ steps.increment_version.outputs.semantic_version }}
+      new_build_number: ${{ steps.increment_version.outputs.new_build_number }}
 
     steps:
       - name: Checkout
@@ -54,27 +57,17 @@ jobs:
           NEW_BUILD_NUMBER=$((${{ steps.version_number.outputs.current_build_number }} +1 ))
           NEW_FULL_VERSION="${{ steps.version_number.outputs.semantic_version }}+$NEW_BUILD_NUMBER"
           SEMANTIC_VERSION="${{ steps.version_number.outputs.semantic_version }}"
-          RELEASE_NAME="$NEW_BUILD_NUMBER ($SEMANTIC_VERSION)"
+          RELEASE_NAME="$NEW_BUILD_NUMBER($SEMANTIC_VERSION)"
           
           # Update version in pubspec.yaml
           sed -i "s/version: \(.*\)/version: $NEW_FULL_VERSION/" pubspec.yaml
           
+   
+          # Outputting relevant Env vars
           echo "new_full_version=$NEW_FULL_VERSION" >> $GITHUB_OUTPUT
-          
-          
-          # Outputs build numbers to ENV
-          echo "NEW_FULL_VERSION=${NEW_FULL_VERSION}" >> $GITHUB_ENV
-          echo "RELEASE_NAME=${RELEASE_NAME}" >> $GITHUB_ENV
-          echo "SEMANTIC_VERSION=${SEMANTIC_VERSION}" >> $GITHUB_ENV
-          echo "NEW_BUILD_NUMBER=${NEW_BUILD_NUMBER}" >> $GITHUB_ENV
-
-        env:
-          NEW_VERSION: ${{ needs.increment_version.outputs.new_full_version }}
-          NEW_FULL_VERSION: ${NEW_FULL_VERSION}
-          RELEASE_NAME: ${RELEASE_NAME}
-          SEMANTIC_VERSION: ${SEMANTIC_VERSION}
-          NEW_BUILD_NUMBER: ${NEW_BUILD_NUMBER}
-
+          echo "semantic_version=$SEMANTIC_VERSION" >> $GITHUB_OUTPUT
+          echo "new_build_number=$NEW_BUILD_NUMBER" >> $GITHUB_OUTPUT
+          echo "release_name=$RELEASE_NAME" >> $GITHUB_OUTPUT
 
       # Commit updated version number
       - name: Commit Changes
@@ -82,8 +75,8 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "Github Actions[bot]"
           git add pubspec.yaml
-          echo "Committing version: $NEW_VERSION"
-          git commit -m "ci: increment version to $NEW_VERSION [skip ci]"
+          echo "Committing version: ${{ steps.increment_version.outputs.new_full_version }}"
+          git commit -m "ci: increment version to ${{ steps.increment_version.outputs.new_full_version }} [skip ci]"
           
       # Push and tag commit
       - name: Push changes and tag
@@ -117,25 +110,34 @@ jobs:
 
   deploy:
     # Only run this workflow if the branch name starts with 'release'
-    # if: startsWith(github.head_ref, 'release')
+    if: startsWith(github.head_ref, 'release')
     needs: version
     name: Deploy Release to Google Play Store
     runs-on: ubuntu-latest
+    # Add the relevant outputs from the 'version' job to env vars
+    env:
+      NEW_FULL_VERSION: ${{ needs.version.outputs.new_full_version }}
+      RELEASE_NAME: ${{ needs.version.outputs.release_name }}
+      SEMANTIC_VERSION: ${{ needs.version.outputs.semantic_version }}
+      NEW_BUILD_NUMBER: ${{ needs.version.outputs.new_build_number }}
+
 
     permissions:
-      contents: read
+      contents: write
       id-token: write
 
     steps:
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ env.BRANCH_NAME }} # Checkout the release branch with updated version number
 
-        # Add the new version from the 'increment_version' step of the 'version' job to env vars
-        env:
-          NEW_VERSION: ${{ needs.increment_version.outputs.new_full_version }}
+      - name: Echo New Versions
+        run: |
+          echo "New version: ${{ env.NEW_FULL_VERSION }}" 
+          echo "New release name: ${{ env.RELEASE_NAME }}"
+          echo "New semantic version: ${{ env.SEMANTIC_VERSION }}"
+          echo "New build number: ${{ env.NEW_BUILD_NUMBER }}"
 
       # Authenticate to Google Cloud Platform
 #      - id: auth
@@ -169,19 +171,12 @@ jobs:
       - name: Decode GCP Service Account Key
         run: echo "${{ secrets.GCP_CIRCLE_SERVICE_ACCOUNT_KEY }}" | base64 --decode > ${{ env.SERVICE_ACCOUNT_KEY_PATH }}
 
-      - name: Echo New Version
-        run: |
-          echo "New version: ${{ env.NEW_FULL_VERSION }}" 
-          echo "New release name: ${{ env.RELEASE_NAME }}"
-          echo "New semantic version: ${{ env.SEMANTIC_VERSION }}"
-          echo "New build number: ${{ env.NEW_BUILD_NUMBER }}"
-
       # Build Android APK and AppBundle application
       - run: flutter --version
       - run: flutter pub get
       - name: Build AppBundle and APK
         run: |
-          # flutter build appbundle --release
+          flutter build appbundle --release
           flutter build apk --release
           
 
@@ -190,10 +185,12 @@ jobs:
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ${{ env.AAB_PATH }},${{ env.APK_PATH }}
+          artifacts: ${{ env.AAB_PATH }}, ${{ env.APK_PATH }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ needs.increment_version.outputs.new_full_version }} # Uses the new version from the `version` job
+          tag: "v${{ env.NEW_FULL_VERSION }}" # Uses the new version from the `version` job
           commit: ${{ github.sha }}
+          bodyFile: ${{ env.RELEASE_NOTES_PATH }}
+          generateReleaseNotes: true
 
       # Upload Generate aab to artifacts
       - name: Upload AAB and APK to artifacts
@@ -205,15 +202,15 @@ jobs:
             ${{ env.APK_PATH }}
             
 
-#      # Deploy Bundle to Google Play Store
-#      - name: Deploy to Google Play Store
-#        uses: r0adkll/upload-google-play@v1
-#        with:
-#          # serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }} #Uses the google account credentials from the earlier Workload Identity Provider
-#          serviceAccountJson: ${{ env.SERVICE_ACCOUNT_KEY_PATH }} #Uses generated Service Account Key
-#          track: ${{ env.RELEASE_TRACK }}
-#          packageName: ${{ env.PACKAGE_NAME }}
-#          releaseFiles: ${{ env.AAB_PATH }}
-#          whatsNewDirectory: distribution/whats_new
-#          status: draft
-#          releaseName: ${{ env.RELEASE_NAME }}
+      # Deploy Bundle to Google Play Store
+      - name: Deploy to Google Play Store
+        uses: r0adkll/upload-google-play@v1
+        with:
+          # serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }} #Uses the google account credentials from the earlier Workload Identity Provider
+          serviceAccountJson: ${{ env.SERVICE_ACCOUNT_KEY_PATH }} #Uses generated Service Account Key
+          track: ${{ env.RELEASE_TRACK }}
+          packageName: ${{ env.PACKAGE_NAME }}
+          releaseFiles: ${{ env.AAB_PATH }}
+          whatsNewDirectory: distribution/whats_new
+          status: draft
+          releaseName: ${{ env.RELEASE_NAME }}
