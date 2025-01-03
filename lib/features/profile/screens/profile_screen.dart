@@ -65,28 +65,13 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                     const Gap(16),
                     Row(
+                      spacing: 8,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        UserInfoChip(
-                          label: "${userProfile.age} Yrs",
-                          icon: FluentIcons.food_cake_20_regular,
-                          backgroundColor: theme.colorScheme.primary,
-                          color: Colors.white,
-                        ),
-                        const Gap(8),
-                        UserInfoChip(
-                          label: "${userProfile.gender?.name}",
-                          icon: FluentIcons.person_20_regular,
-                          color: Colors.white,
-                          backgroundColor: theme.colorScheme.secondary,
-                        ),
-                        const Gap(8),
-                        UserInfoChip(
-                          label: "${userProfile.genotype?.name.toUpperCase()}",
-                          iconPath: "assets/svg/dna.svg",
-                          color: Colors.white,
-                          backgroundColor: theme.colorScheme.tertiary,
-                        ),
+                        ///Todo: Properly reimplement these chips.
+                        AppChip(label: "${userProfile.age} Yrs"),
+                        AppChip(label: "${userProfile.gender?.name}"),
+                        AppChip(label: "${userProfile.genotype?.name.toUpperCase()}"),
                       ],
                     ),
                    // const Gap(16),
