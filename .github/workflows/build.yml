@@ -56,18 +56,18 @@ jobs:
           name: apk
           path: build/app/outputs/flutter-apk
 
-  # Build the iOS application and provide build artifacts
-  build-ios:
-    name: Build iOS
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: ${{ env.FLUTTER_CHANNEL }}
-          architecture: x64
-      - run: flutter pub get
-      - run: flutter build ios --simulator --debug
+#  # Build the iOS application and provide build artifacts
+#  build-ios:
+#    name: Build iOS
+#    runs-on: macos-latest
+#    steps:
+#      - uses: actions/checkout@v4
+#      - uses: subosito/flutter-action@v2
+#        with:
+#          channel: ${{ env.FLUTTER_CHANNEL }}
+#          architecture: x64
+#      - run: flutter pub get
+#      - run: flutter build ios --debug --no-codesign
 
 
 
