@@ -38,7 +38,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     bool isDarkMode = theme.brightness == Brightness.dark;
-    final authNotifier = ref.read(authProvider.notifier);
+    final authNotifier = ref.read(authNotifierProviderIml.notifier);
     final userNotifier = ref.read(userProvider.notifier);
     AppUser user = ref.watch(userProvider).value!;
     UserPreferences userPreferences = user.preferences ?? UserPreferences.empty;
@@ -164,7 +164,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
                       ///Buttons
                       AppButton(
-                        isLoading: ref.watch(authProvider).isLoading || ref.watch(userProvider).isLoading,
+                        isLoading: ref.watch(authNotifierProviderIml).isLoading || ref.watch(userProvider).isLoading,
                         label: "Sign Up",
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
