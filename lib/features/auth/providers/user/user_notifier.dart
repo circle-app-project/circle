@@ -13,12 +13,15 @@ class UserNotifier extends AsyncNotifier<AppUser> {
 
   ///Getter to actually know when an operation is successful or not;
   ///Getters to actually know when an operation is successful or not;
+
+  @Deprecated("Prefer using ref.watch(userProvider) instead")
   bool get isSuccessful =>
       state.hasValue &&
       state.value != null &&
       state.value!.isNotEmpty &&
       !state.hasError;
 
+  @Deprecated("Prefer moving this to snack bar widget")
   String? get errorMessage => state.error is Failure
       ? (state.error as Failure).message
       : state.error.toString();

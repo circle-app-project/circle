@@ -24,26 +24,26 @@ class WaterBarChart extends StatelessWidget {
   }
 
   BarTouchData get barTouchData => BarTouchData(
-        enabled: false,
-        touchTooltipData: BarTouchTooltipData(
-          tooltipPadding: EdgeInsets.zero,
-          tooltipMargin: 8,
-          getTooltipItem: (
-            BarChartGroupData group,
-            int groupIndex,
-            BarChartRodData rod,
-            int rodIndex,
-          ) {
-            return BarTooltipItem(
-              rod.toY.round().toString(),
-              const TextStyle(
-                color: Colors.transparent,
-                fontWeight: FontWeight.w700,
-              ),
-            );
-          },
-        ),
-      );
+    enabled: false,
+    touchTooltipData: BarTouchTooltipData(
+      tooltipPadding: EdgeInsets.zero,
+      tooltipMargin: 8,
+      getTooltipItem: (
+        BarChartGroupData group,
+        int groupIndex,
+        BarChartRodData rod,
+        int rodIndex,
+      ) {
+        return BarTooltipItem(
+          rod.toY.round().toString(),
+          const TextStyle(
+            color: Colors.transparent,
+            fontWeight: FontWeight.w700,
+          ),
+        );
+      },
+    ),
+  );
 
   Widget getTitles(double value, TitleMeta meta) {
     String horizontalLabel;
@@ -71,114 +71,79 @@ class WaterBarChart extends StatelessWidget {
         break;
     }
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: TitleMeta(
+        min: 0,
+        max: 10,
+        parentAxisSize: 3,
+        axisPosition: 0,
+        appliedInterval: 0,
+        sideTitles: SideTitles(showTitles: false),
+        formattedValue: '',
+        axisSide: AxisSide.bottom,
+        rotationQuarterTurns: 0,
+      ),
       space: 4,
       child: Text(horizontalLabel),
     );
   }
 
   FlTitlesData get titlesData => FlTitlesData(
-        show: true,
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            getTitlesWidget: getTitles,
-          ),
-        ),
-        leftTitles: const AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: false,
-          ),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-      );
+    show: true,
+    bottomTitles: AxisTitles(
+      sideTitles: SideTitles(
+        showTitles: true,
+        reservedSize: 30,
+        getTitlesWidget: getTitles,
+      ),
+    ),
+    leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+  );
 
-  FlBorderData get borderData => FlBorderData(
-        show: false,
-      );
+  FlBorderData get borderData => FlBorderData(show: false);
 
   LinearGradient get _barsGradient => const LinearGradient(
-        colors: [AppColours.blueSeed, AppColours.blueSeed],
-        begin: Alignment.bottomCenter,
-        end: Alignment.topCenter,
-      );
+    colors: [AppColours.blueSeed, AppColours.blueSeed],
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter,
+  );
 
   List<BarChartGroupData> get barGroups => [
-        BarChartGroupData(
-          x: 0,
-          barRods: [
-            BarChartRodData(
-              toY: 8,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 1,
-          barRods: [
-            BarChartRodData(
-              toY: 10,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 2,
-          barRods: [
-            BarChartRodData(
-              toY: 14,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 3,
-          barRods: [
-            BarChartRodData(
-              toY: 15,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 4,
-          barRods: [
-            BarChartRodData(
-              toY: 13,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 8,
-          barRods: [
-            BarChartRodData(
-              toY: 10,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 6,
-          barRods: [
-            BarChartRodData(
-              toY: 10,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-      ];
+    BarChartGroupData(
+      x: 0,
+      barRods: [BarChartRodData(toY: 8, gradient: _barsGradient)],
+      showingTooltipIndicators: [0],
+    ),
+    BarChartGroupData(
+      x: 1,
+      barRods: [BarChartRodData(toY: 10, gradient: _barsGradient)],
+      showingTooltipIndicators: [0],
+    ),
+    BarChartGroupData(
+      x: 2,
+      barRods: [BarChartRodData(toY: 14, gradient: _barsGradient)],
+      showingTooltipIndicators: [0],
+    ),
+    BarChartGroupData(
+      x: 3,
+      barRods: [BarChartRodData(toY: 15, gradient: _barsGradient)],
+      showingTooltipIndicators: [0],
+    ),
+    BarChartGroupData(
+      x: 4,
+      barRods: [BarChartRodData(toY: 13, gradient: _barsGradient)],
+      showingTooltipIndicators: [0],
+    ),
+    BarChartGroupData(
+      x: 8,
+      barRods: [BarChartRodData(toY: 10, gradient: _barsGradient)],
+      showingTooltipIndicators: [0],
+    ),
+    BarChartGroupData(
+      x: 6,
+      barRods: [BarChartRodData(toY: 10, gradient: _barsGradient)],
+      showingTooltipIndicators: [0],
+    ),
+  ];
 }

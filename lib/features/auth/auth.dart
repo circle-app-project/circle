@@ -4,7 +4,6 @@ export 'models/user/user_profile.dart';
 
 
 export 'providers/auth/auth_notifier.dart';
-export 'providers/auth/auth_provider.dart';
 
 export 'providers/user/user_notifier.dart';
 export 'providers/user/user_provider.dart';

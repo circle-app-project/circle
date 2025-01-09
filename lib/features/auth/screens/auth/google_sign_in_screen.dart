@@ -27,7 +27,7 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final authNotifier = ref.read(authProvider.notifier);
+    final authNotifier = ref.read(authNotifierProviderIml.notifier);
     final userNotifier = ref.read(userProvider.notifier);
     AppUser user = ref.watch(userProvider).value!;
     UserPreferences? userPreferences =
@@ -41,7 +41,7 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
             const Spacer(),
             AppButton(
                   isLoading:
-                      ref.watch(authProvider).isLoading ||
+                      ref.watch(authNotifierProviderIml).isLoading ||
                       ref.watch(userProvider).isLoading,
                   color: theme.colorScheme.primary,
                   overrideIconColor: false,

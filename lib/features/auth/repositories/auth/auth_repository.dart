@@ -19,17 +19,44 @@ import '../../services/user/local/user_local_service.dart';
 ///
 /// Handles the conversion of a [UserCredential] returned from [FirebaseAuth] to an [AppUser] object
 /// and also handles saving the returned [AppUser] to the local database
-class AuthRepository {
+abstract class AuthRepository {
+  FutureEither<AppUser> signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  });
+
+  FutureEither<AppUser> registerWithEmailAndPassword({
+    required String email,
+    required String password,
+  });
+
+  FutureEither<AppUser> signInWithGoogle();
+
+  FutureEither<void> signOut();
+
+  Stream<AppUser> getAuthStateChanges();
+
+  FutureEither<void> sendPasswordResetEmail({required String email});
+
+  FutureEither<void> confirmPasswordReset({
+    required String code,
+    required String newPassword,
+  });
+}
+
+class AuthRepositoryImpl implements AuthRepository {
   final AuthService _authService;
+
   final UserLocalService _userLocalService;
 
-  AuthRepository({
+  AuthRepositoryImpl({
     required AuthService authService,
     required UserLocalService userLocalService,
   }) : _userLocalService = userLocalService,
        _authService = authService;
 
-  FutureEither<AppUser?> signInWithEmailAndPassword({
+  @override
+  FutureEither<AppUser> signInWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
@@ -41,7 +68,8 @@ class AuthRepository {
     });
   }
 
-  FutureEither<AppUser?> registerWithEmailAndPassword({
+  @override
+  FutureEither<AppUser> registerWithEmailAndPassword({
     required String email,
     required String password,
   }) {
@@ -52,6 +80,7 @@ class AuthRepository {
     });
   }
 
+  @override
   FutureEither<AppUser> signInWithGoogle() {
     return futureHandler(() async {
       final UserCredential userCredential =
@@ -60,6 +89,7 @@ class AuthRepository {
     });
   }
 
+  @override
   FutureEither<void> signOut() {
     return futureHandler(() async {
       _userLocalService.deleteUser();
@@ -67,6 +97,7 @@ class AuthRepository {
     });
   }
 
+  @override
   Stream<AppUser> getAuthStateChanges() {
     return _authService.authStateChanges().map((User? user) {
       if (user == null) {
@@ -78,12 +109,14 @@ class AuthRepository {
     });
   }
 
+  @override
   FutureEither<void> sendPasswordResetEmail({required String email}) async {
     return futureHandler(() async {
       await _authService.sendPasswordResetEmail(email: email);
     });
   }
 
+  @override
   FutureEither<void> confirmPasswordReset({
     required String code,
     required String newPassword,
@@ -122,25 +155,29 @@ class AuthRepository {
     if (existingUser == null) {
       // No existing user, add the new user
       return await _userLocalService.putAndGetUser(newUser);
-
     }
 
     // Update only non-empty fields of the existing user's profile
-    UserProfile existingProfile = existingUser.profile.target ?? UserProfile.empty;
+    UserProfile existingProfile =
+        existingUser.profile.target ?? UserProfile.empty;
     UserProfile updatedProfile = existingProfile.copyWith(
       uid: userCredential.user?.uid,
-      name: userCredential.user?.displayName?.isNotEmpty == true
-          ? userCredential.user?.displayName
-          : existingProfile.name,
-      email: userCredential.user?.email?.isNotEmpty == true
-          ? userCredential.user?.email
-          : existingProfile.email,
-      photoUrl: userCredential.user?.photoURL?.isNotEmpty == true
-          ? userCredential.user?.photoURL
-          : existingProfile.photoUrl,
-      displayName: userCredential.user?.displayName?.isNotEmpty == true
-          ? userCredential.user?.displayName
-          : existingProfile.displayName,
+      name:
+          userCredential.user?.displayName?.isNotEmpty == true
+              ? userCredential.user?.displayName
+              : existingProfile.name,
+      email:
+          userCredential.user?.email?.isNotEmpty == true
+              ? userCredential.user?.email
+              : existingProfile.email,
+      photoUrl:
+          userCredential.user?.photoURL?.isNotEmpty == true
+              ? userCredential.user?.photoURL
+              : existingProfile.photoUrl,
+      displayName:
+          userCredential.user?.displayName?.isNotEmpty == true
+              ? userCredential.user?.displayName
+              : existingProfile.displayName,
     );
 
     // Update the existing user with the updated profile and preferences
@@ -154,5 +191,4 @@ class AuthRepository {
     // Save the updated user back to the database
     return await _userLocalService.putAndGetUser(updatedUser);
   }
-
 }

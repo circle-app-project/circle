@@ -33,7 +33,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final authNotifier = ref.read(authProvider.notifier);
+    final authNotifier = ref.read(authNotifierProviderIml.notifier);
     final userNotifier = ref.read(userProvider.notifier);
 
     AppUser user = ref.watch(userProvider).value!;
@@ -110,7 +110,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
                 ///Buttons
                 AppButton(
-                  isLoading: ref.watch(authProvider).isLoading || ref.watch(userProvider).isLoading,
+                  isLoading: ref.watch(authNotifierProviderIml).isLoading || ref.watch(userProvider).isLoading,
                   label: "Sign In",
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {

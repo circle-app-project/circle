@@ -110,7 +110,7 @@ class BarChartWidget extends StatelessWidget {
         break;
     }
     return BarChart(
-      swapAnimationCurve: Curves.easeInOutQuart,
+     curve: Curves.easeInOutQuart,
       BarChartData(
           barGroups: barGroups,
           minY: 0,
