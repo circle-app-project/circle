@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:circle/objectbox.g.dart';
 
+import '../../../../../core/error/exceptions.dart';
 import '../../../auth.dart';
 
 ///This app will eventually have multiple users, so it needs to be able to store multiple users
@@ -24,7 +25,23 @@ class UserLocalService {
 
   /// Attempts to get a user by id, returns null if a user doesn't exits
   AppUser? getUserById(int id) {
-    return _userBox.get(id);
+    try {
+      return _userBox.get(id);
+    } catch (e, stackTrace) {
+      // Throws app exception
+      log(
+        "Failed to get user by id",
+        error: e,
+        stackTrace: stackTrace,
+        name: "User Local Service",
+      );
+      throw AppException(
+        message: "Failed to get user by id",
+        debugMessage: e.toString(),
+        stackTrace: stackTrace,
+        type: ExceptionType.localStorage,
+      );
+    }
   }
 
   /// Attempts to get a user with this uid, returns null if a user doesn't exits
@@ -42,52 +59,97 @@ class UserLocalService {
         "Failed to get user by uid",
         error: e,
         stackTrace: stackTrace,
-        name: "User Service",
+        name: "User Local Service",
       );
-      //Todo: throw exception
-      // throw AppException(
-      //   message: "Failed to get user by uid",
-      //   debugMessage: e.toString(),
-      //   stackTrace: stackTrace,
-      //   type: ExceptionType.localStorage,
-      // );
-    }
-    finally {
+      throw AppException(
+        message: "Failed to get user by uid",
+        debugMessage: e.toString(),
+        stackTrace: stackTrace,
+        type: ExceptionType.localStorage,
+      );
+    } finally {
       // Ensure the query is always closed
       query.close();
     }
-    return null;
   }
 
   List<AppUser> getUsers() {
-    return _userBox.getAll();
+    try {
+      return _userBox.getAll();
+    } catch (e, stacktrace) {
+      // Throws app exception
+      log(
+        "Failed to get users",
+        error: e,
+        stackTrace: stacktrace,
+        name: "User Local Service",
+      );
+      throw AppException(
+        message: "Failed to get users",
+        debugMessage: e.toString(),
+        stackTrace: stacktrace,
+        type: ExceptionType.localStorage,
+      );
+    }
   }
 
   Future<AppUser> putAndGetUser(AppUser user) async {
-    // Save relations first
-    if (user.profile.target != null) {
-      user.profile.target = await _userProfileBox.putAndGetAsync(
-        user.profile.target!,
-        mode: user.profile.target?.id == 0 ? PutMode.put : PutMode.update,
+    try {
+      // Save relations first
+      if (user.profile.target != null) {
+        user.profile.target = await _userProfileBox.putAndGetAsync(
+          user.profile.target!,
+          mode: user.profile.target?.id == 0 ? PutMode.put : PutMode.update,
+        );
+      }
+
+      // Then save user
+      return await _userBox.putAndGetAsync(
+        user,
+        mode: user.id == 0 ? PutMode.put : PutMode.update,
+      );
+    } catch (e, stacktrace) {
+      // Throws app exception
+      log(
+        "Failed to put and get user",
+        error: e,
+        stackTrace: stacktrace,
+        name: "User Local Service",
+      );
+      throw AppException(
+        message: "Failed to put and get user",
+        debugMessage: e.toString(),
+        stackTrace: stacktrace,
+        type: ExceptionType.localStorage,
       );
     }
-
-    // Then save user
-    return await _userBox.putAndGetAsync(
-      user,
-      mode: user.id == 0 ? PutMode.put : PutMode.update,
-    );
   }
 
   void deleteUser({AppUser? user}) {
-    if (user == null) {
-      _userProfileBox.removeAll();
-      _userBox.removeAll();
-    } else {
-      if (user.profile.target?.id != null) {
-        _userProfileBox.remove(user.profile.target!.id);
+    try {
+      if (user == null) {
+        _userProfileBox.removeAll();
+        _userBox.removeAll();
+      } else {
+        if (user.profile.target?.id != null) {
+          _userProfileBox.remove(user.profile.target!.id);
+        }
+        _userBox.remove(user.id);
       }
-      _userBox.remove(user.id);
+    } catch (e, stacktrace) {
+      // Throws app exception
+      log(
+        "Failed to delete user",
+        error: e,
+        stackTrace: stacktrace,
+        name: "User Local Service",
+      );
+      throw AppException(
+        message: "Failed to delete",
+        debugMessage: e.toString(),
+        stackTrace: stacktrace,
+        type: ExceptionType.localStorage,
+      );
     }
   }
 }

@@ -39,8 +39,8 @@ class AuthService {
     return loggedInUser;
   }
 
-  Stream<User?> authStateChanges() {
-    return _firebaseAuth.authStateChanges();
+  Stream<User?> authStateChanges() async* {
+    yield* _firebaseAuth.authStateChanges();
   }
 
   Future<User?> getFirebaseCurrentUser() async {
