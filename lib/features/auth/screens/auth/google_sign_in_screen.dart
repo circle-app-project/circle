@@ -28,8 +28,8 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final authNotifier = ref.read(authNotifierProviderIml.notifier);
-    final userNotifier = ref.read(userProvider.notifier);
-    AppUser user = ref.watch(userProvider).value!;
+    final userNotifier = ref.read(userNotifierProviderImpl.notifier);
+    AppUser user = ref.watch(userNotifierProviderImpl).value!;
     UserPreferences? userPreferences =
         user.preferences ?? UserPreferences.empty;
     return Scaffold(
@@ -42,7 +42,7 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
             AppButton(
                   isLoading:
                       ref.watch(authNotifierProviderIml).isLoading ||
-                      ref.watch(userProvider).isLoading,
+                      ref.watch(userNotifierProviderImpl).isLoading,
                   color: theme.colorScheme.primary,
                   overrideIconColor: false,
                   buttonType: ButtonType.secondary,
@@ -60,7 +60,7 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
                           message: "Signed in successfully",
                           mode: SnackBarMode.success,
                         );
-                        user = ref.watch(userProvider).value!;
+                        user = ref.watch(userNotifierProviderImpl).value!;
 
                         /// Update User
                         if (context.mounted) {

@@ -19,7 +19,7 @@ class ProfileScreen extends ConsumerWidget {
     final ThemeData theme = Theme.of(context);
     final bool isDarkMode = theme.colorScheme.brightness == Brightness.dark;
 
-    final userState = ref.watch(userProvider);
+    final userState = ref.watch(userNotifierProviderImpl);
     final AppUser selfUser = userState.value!;
     //AppUser selfUser = AppUser.sample;
     final UserProfile userProfile = selfUser.profile.target!;

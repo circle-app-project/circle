@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:circle/features/auth/services/user/local/user_local_service.dart';
-import 'package:circle/main.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,7 +11,7 @@ part 'auth_notifier.g.dart';
 
 final AuthService authService = AuthService();
 final AuthRepository _authRepository = AuthRepositoryImpl(
-  userLocalService: UserLocalService(store: database.store),
+  userLocalService: userLocalService,
   authService: authService,
 );
 

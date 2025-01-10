@@ -16,7 +16,7 @@ class AuthSuccessScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
-    AppUser user = ref.watch(userProvider).value!;
+    AppUser user = ref.watch(userNotifierProviderImpl).value!;
     String userName = user.getDisplayName();
     //Todo: Rearrange animation timing;
     return Scaffold(

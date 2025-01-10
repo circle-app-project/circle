@@ -41,10 +41,10 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
   }
 
   Future<void> evaluateInitialLocation(BuildContext context) async {
-    log("EVALUATING INITIAL LOCATION");
-    final userNotifier = ref.watch(userProvider.notifier);
+    log("Evaluating Initial Route", name: "Loading Screen");
+    final userNotifier = ref.watch(userNotifierProviderImpl.notifier);
     await userNotifier.getSelfUserData();
-    final AppUser user = ref.watch(userProvider).value!;
+    final AppUser user = ref.watch(userNotifierProviderImpl).value!;
     UserPreferences userPreferences =
         user.preferences ?? UserPreferences.empty;
     final bool isFirstTime = userPreferences.isFirstTime;
