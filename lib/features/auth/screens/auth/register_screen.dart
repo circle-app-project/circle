@@ -164,7 +164,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
                       ///Buttons
                       AppButton(
-                        isLoading: ref.watch(authNotifierProviderIml).isLoading || ref.watch(userNotifierProviderImpl).isLoading,
+                        isLoading:
+                            ref.watch(authNotifierProviderIml).isLoading ||
+                            ref.watch(userNotifierProviderImpl).isLoading,
                         label: "Sign Up",
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
@@ -176,14 +178,26 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
                             ///Notify users when all operations are completed or fails
                             if (context.mounted) {
-                              if (authNotifier.isSuccessful &&
-                                  userNotifier.isSuccessful) {
+                              if (ref.watch(authNotifierProviderIml).hasError ||
+                                  ref
+                                      .watch(userNotifierProviderImpl)
+                                      .hasError) {
+                                showCustomSnackBar(
+                                  context: context,
+                                  error:
+                                      ref
+                                          .watch(authNotifierProviderIml)
+                                          .error ??
+                                      ref.watch(userNotifierProviderImpl).error,
+                                );
+                              } else {
                                 showCustomSnackBar(
                                   context: context,
                                   message: "Signed in successfully",
                                   mode: SnackBarMode.success,
                                 );
-                                user = ref.watch(userNotifierProviderImpl).value!;
+                                user =
+                                    ref.watch(userNotifierProviderImpl).value!;
 
                                 /// Update User
                                 if (context.mounted) {
@@ -205,17 +219,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                     if (userPreferences.isOnboarded) {
                                       context.goNamed(BottomNavBar.id);
                                     } else {
-                                      context.goNamed(ProfileBasicInfoScreen.id);
+                                      context.goNamed(
+                                        ProfileBasicInfoScreen.id,
+                                      );
                                     }
                                   }
                                 }
-                              } else if (authNotifier.errorMessage != null ||
-                                  userNotifier.errorMessage != null) {
-                                showCustomSnackBar(
-                                  context: context,
-                                  message: authNotifier.errorMessage!,
-                                  mode: SnackBarMode.error,
-                                );
                               }
                             }
                           }

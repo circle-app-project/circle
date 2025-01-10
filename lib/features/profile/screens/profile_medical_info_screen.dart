@@ -48,15 +48,13 @@ class _ProfileMedicalInfoScreenState
   // }
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) async {});
 
     Future.microtask(() async {
       await ref.watch(userNotifierProviderImpl.notifier).getSelfUserData();
       AppUser user = ref.watch(userNotifierProviderImpl).value!;
       UserProfile? userProfile = user.profile.target;
-      if(userProfile != null){
+      if (userProfile != null) {
         medicalConditions = userProfile.medicalConditions ?? [];
         allergies = userProfile.allergies ?? [];
       }
@@ -70,8 +68,7 @@ class _ProfileMedicalInfoScreenState
     final userNotifier = ref.watch(userNotifierProviderImpl.notifier);
     AppUser user = ref.watch(userNotifierProviderImpl).value!;
     UserProfile userProfile = user.profile.target ?? UserProfile.empty;
-    UserPreferences userPreferences =
-        user.preferences?? UserPreferences.empty;
+    UserPreferences userPreferences = user.preferences ?? UserPreferences.empty;
 
     return Scaffold(
       body: Padding(
@@ -89,13 +86,14 @@ class _ProfileMedicalInfoScreenState
                   },
                   label: "Skip",
                   buttonType: ButtonType.text,
-                )
+                ),
               ],
             ),
             Text(
               "Allergies",
-              style: theme.textTheme.bodyLarge!
-                  .copyWith(fontWeight: FontWeight.w700),
+              style: theme.textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
             const Gap(12),
 
@@ -108,19 +106,17 @@ class _ProfileMedicalInfoScreenState
                   allergiesController.clear();
                 });
               },
-              decoration:
-                  AppInputDecoration.inputDecoration(context).copyWith(
+              decoration: AppInputDecoration.inputDecoration(context).copyWith(
                 hintText: "e.g. Peanuts",
                 suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        allergies.add(allergiesController.text.trim());
-                        allergiesController.clear();
-                      });
-                    },
-                    icon: const Icon(
-                      FluentIcons.checkmark_24_filled,
-                    )),
+                  onPressed: () {
+                    setState(() {
+                      allergies.add(allergiesController.text.trim());
+                      allergiesController.clear();
+                    });
+                  },
+                  icon: const Icon(FluentIcons.checkmark_24_filled),
+                ),
               ),
             ),
             const Gap(12),
@@ -144,8 +140,9 @@ class _ProfileMedicalInfoScreenState
             const Gap(12),
             Text(
               "Medical Conditions",
-              style: theme.textTheme.bodyLarge!
-                  .copyWith(fontWeight: FontWeight.w700),
+              style: theme.textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
             const Gap(12),
             TextFormField(
@@ -153,25 +150,25 @@ class _ProfileMedicalInfoScreenState
               textCapitalization: TextCapitalization.sentences,
               onFieldSubmitted: (String value) {
                 setState(() {
-                  medicalConditions
-                      .add(medicalConditionsController.text.trim());
+                  medicalConditions.add(
+                    medicalConditionsController.text.trim(),
+                  );
                   medicalConditionsController.clear();
                 });
               },
-              decoration:
-                  AppInputDecoration.inputDecoration(context).copyWith(
+              decoration: AppInputDecoration.inputDecoration(context).copyWith(
                 hintText: "e.g. Acute Chest Syndrome",
                 suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        medicalConditions
-                            .add(medicalConditionsController.text.trim());
-                        medicalConditionsController.clear();
-                      });
-                    },
-                    icon: const Icon(
-                      FluentIcons.checkmark_24_filled,
-                    )),
+                  onPressed: () {
+                    setState(() {
+                      medicalConditions.add(
+                        medicalConditionsController.text.trim(),
+                      );
+                      medicalConditionsController.clear();
+                    });
+                  },
+                  icon: const Icon(FluentIcons.checkmark_24_filled),
+                ),
               ),
             ),
             const Gap(12),
@@ -193,38 +190,41 @@ class _ProfileMedicalInfoScreenState
               ],
             ),
 
-                         Spacer(),
+            Spacer(),
             AppButton(
               isLoading: ref.watch(userNotifierProviderImpl).isLoading,
-                onPressed: () async {
-                  user = user.copyWith(
-                      preferences:
-                          userPreferences.copyWith(isOnboarded: true),
-                      profile: userProfile.copyWith(
-                          allergies: allergies,
-                          medicalConditions: medicalConditions,
-                          bmi: userProfile.calculateBMI()));
+              onPressed: () async {
+                user = user.copyWith(
+                  preferences: userPreferences.copyWith(isOnboarded: true),
+                  profile: userProfile.copyWith(
+                    allergies: allergies,
+                    medicalConditions: medicalConditions,
+                    bmi: userProfile.calculateBMI(),
+                  ),
+                );
 
-                  //Send data to firebase
-                  await userNotifier.putUserData(
-                      user: user, updateRemote: true);
+                //Send data to firebase
+                await userNotifier.putUserData(user: user, updateRemote: true);
 
-                  if (context.mounted) {
-                    if (userNotifier.isSuccessful) {
-                      showCustomSnackBar(
-                          context: context,
-                          message: "Profile Updated",
-                          mode: SnackBarMode.success);
-                      context.pushNamed(SuggestedWaterDailyGoalScreen.id);
-                    } else if (userNotifier.errorMessage != null) {
-                      showCustomSnackBar(
-                          context: context,
-                          message: "Something went wrong",
-                          mode: SnackBarMode.error);
-                    }
+                if (context.mounted) {
+                  if (ref.watch(userNotifierProviderImpl).hasError) {
+                    showCustomSnackBar(
+                      context: context,
+                      message: "Something went wrong",
+                      error: ref.watch(userNotifierProviderImpl).error,
+                    );
+                  } else {
+                    showCustomSnackBar(
+                      context: context,
+                      message: "Profile Updated",
+                      mode: SnackBarMode.success,
+                    );
+                    context.pushNamed(SuggestedWaterDailyGoalScreen.id);
                   }
-                },
-                label: "Continue"),
+                }
+              },
+              label: "Continue",
+            ),
             const Gap(64),
           ],
         ),

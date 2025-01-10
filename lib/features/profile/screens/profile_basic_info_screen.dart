@@ -47,7 +47,8 @@ class _ProfileBasicInfoScreenState
           selectedRadioValue = userProfile.gender ?? Gender.male;
           nameController.text =
               userProfile.displayName ?? userProfile.name ?? "";
-          ageController.text = userProfile.age !=null ? userProfile.age.toString() : "";
+          ageController.text =
+              userProfile.age != null ? userProfile.age.toString() : "";
         });
       }
     });
@@ -78,14 +79,14 @@ class _ProfileBasicInfoScreenState
                           : "Tell us more\nabout you",
                 ),
 
-                if(widget.isEditing!)
+                if (widget.isEditing!)
                   EditableAvatar(
                     onEditPressed: () {
                       ///Todo: Implement on Edit Pressed;
                     },
                     imagePath: "assets/images/memoji2.jpg",
                   ),
-                if(widget.isEditing!)  const Gap(32),
+                if (widget.isEditing!) const Gap(32),
                 Text("Full Names", style: theme.textTheme.bodyMedium),
                 const Gap(8),
                 TextFormField(
@@ -126,8 +127,7 @@ class _ProfileBasicInfoScreenState
                               itemExtent: 48,
                               onSelectedItemChanged: (selectedValue) {
                                 setState(() {
-                                  ageController.text =
-                                      selectedValue.toString();
+                                  ageController.text = selectedValue.toString();
                                 });
                               },
                               primaryInitialValue: 0,
@@ -196,27 +196,39 @@ class _ProfileBasicInfoScreenState
 
                         /// Also show snack bars when making remote calls
                         if (context.mounted) {
-                          if (userNotifier.isSuccessful) {
-                            showCustomSnackBar(
-                              context: context,
-                              message: "Profile Updated",
-                              mode: SnackBarMode.success,
-                            );
-                          } else {
+                          if (ref.watch(userNotifierProviderImpl).hasError) {
                             showCustomSnackBar(
                               context: context,
                               message: "Failed to update user",
                               mode: SnackBarMode.error,
                             );
+                          } else {
+                            showCustomSnackBar(
+                              context: context,
+                              message: "Profile Updated",
+                              mode: SnackBarMode.success,
+                            );
                           }
                         }
                       } else {
+                        /// Is not editing
                         await userNotifier.putUserData(
                           user: user,
                           updateRemote: false,
                         );
+
+                        /// Also show snack bars when making remote calls
                         if (context.mounted) {
-                          context.pushNamed(ProfileVitalsInfoScreen.id);
+                          if (ref.watch(userNotifierProviderImpl).hasError) {
+                            showCustomSnackBar(
+                              context: context,
+                              message: "Failed to update user",
+                              mode: SnackBarMode.error,
+                            );
+                          }else{
+                            context.pushNamed(ProfileVitalsInfoScreen.id);
+                          }
+
                         }
                       }
                     }

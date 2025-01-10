@@ -110,7 +110,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
                 ///Buttons
                 AppButton(
-                  isLoading: ref.watch(authNotifierProviderIml).isLoading || ref.watch(userNotifierProviderImpl).isLoading,
+                  isLoading:
+                      ref.watch(authNotifierProviderIml).isLoading ||
+                      ref.watch(userNotifierProviderImpl).isLoading,
                   label: "Sign In",
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
@@ -119,10 +121,20 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         password: passwordController.text.trim(),
                       );
                       await userNotifier.getSelfUserData();
+
                       ///Notify users when all operations are completed or fails
                       if (context.mounted) {
-                        if (authNotifier.isSuccessful &&
-                            userNotifier.isSuccessful) {
+                        /// If error occurs
+                        if (ref.watch(authNotifierProviderIml).hasError ||
+                            ref.watch(userNotifierProviderImpl).hasError) {
+                          showCustomSnackBar(
+                            context: context,
+                            error:
+                                ref.watch(authNotifierProviderIml).error ??
+                                ref.watch(userNotifierProviderImpl).error,
+                          );
+                        } else {
+                          /// If successful
                           showCustomSnackBar(
                             context: context,
                             message: "Signed in successfully",
@@ -154,13 +166,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                               }
                             }
                           }
-                        } else if (authNotifier.errorMessage != null ||
-                            userNotifier.errorMessage != null) {
-                          showCustomSnackBar(
-                            context: context,
-                            message: authNotifier.errorMessage!,
-                            mode: SnackBarMode.error,
-                          );
                         }
                       }
                     }

@@ -23,22 +23,6 @@ final AuthNotifierProvider authNotifierProviderIml = authNotifierProvider(
 class AuthNotifier extends _$AuthNotifier {
   late final AuthRepository _authRepository;
 
-  ///Getters to actually know when an operation is successful or not;
-
-  @Deprecated("Deprecated, Prefer using !ref.watch(authProvider).hasError")
-  bool get isSuccessful =>
-      state.hasValue &&
-      state.value != null &&
-      !state.hasError &&
-      (state.value is! AppUser || (state.value as AppUser).isNotEmpty);
-
-  @Deprecated(
-    "Probably move this to the custom snack bar... Deprecating for now",
-  )
-  String? get errorMessage =>
-      state.error is Failure
-          ? (state.error as Failure).message
-          : state.error.toString();
 
   @override
   FutureOr<AppUser> build({required AuthRepository authRepository}) async {
