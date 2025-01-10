@@ -4,9 +4,8 @@ export 'models/user/user_profile.dart';
 
 
 export 'providers/auth/auth_notifier.dart';
-
 export 'providers/user/user_notifier.dart';
-export 'providers/user/user_provider.dart';
+
 
 export 'repositories/user/user_repository.dart';
 export 'repositories/auth/auth_repository.dart';

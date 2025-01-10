@@ -38,8 +38,8 @@ class _ProfileBasicInfoScreenState
   @override
   void initState() {
     Future.microtask(() async {
-      await ref.watch(userProvider.notifier).getSelfUserData();
-      AppUser user = ref.watch(userProvider).value!;
+      await ref.watch(userNotifierProviderImpl.notifier).getSelfUserData();
+      AppUser user = ref.watch(userNotifierProviderImpl).value!;
       UserProfile? userProfile = user.profile.target;
 
       if (userProfile != null) {
@@ -57,8 +57,8 @@ class _ProfileBasicInfoScreenState
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final userNotifier = ref.watch(userProvider.notifier);
-    AppUser user = ref.watch(userProvider).value!;
+    final userNotifier = ref.watch(userNotifierProviderImpl.notifier);
+    AppUser user = ref.watch(userNotifierProviderImpl).value!;
     UserProfile? userProfile = user.profile.target;
 
     return Scaffold(

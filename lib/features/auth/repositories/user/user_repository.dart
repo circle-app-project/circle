@@ -8,12 +8,34 @@ import '../../services/auth/remote/auth_service.dart';
 import '../../services/user/local/user_local_service.dart';
 import '../../services/user/remote/user_service.dart';
 
-class UserRepository {
+abstract class UserRepository {
+  FutureEither<AppUser> getSelfUserData({bool forceRefresh = false});
+
+  ///Todo: Move this logic to the User Service for clear seperations of concerns
+  Future<AppUser> _getRemoteUser(String uid);
+
+  FutureEither<AppUser> updateUserData({
+    required AppUser user,
+    bool updateRemote = false,
+  });
+
+  FutureEither<AppUser> addUserData({
+    required AppUser user,
+    bool updateRemote = false,
+  });
+
+  FutureEither<void> deleteUserData({
+    required AppUser user,
+    bool deleteRemote = false,
+  });
+}
+
+class UserRepositoryImpl implements UserRepository {
   final UserService _userService;
   final UserLocalService _userLocalService;
   final AuthService _authService;
 
-  UserRepository({
+  UserRepositoryImpl({
     required UserService userService,
     required UserLocalService userLocalService,
     required AuthService authService,
@@ -21,6 +43,7 @@ class UserRepository {
        _userLocalService = userLocalService,
        _userService = userService;
 
+  @override
   FutureEither<AppUser> getSelfUserData({bool forceRefresh = false}) async {
     return futureHandler(() async {
       log("GETTING SELF USER", name: "USER REPOSITORY");
@@ -31,7 +54,10 @@ class UserRepository {
 
       if (firebaseUser == null) {
         // f user is not signed in, return an empty class
-        log("USER IS NOT SIGNED IN. Deleting local user data", name: "FIREBASE AUTH");
+        log(
+          "USER IS NOT SIGNED IN. Deleting local user data",
+          name: "FIREBASE AUTH",
+        );
         _userLocalService.deleteUser();
         return AppUser.empty;
       }
@@ -44,18 +70,22 @@ class UserRepository {
 
       // Step 3: Check local database for user data
       AppUser? localUser = _userLocalService.getUserByUid(firebaseUser.uid);
-      if (localUser!=null && localUser.isNotEmpty) {
+      if (localUser != null && localUser.isNotEmpty) {
         log("LOCAL USER FOUND", name: "USER LOCAL SERVICE");
         return localUser;
       }
 
       // Step 4: Fetch remote user as fallback if local user is empty
-      log("LOCAL USER IS EMPTY. Attempting remote fetch...", name: "USER REPOSITORY");
+      log(
+        "LOCAL USER IS EMPTY. Attempting remote fetch...",
+        name: "USER REPOSITORY",
+      );
       return await _getRemoteUser(firebaseUser.uid);
     });
   }
 
   ///Todo: Move this logic to the User Service for clear seperations of concerns
+  @override
   Future<AppUser> _getRemoteUser(String uid) async {
     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await _userService
         .getUserData(uid);
@@ -64,15 +94,19 @@ class UserRepository {
         documentSnapshot.data() != null &&
         documentSnapshot.data()!.isNotEmpty) {
       AppUser remoteUser = AppUser.fromMap(data: documentSnapshot.data()!);
-     await _userLocalService.putAndGetUser(remoteUser);
+      await _userLocalService.putAndGetUser(remoteUser);
       return remoteUser;
     } else {
-      log("FAILED TO FETCH REMOTE USER: USER DATA DOESN'T EXIST", name: "USER REPOSITORY");
+      log(
+        "FAILED TO FETCH REMOTE USER: USER DATA DOESN'T EXIST",
+        name: "USER REPOSITORY",
+      );
       _userLocalService.deleteUser();
       return AppUser.empty;
     }
   }
 
+  @override
   FutureEither<AppUser> updateUserData({
     required AppUser user,
     bool updateRemote = false,
@@ -85,6 +119,7 @@ class UserRepository {
     });
   }
 
+  @override
   FutureEither<AppUser> addUserData({
     required AppUser user,
     bool updateRemote = false,
@@ -98,6 +133,7 @@ class UserRepository {
   }
 
   /// --------- Delete User Data --------///
+  @override
   FutureEither<void> deleteUserData({
     required AppUser user,
     bool deleteRemote = false,

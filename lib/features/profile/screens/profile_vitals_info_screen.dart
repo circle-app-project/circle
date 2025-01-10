@@ -31,8 +31,8 @@ class _ProfileVitalsInfoScreenState
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.watch(userProvider.notifier).getSelfUserData();
-      AppUser user = ref.watch(userProvider).value!;
+      await ref.watch(userNotifierProviderImpl.notifier).getSelfUserData();
+      AppUser user = ref.watch(userNotifierProviderImpl).value!;
       UserProfile userProfile = user.profile.target ?? UserProfile.empty;
       heightController.text = userProfile.height!=null ? userProfile.height.toString() : "";
       weightController.text = userProfile.weight!=null ? userProfile.weight.toString() : "";
@@ -56,8 +56,8 @@ class _ProfileVitalsInfoScreenState
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final UserNotifier userNotifier = ref.watch(userProvider.notifier);
-    AppUser user = ref.watch(userProvider).value!;
+    final UserNotifier userNotifier = ref.watch(userNotifierProviderImpl.notifier);
+    AppUser user = ref.watch(userNotifierProviderImpl).value!;
     UserProfile userProfile = user.profile.target ?? UserProfile.empty;
 
     return Scaffold(

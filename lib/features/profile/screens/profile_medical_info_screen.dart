@@ -53,8 +53,8 @@ class _ProfileMedicalInfoScreenState
     });
 
     Future.microtask(() async {
-      await ref.watch(userProvider.notifier).getSelfUserData();
-      AppUser user = ref.watch(userProvider).value!;
+      await ref.watch(userNotifierProviderImpl.notifier).getSelfUserData();
+      AppUser user = ref.watch(userNotifierProviderImpl).value!;
       UserProfile? userProfile = user.profile.target;
       if(userProfile != null){
         medicalConditions = userProfile.medicalConditions ?? [];
@@ -67,8 +67,8 @@ class _ProfileMedicalInfoScreenState
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final userNotifier = ref.watch(userProvider.notifier);
-    AppUser user = ref.watch(userProvider).value!;
+    final userNotifier = ref.watch(userNotifierProviderImpl.notifier);
+    AppUser user = ref.watch(userNotifierProviderImpl).value!;
     UserProfile userProfile = user.profile.target ?? UserProfile.empty;
     UserPreferences userPreferences =
         user.preferences?? UserPreferences.empty;
@@ -195,7 +195,7 @@ class _ProfileMedicalInfoScreenState
 
                          Spacer(),
             AppButton(
-              isLoading: ref.watch(userProvider).isLoading,
+              isLoading: ref.watch(userNotifierProviderImpl).isLoading,
                 onPressed: () async {
                   user = user.copyWith(
                       preferences:

@@ -39,8 +39,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final ThemeData theme = Theme.of(context);
     bool isDarkMode = theme.brightness == Brightness.dark;
     final authNotifier = ref.read(authNotifierProviderIml.notifier);
-    final userNotifier = ref.read(userProvider.notifier);
-    AppUser user = ref.watch(userProvider).value!;
+    final userNotifier = ref.read(userNotifierProviderImpl.notifier);
+    AppUser user = ref.watch(userNotifierProviderImpl).value!;
     UserPreferences userPreferences = user.preferences ?? UserPreferences.empty;
 
     return Scaffold(
@@ -164,7 +164,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
                       ///Buttons
                       AppButton(
-                        isLoading: ref.watch(authNotifierProviderIml).isLoading || ref.watch(userProvider).isLoading,
+                        isLoading: ref.watch(authNotifierProviderIml).isLoading || ref.watch(userNotifierProviderImpl).isLoading,
                         label: "Sign Up",
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
@@ -183,7 +183,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   message: "Signed in successfully",
                                   mode: SnackBarMode.success,
                                 );
-                                user = ref.watch(userProvider).value!;
+                                user = ref.watch(userNotifierProviderImpl).value!;
 
                                 /// Update User
                                 if (context.mounted) {
