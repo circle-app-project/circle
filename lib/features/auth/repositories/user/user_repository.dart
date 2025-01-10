@@ -10,20 +10,16 @@ import '../../services/user/remote/user_service.dart';
 
 abstract class UserRepository {
   FutureEither<AppUser> getSelfUserData({bool forceRefresh = false});
-
   ///Todo: Move this logic to the User Service for clear seperations of concerns
-  Future<AppUser> _getRemoteUser(String uid);
 
   FutureEither<AppUser> updateUserData({
     required AppUser user,
     bool updateRemote = false,
   });
-
   FutureEither<AppUser> addUserData({
     required AppUser user,
     bool updateRemote = false,
   });
-
   FutureEither<void> deleteUserData({
     required AppUser user,
     bool deleteRemote = false,

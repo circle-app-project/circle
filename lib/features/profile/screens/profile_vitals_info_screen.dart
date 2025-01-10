@@ -34,8 +34,10 @@ class _ProfileVitalsInfoScreenState
       await ref.watch(userNotifierProviderImpl.notifier).getSelfUserData();
       AppUser user = ref.watch(userNotifierProviderImpl).value!;
       UserProfile userProfile = user.profile.target ?? UserProfile.empty;
-      heightController.text = userProfile.height!=null ? userProfile.height.toString() : "";
-      weightController.text = userProfile.weight!=null ? userProfile.weight.toString() : "";
+      heightController.text =
+          userProfile.height != null ? userProfile.height.toString() : "";
+      weightController.text =
+          userProfile.weight != null ? userProfile.weight.toString() : "";
 
       if (userProfile.genotype != null) {
         setState(() {
@@ -56,7 +58,9 @@ class _ProfileVitalsInfoScreenState
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final UserNotifier userNotifier = ref.watch(userNotifierProviderImpl.notifier);
+    final UserNotifier userNotifier = ref.watch(
+      userNotifierProviderImpl.notifier,
+    );
     AppUser user = ref.watch(userNotifierProviderImpl).value!;
     UserProfile userProfile = user.profile.target ?? UserProfile.empty;
 
@@ -73,18 +77,19 @@ class _ProfileVitalsInfoScreenState
                   CustomAppBar(
                     pageTitle:
                         widget.isEditing! ? "Edit Vitals" : "Vitals Info",
-                    actions: !widget.isEditing!
-                        ? [
-                            AppButton(
-                              isChipButton: true,
-                              onPressed: () {
-                                //Todo: Skip Page
-                              },
-                              label: "Skip",
-                              buttonType: ButtonType.text,
-                            )
-                          ]
-                        : null,
+                    actions:
+                        !widget.isEditing!
+                            ? [
+                              AppButton(
+                                isChipButton: true,
+                                onPressed: () {
+                                  //Todo: Skip Page
+                                },
+                                label: "Skip",
+                                buttonType: ButtonType.text,
+                              ),
+                            ]
+                            : null,
                   ),
 
                   ///Content
@@ -93,19 +98,21 @@ class _ProfileVitalsInfoScreenState
                       SvgPicture.asset(
                         "assets/svg/ruler.svg",
                         colorFilter: ColorFilter.mode(
-                            theme.colorScheme.primary, BlendMode.srcIn),
+                          theme.colorScheme.primary,
+                          BlendMode.srcIn,
+                        ),
                       ),
                       const Gap(4),
-                      Text("Your Height",
-                          style: theme.textTheme.bodyMedium),
+                      Text("Your Height", style: theme.textTheme.bodyMedium),
                     ],
                   ),
                   const Gap(8),
                   TextFormField(
                     controller: heightController,
                     keyboardType: TextInputType.number,
-                    decoration: AppInputDecoration.inputDecoration(context)
-                        .copyWith(hintText: "Height"),
+                    decoration: AppInputDecoration.inputDecoration(
+                      context,
+                    ).copyWith(hintText: "Height"),
                   ),
                   const Gap(24),
                   Row(
@@ -113,21 +120,21 @@ class _ProfileVitalsInfoScreenState
                       SvgPicture.asset(
                         "assets/svg/weight.svg",
                         colorFilter: ColorFilter.mode(
-                            theme.colorScheme.primary, BlendMode.srcIn),
+                          theme.colorScheme.primary,
+                          BlendMode.srcIn,
+                        ),
                       ),
                       const Gap(4),
-                      Text("Your Weight",
-                          style: theme.textTheme.bodyMedium),
+                      Text("Your Weight", style: theme.textTheme.bodyMedium),
                     ],
                   ),
                   const Gap(8),
                   TextFormField(
                     controller: weightController,
                     keyboardType: TextInputType.number,
-                    decoration: AppInputDecoration.inputDecoration(context)
-                        .copyWith(
-                      hintText: "Weight",
-                    ),
+                    decoration: AppInputDecoration.inputDecoration(
+                      context,
+                    ).copyWith(hintText: "Weight"),
                   ),
                   const Gap(24),
                   Row(
@@ -135,11 +142,12 @@ class _ProfileVitalsInfoScreenState
                       SvgPicture.asset(
                         "assets/svg/dna.svg",
                         colorFilter: ColorFilter.mode(
-                            theme.colorScheme.primary, BlendMode.srcIn),
+                          theme.colorScheme.primary,
+                          BlendMode.srcIn,
+                        ),
                       ),
                       const Gap(4),
-                      Text("Your Genotype",
-                          style: theme.textTheme.bodyMedium),
+                      Text("Your Genotype", style: theme.textTheme.bodyMedium),
                     ],
                   ),
                   const Gap(8),
@@ -155,55 +163,73 @@ class _ProfileVitalsInfoScreenState
 
                   ///Buttons
                   AppButton(
-                      icon: widget.isEditing!
-                          ? FluentIcons.checkmark_24_regular
-                          : null,
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          user = user.copyWith(
-                              profile: userProfile.copyWith(
-                                  height: double.tryParse(
-                                      heightController.text.trim()),
-                                  weight: double.tryParse(
-                                      weightController.text.trim()),
-                                  genotype: selectedGenotype));
+                    icon:
+                        widget.isEditing!
+                            ? FluentIcons.checkmark_24_regular
+                            : null,
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        user = user.copyWith(
+                          profile: userProfile.copyWith(
+                            height: double.tryParse(
+                              heightController.text.trim(),
+                            ),
+                            weight: double.tryParse(
+                              weightController.text.trim(),
+                            ),
+                            genotype: selectedGenotype,
+                          ),
+                        );
 
-                          if (widget.isEditing!) {
-                            ///Always update remote when the user is editing data.
-                            ///But do not do that when the user is adding data because
-                            ///the user is onboarding for the first time,
-                            ///the data will be gathered and saved at the
-                            ///end of the onboard process
+                        if (widget.isEditing!) {
+                          ///Always update remote when the user is editing data.
+                          ///But do not do that when the user is adding data because
+                          ///the user is onboarding for the first time,
+                          ///the data will be gathered and saved at the
+                          ///end of the onboard process
 
-                            await userNotifier.putUserData(
-                                user: user, updateRemote: true);
+                          await userNotifier.putUserData(
+                            user: user,
+                            updateRemote: true,
+                          );
 
-                            ///Also show snack bars when making remote calls
-                            if (context.mounted) {
-                              if (userNotifier.isSuccessful) {
-                                showCustomSnackBar(
-                                    context: context,
-                                    message: "Profile Updated",
-                                    mode: SnackBarMode.success);
-                              } else {
-                                showCustomSnackBar(
-                                    context: context,
-                                    message: "Something went wrong",
-                                    mode: SnackBarMode.error);
-                              }
-                            }
-                          } else {
-                            await userNotifier.putUserData(
-                                user: user, updateRemote: false);
-                          }
-
+                          ///Also show snack bars when making remote calls
                           if (context.mounted) {
-                            ///Todo: Add parameters for isEditing to know if it is editing or not
-                            context.pushNamed(ProfileMedicalInfoScreen.id);
+                            if (ref.watch(userNotifierProviderImpl).hasError) {
+                              showCustomSnackBar(
+                                context: context,
+                                message: "Something went wrong",
+                                mode: SnackBarMode.error,
+                              );
+                            } else {
+                              showCustomSnackBar(
+                                context: context,
+                                message: "Profile Updated",
+                                mode: SnackBarMode.success,
+                              );
+                            }
+                          }
+                        } else {
+                          await userNotifier.putUserData(
+                            user: user,
+                            updateRemote: false,
+                          );
+                          if (context.mounted) {
+                            if (ref.watch(userNotifierProviderImpl).hasError) {
+                              showCustomSnackBar(
+                                context: context,
+                                message: "Something went wrong",
+                                mode: SnackBarMode.error,
+                              );
+                            } else {
+                              context.pushNamed(ProfileMedicalInfoScreen.id);
+                            }
                           }
                         }
-                      },
-                      label: widget.isEditing! ? "Save" : "Continue"),
+                      }
+                    },
+                    label: widget.isEditing! ? "Save" : "Continue",
+                  ),
                   const Gap(64),
                 ],
               ),

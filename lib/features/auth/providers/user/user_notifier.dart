@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/core.dart';
@@ -28,20 +27,6 @@ final UserNotifierProvider userNotifierProviderImpl = userNotifierProvider(
 @Riverpod(keepAlive: true)
 class UserNotifier extends _$UserNotifier {
   late final UserRepository _userRepository;
-
-  ///Getter to actually know when an operation is successful or not;
-  @Deprecated("Prefer using ref.watch(userProvider) instead")
-  bool get isSuccessful =>
-      state.hasValue &&
-      state.value != null &&
-      state.value!.isNotEmpty &&
-      !state.hasError;
-
-  @Deprecated("Prefer moving this to snack bar widget")
-  String? get errorMessage =>
-      state.error is Failure
-          ? (state.error as Failure).message
-          : state.error.toString();
 
   @override
   FutureOr<AppUser> build({required UserRepository userRepository}) async {

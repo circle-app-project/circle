@@ -53,15 +53,20 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
 
                     ///Notify users when all operations are completed or fails
                     if (context.mounted) {
-                      if (authNotifier.isSuccessful &&
-                          userNotifier.isSuccessful) {
+                      if (ref.watch(userNotifierProviderImpl).hasError) {
+                        showCustomSnackBar(
+                          context: context,
+                          error: ref.watch(userNotifierProviderImpl).error!,
+                          mode: SnackBarMode.error,
+                        );
+                      } else {
+                        // Assume Successful
                         showCustomSnackBar(
                           context: context,
                           message: "Signed in successfully",
                           mode: SnackBarMode.success,
                         );
                         user = ref.watch(userNotifierProviderImpl).value!;
-
                         /// Update User
                         if (context.mounted) {
                           if (userPreferences.isFirstTime) {
@@ -86,13 +91,6 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
                             }
                           }
                         }
-                      } else if (authNotifier.errorMessage != null ||
-                          userNotifier.errorMessage != null) {
-                        showCustomSnackBar(
-                          context: context,
-                          message: authNotifier.errorMessage!,
-                          mode: SnackBarMode.error,
-                        );
                       }
                     }
                   },
