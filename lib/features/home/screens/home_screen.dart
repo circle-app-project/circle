@@ -23,8 +23,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     //Todo: Initialize all data here
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.watch(userNotifierProviderImpl.notifier).getSelfUserData();
-      await ref.watch(waterLogProvider.notifier).getWaterLogs();
-      await ref.watch(waterPreferencesProvider.notifier).getWaterPreferences();
+      await ref.watch(waterLogNotifierProviderIml.notifier).getWaterLogs();
+      await ref.watch(waterPrefsNotifierProviderImpl.notifier).getWaterPreferences();
     });
     super.initState();
   }
@@ -35,9 +35,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final AppUser user = ref.watch(userNotifierProviderImpl).value!;
 
-    final waterLogNotifier = ref.watch(waterLogProvider.notifier);
+    final waterLogNotifier = ref.watch(waterLogNotifierProviderIml.notifier);
 
-    List<WaterLog>? totalLogsToday = ref.watch(waterLogProvider).value!;
+    List<WaterLog>? totalLogsToday = ref.watch(waterLogNotifierProviderIml).value!;
 
     //Todo: This calculation should be done somewhere in the water notifier and the value just returned.
     double totalToday =

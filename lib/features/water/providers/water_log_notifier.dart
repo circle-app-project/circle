@@ -1,30 +1,40 @@
 import 'dart:developer';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:circle/features/auth/auth.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/core.dart';
+import '../../../main.dart';
 import '../../auth/models/user/app_user.dart';
 import '../water.dart';
 
-class WaterLogNotifier extends AsyncNotifier<List<WaterLog>> {
-  final WaterRepository _waterRepository;
-  WaterLogNotifier({required WaterRepository waterRepository})
-      : _waterRepository = waterRepository;
 
-  ///Getters to actually know when an operation is successful or not;
-  bool get isSuccessful =>
-      state.hasValue &&
-      state.value != null &&
-      state.value!.isNotEmpty &&
-      !state.hasError;
+part 'water_log_notifier.g.dart';
 
-  String? get errorMessage => state.error is Failure
-      ? (state.error as Failure).message
-      : state.error.toString();
+
+final WaterService waterService = WaterService();
+final WaterLocalService waterLocalService = WaterLocalService(store: database.store);
+
+final WaterRepository waterRepository = WaterRepositoryImpl(
+  waterLocalService: waterLocalService,
+  waterService: waterService,
+
+);
+
+final WaterLogNotifierProvider waterLogNotifierProviderIml = waterLogNotifierProvider(
+  waterRepository: waterRepository,
+);
+
+
+@Riverpod(keepAlive: true)
+class WaterLogNotifier extends _$WaterLogNotifier {
+late final WaterRepository _waterRepository;
+
 
   @override
-  Future<List<WaterLog>> build() async {
+  FutureOr<List<WaterLog>> build({required WaterRepository waterRepository}) async {
+  _waterRepository = waterRepository;
     return [];
   }
 
@@ -90,17 +100,17 @@ class WaterLogNotifier extends AsyncNotifier<List<WaterLog>> {
       {required WaterLog entry,
       required AppUser user,
       bool updateRemote = false}) async {
-    log("ADDING WATER LOG", name: "WATER LOG NOTIFIER");
+    log("ADDING WATER LOG", name: "Water Log Notifier");
     //print("Adding log");
     Stopwatch stopwatch = Stopwatch()..start();
     state = const AsyncValue.loading();
     final Either<Failure, void> response = await _waterRepository.addWaterLog(
         log: entry, user: user, updateRemote: updateRemote);
     response.fold((failure) {
-      log("RETURNED FAILURE", name: "WATER LOG NOTIFIER");
+      log("RETURNED FAILURE", name: "Water Log Notifier");
       state = AsyncValue.error(failure, failure.stackTrace ?? StackTrace.current);
     }, (empty) async {
-           log("RETURNED FAILURE", name: "WATER LOG NOTIFIER");
+           log("RETURNED FAILURE", name: "Water Log Notifier");
       await getWaterLogs();
       //  print("Added stopwatch and got updated logs");
       stopwatch.stop();
@@ -113,15 +123,15 @@ class WaterLogNotifier extends AsyncNotifier<List<WaterLog>> {
     required AppUser user,
     bool updateRemote = false,
   }) async {
-    log("UPDATING WATER LOG", name: "WATER LOG NOTIFIER");
+    log("UPDATING WATER LOG", name: "Water Log Notifier");
     state = const AsyncValue.loading();
     final Either<Failure, void> response = await _waterRepository.addWaterLog(
         log: entry, user: user, updateRemote: updateRemote);
     response.fold((failure) {
-           log("RETURNED FAILURE", name: "WATER LOG NOTIFIER");
+           log("RETURNED FAILURE", name: "Water Log Notifier");
       state = AsyncValue.error(failure, failure.stackTrace ?? StackTrace.current);
     }, (empty) async {
-           log("RETURNED FAILURE", name: "WATER LOG NOTIFIER");
+           log("RETURNED FAILURE", name: "Water Log Notifier");
       await getWaterLogs();
     });
   }
@@ -131,15 +141,15 @@ class WaterLogNotifier extends AsyncNotifier<List<WaterLog>> {
     required AppUser user,
     bool updateRemote = false,
   }) async {
-    log("DELETING WATER LOG", name: "WATER LOG NOTIFIER");
+    log("DELETING WATER LOG", name: "Water Log Notifier");
     state = const AsyncValue.loading();
     final Either<Failure, void> response = await _waterRepository.deleteLog(
         log: entry, user: user, updateRemote: updateRemote);
     response.fold((failure) {
-           log("RETURNED FAILURE", name: "WATER LOG NOTIFIER");
+           log("RETURNED FAILURE", name: "Water Log Notifier");
       state = AsyncValue.error(failure, failure.stackTrace ?? StackTrace.current);
     }, (empty) async {
-           log("RETURNED FAILURE", name: "WATER LOG NOTIFIER");
+           log("RETURNED FAILURE", name: "Water Log Notifier");
       await getWaterLogs();
     });
   }
@@ -148,15 +158,15 @@ class WaterLogNotifier extends AsyncNotifier<List<WaterLog>> {
     required AppUser user,
     bool updateRemote = false,
   }) async {
-    log("CLEARING WATER LOG", name: "WATER LOG NOTIFIER");
+    log("CLEARING WATER LOG", name: "Water Log Notifier");
     state = const AsyncValue.loading();
     final Either<Failure, void> response =
         await _waterRepository.clear(user: user, updateRemote: updateRemote);
     response.fold((failure) {
-           log("RETURNED FAILURE", name: "WATER LOG NOTIFIER");
+           log("RETURNED FAILURE", name: "Water Log Notifier");
       state = AsyncValue.error(failure, failure.stackTrace ?? StackTrace.current);
     }, (empty) async {
-           log("RETURNED FAILURE", name: "WATER LOG NOTIFIER");
+           log("RETURNED FAILURE", name: "Water Log Notifier");
       await getWaterLogs();
     });
   }

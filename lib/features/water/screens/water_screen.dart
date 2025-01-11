@@ -29,7 +29,7 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.watch(waterLogProvider.notifier).getWaterLogs();
+      ref.watch(waterLogNotifierProviderIml.notifier).getWaterLogs();
     });
     super.initState();
   }
@@ -37,9 +37,9 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
   @override
   Widget build(BuildContext context) {
     final WaterLogNotifier waterLogNotifier =
-        ref.watch(waterLogProvider.notifier);
+        ref.watch(waterLogNotifierProviderIml.notifier);
     AppUser selfUser = ref.watch(userNotifierProviderImpl).value!;
-    List<WaterLog> allLogs = ref.watch(waterLogProvider).value!;
+    List<WaterLog> allLogs = ref.watch(waterLogNotifierProviderIml).value!;
   //  WaterStats waterStats = ref.watch(waterStatsProvider);
 
 
@@ -61,172 +61,169 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
         logsThisMonth: [],
         dailyGoal: 2000);
     WaterPreferences waterPreferences =
-        ref.watch(waterPreferencesProvider).value!;
+        ref.watch(waterPrefsNotifierProviderImpl).value!;
     List<WaterLog>? todayLogs = waterStats.logsToday;
     List<WaterLog>? thisWeekLogs = waterStats.logsThisWeek;
     List<WaterLog>? thisMonthLogs = waterStats.logsThisMonth;
 
     final ThemeData theme = Theme.of(context);
     return Scaffold(
-      body: SnackBarNotifier(
-        provider: waterLogProvider,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const CustomAppBar(pageTitle: "Water"),
-              Align(
-                alignment: Alignment.center,
-                child: CustomCircularPercentIndicator(
-                  value: waterStats.percentCompleteToday.toInt().toString(),
-                  shouldAnimate: true,
-                  unit: "%",
-                  progress: waterStats.percentCompleteToday > 100
-                      ? 1
-                      : waterStats.percentCompleteToday / 100,
-                ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const CustomAppBar(pageTitle: "Water"),
+            Align(
+              alignment: Alignment.center,
+              child: CustomCircularPercentIndicator(
+                value: waterStats.percentCompleteToday.toInt().toString(),
+                shouldAnimate: true,
+                unit: "%",
+                progress: waterStats.percentCompleteToday > 100
+                    ? 1
+                    : waterStats.percentCompleteToday / 100,
               ),
-              const Gap(kPadding16),
-              Align(
-                alignment: Alignment.center,
-                child: Text("${waterStats.totalToday.toInt()} ml",
-                    style: theme.textTheme.displaySmall!
-                        .copyWith(fontWeight: FontWeight.w700)),
-              ),
-              const Gap(kPadding12),
-              Align(
-                alignment: Alignment.center,
-                child: Text(
-                    waterStats.remainingToday <= 0
-                        ? "Goal Completed!"
-                        : "remaining ${waterStats.remainingToday} ml",
-                    style: theme.textTheme.bodyMedium),
-              ),
-              const Gap(kPadding24),
-              WaterVolumeSelector(
-                  selectedVolume: (double? selectedVolume) async {
-                WaterLog waterLog = WaterLog(
-                    timestamp: DateTime.now(),
-                    value: selectedVolume ??
-                        waterPreferences.defaultLogValue!.toDouble());
+            ),
+            const Gap(kPadding16),
+            Align(
+              alignment: Alignment.center,
+              child: Text("${waterStats.totalToday.toInt()} ml",
+                  style: theme.textTheme.displaySmall!
+                      .copyWith(fontWeight: FontWeight.w700)),
+            ),
+            const Gap(kPadding12),
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                  waterStats.remainingToday <= 0
+                      ? "Goal Completed!"
+                      : "remaining ${waterStats.remainingToday} ml",
+                  style: theme.textTheme.bodyMedium),
+            ),
+            const Gap(kPadding24),
+            WaterVolumeSelector(
+                selectedVolume: (double? selectedVolume) async {
+              WaterLog waterLog = WaterLog(
+                  timestamp: DateTime.now(),
+                  value: selectedVolume ??
+                      waterPreferences.defaultLogValue!.toDouble());
 
-                await waterLogNotifier.addWaterLog(
-                    entry: waterLog, user: selfUser, updateRemote: false);
-                if (!waterLogNotifier.isSuccessful &&
-                    waterLogNotifier.errorMessage != null) {
-                  if (context.mounted) {
-                    showCustomSnackBar(
-                        context: context,
-                        message: "Failed to add entry",
-                        mode: SnackBarMode.error);
-                  }
+              await waterLogNotifier.addWaterLog(
+                  entry: waterLog, user: selfUser, updateRemote: false);
+              if(ref.watch(waterLogNotifierProviderIml).hasError){
+                if (context.mounted) {
+                  showCustomSnackBar(
+                      context: context,
+                      message: "Failed to add entry",
+                      mode: SnackBarMode.error);
                 }
-              }),
-              Padding(
-                padding: const EdgeInsets.only(left: kPadding16),
-                child: Text("Statistics", style: theme.textTheme.titleMedium),
-              ),
-              const Gap(kPadding16),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    const Gap(kPadding16),
-                    WaterStatsCard(
-                        dateRange: "Today",
-                        title: "Today so far",
-                        visible: todayLogs.isNotEmpty,
-                        onActionPressed: () {
-                          setState(() {
-                            showFullDay = !showFullDay;
-                          });
-                        },
-                        value:
-                            "${(waterStats.totalToday / 1000).toStringAsFixed(1)} L",
-                        child: LineChartWidget(
-                          yUnit: "L",
-                          timeScale: ChartTimeScale.day,
-                          showFullDay: showFullDay,
-                          spots: ChartDataTransformer
-                              .transformForCumulativeDailyTrend(todayLogs),
-                        )),
-                    const Gap(kPadding16),
-                    WaterStatsCard(
-                      dateRange: "This Week",
-                      title: "This week's average",
-                      visible: thisWeekLogs!.isNotEmpty,
-                      value:
-                          "${(waterStats.averageThisWeek ?? 0).toStringAsFixed(2)} L",
+              }
 
-                      ///Todo: Implement an error widget here
-                      child: BarChartWidget(
+            }),
+            Padding(
+              padding: const EdgeInsets.only(left: kPadding16),
+              child: Text("Statistics", style: theme.textTheme.titleMedium),
+            ),
+            const Gap(kPadding16),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  const Gap(kPadding16),
+                  WaterStatsCard(
+                      dateRange: "Today",
+                      title: "Today so far",
+                      visible: todayLogs.isNotEmpty,
+                      onActionPressed: () {
+                        setState(() {
+                          showFullDay = !showFullDay;
+                        });
+                      },
+                      value:
+                          "${(waterStats.totalToday / 1000).toStringAsFixed(1)} L",
+                      child: LineChartWidget(
                         yUnit: "L",
-                        timeScale: ChartTimeScale.week,
-                        barGroups:
-                            ChartDataTransformer.transformForWeeklyTotals(
-                                logList: thisWeekLogs),
-                      ),
-                    ),
-                    const Gap(kPadding16),
-                    WaterStatsCard(
-                      visible: thisMonthLogs!.isNotEmpty,
-                      dateRange: "This Month",
-                      title: "This month's average",
-                      value:
-                          "${(waterStats.averageThisMonth ?? 0).toStringAsFixed(2)} L",
-                      child: BarChartWidget(
-                          timeScale: ChartTimeScale.month,
-                          yUnit: "L",
-                          barGroups:
-                              ChartDataTransformer.transformForMonthlyTotals(
-                                  logList: thisMonthLogs)),
-                    ),
-                    const Gap(kPadding16),
-                  ],
-                ),
-              )
+                        timeScale: ChartTimeScale.day,
+                        showFullDay: showFullDay,
+                        spots: ChartDataTransformer
+                            .transformForCumulativeDailyTrend(todayLogs),
+                      )),
+                  const Gap(kPadding16),
+                  WaterStatsCard(
+                    dateRange: "This Week",
+                    title: "This week's average",
+                    visible: thisWeekLogs!.isNotEmpty,
+                    value:
+                        "${(waterStats.averageThisWeek ?? 0).toStringAsFixed(2)} L",
 
-              //    const WaterStatistics(),
-              ,
-              const Gap(24),
-              Padding(
-                  padding: const EdgeInsets.only(left: kPadding16),
-                  child:
-                      Text("Today's Logs", style: theme.textTheme.titleMedium)),
-              const Gap(16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kPadding16),
-                child: ListView.separated(
-                  separatorBuilder: (context, index) => const Gap(8),
-                  shrinkWrap: true,
-                  padding: EdgeInsets.zero,
-                  itemCount: waterStats.logsToday.length,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (BuildContext context, int index) {
-                    return WaterLogListItem(
-                      log: waterStats.logsToday[index],
-                      onDeletePressed: () async {
-                        await waterLogNotifier.deleteWaterLog(
-                            entry: waterStats.logsToday[index],
-                            user: selfUser,
-                            updateRemote:
-                                false); // Todo: change to true or setup periodic syncing
-                      },
-                      onEditPressed: (newLog) async {
-                        await waterLogNotifier.updateWaterLog(
-                            entry: newLog,
-                            user: selfUser,
-                            updateRemote:
-                                false); // Todo: change to true or setup periodic syncing
-                        setState(() {});
-                      },
-                    );
-                  },
-                ),
+                    ///Todo: Implement an error widget here
+                    child: BarChartWidget(
+                      yUnit: "L",
+                      timeScale: ChartTimeScale.week,
+                      barGroups:
+                          ChartDataTransformer.transformForWeeklyTotals(
+                              logList: thisWeekLogs),
+                    ),
+                  ),
+                  const Gap(kPadding16),
+                  WaterStatsCard(
+                    visible: thisMonthLogs!.isNotEmpty,
+                    dateRange: "This Month",
+                    title: "This month's average",
+                    value:
+                        "${(waterStats.averageThisMonth ?? 0).toStringAsFixed(2)} L",
+                    child: BarChartWidget(
+                        timeScale: ChartTimeScale.month,
+                        yUnit: "L",
+                        barGroups:
+                            ChartDataTransformer.transformForMonthlyTotals(
+                                logList: thisMonthLogs)),
+                  ),
+                  const Gap(kPadding16),
+                ],
               ),
-              const Gap(64)
-            ],
-          ),
+            )
+
+            //    const WaterStatistics(),
+            ,
+            const Gap(24),
+            Padding(
+                padding: const EdgeInsets.only(left: kPadding16),
+                child:
+                    Text("Today's Logs", style: theme.textTheme.titleMedium)),
+            const Gap(16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kPadding16),
+              child: ListView.separated(
+                separatorBuilder: (context, index) => const Gap(8),
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                itemCount: waterStats.logsToday.length,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  return WaterLogListItem(
+                    log: waterStats.logsToday[index],
+                    onDeletePressed: () async {
+                      await waterLogNotifier.deleteWaterLog(
+                          entry: waterStats.logsToday[index],
+                          user: selfUser,
+                          updateRemote:
+                              false); // Todo: change to true or setup periodic syncing
+                    },
+                    onEditPressed: (newLog) async {
+                      await waterLogNotifier.updateWaterLog(
+                          entry: newLog,
+                          user: selfUser,
+                          updateRemote:
+                              false); // Todo: change to true or setup periodic syncing
+                      setState(() {});
+                    },
+                  );
+                },
+              ),
+            ),
+            const Gap(64)
+          ],
         ),
       ),
     );

@@ -1,28 +1,14 @@
-import 'package:circle/main.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../water.dart';
 
 
 /// ------ Water Related Providers ------ ///
-///
-///
 
-final WaterService waterService = WaterService();
-final WaterLocalService waterLocalService = WaterLocalService(store: database.store);
-final WaterRepository waterRepository = WaterRepository(
-    waterService: waterService, waterLocalService: waterLocalService);
 
-final waterLogProvider =
-    AsyncNotifierProvider<WaterLogNotifier, List<WaterLog>>(
-        () => WaterLogNotifier(waterRepository: waterRepository));
-
-final waterPreferencesProvider =
-    AsyncNotifierProvider<WaterPrefsNotifier, WaterPreferences>(
-        () => WaterPrefsNotifier(waterRepository: waterRepository));
 
 final waterStatsProvider = Provider<WaterStats>((ref) {
-  final AsyncValue<List<WaterLog>> waterLogsAsync = ref.watch(waterLogProvider);
+  final AsyncValue<List<WaterLog>> waterLogsAsync = ref.watch(waterLogNotifierProviderIml);
 
   return waterLogsAsync.when(data: (allLogs) {
     final DateTime now = DateTime.now();
@@ -64,7 +50,7 @@ final waterStatsProvider = Provider<WaterStats>((ref) {
         .toList();
 
     double dailyGoal =
-        ref.watch(waterPreferencesProvider).value!.defaultDailyGoal!.toDouble();
+        ref.watch(waterPrefsNotifierProviderImpl).value!.defaultDailyGoal!.toDouble();
 
     return WaterStats(
         logsToday: logsToday,
