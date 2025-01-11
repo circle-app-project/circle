@@ -29,8 +29,8 @@ class _SuggestedWaterDailyGoalScreenState
     final ThemeData theme = Theme.of(context);
 
     WaterPrefsNotifier waterPrefsNotifier =
-        ref.watch(waterPreferencesProvider.notifier);
-    WaterPreferences? preferences = ref.watch(waterPreferencesProvider).value;
+        ref.watch(waterPrefsNotifierProviderImpl.notifier);
+    WaterPreferences? preferences = ref.watch(waterPrefsNotifierProviderImpl).value;
     AppUser user = ref.watch(userNotifierProviderImpl).value!;
 
     return Scaffold(
@@ -107,7 +107,7 @@ class _SuggestedWaterDailyGoalScreenState
                 ),
                 const Gap(16),
                 AppButton(
-                  isLoading: ref.watch(waterPreferencesProvider).isLoading,
+                  isLoading: ref.watch(waterPrefsNotifierProviderImpl).isLoading,
                   onPressed: () async {
                     preferences = preferences?.copyWith(
                       defaultDailyGoal: defaultDailyGoal,
@@ -115,18 +115,18 @@ class _SuggestedWaterDailyGoalScreenState
                     await waterPrefsNotifier.addWaterPreferences(
                         preferences: preferences!, user: user);
                     if (context.mounted) {
-                      if (waterPrefsNotifier.isSuccessful) {
-                        showCustomSnackBar(
-                            context: context,
-                            message: "Preferences Updated",
-                            mode: SnackBarMode.success);
-                      } else {
+                      if(ref.watch(waterPrefsNotifierProviderImpl).hasError){
                         showCustomSnackBar(
                             context: context,
                             message: "Failed to add data",
                             mode: SnackBarMode.error);
+                      }else{
+                        showCustomSnackBar(
+                            context: context,
+                            message: "Preferences Updated",
+                            mode: SnackBarMode.success);
+                        context.goNamed(BottomNavBar.id);
                       }
-                      context.goNamed(BottomNavBar.id);
                     }
                   },
                   label: "Accept Goal & Continue",

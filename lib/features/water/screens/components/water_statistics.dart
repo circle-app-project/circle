@@ -32,7 +32,7 @@ class WaterStatistics extends ConsumerWidget {
               onPreviousPressed: () {},
               label: "Today"),
           const Gap(kPadding16),
-          WaterLineChart(logs: ref.watch(waterLogProvider).value!),
+          WaterLineChart(logs: ref.watch(waterLogNotifierProviderIml).value!),
         ],
       ),
     );

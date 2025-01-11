@@ -6,23 +6,84 @@ import 'package:circle/core/core.dart';
 import '../../auth/auth.dart';
 import '../water.dart';
 
+abstract class WaterRepository {
 
-class WaterRepository {
+  /// Todo: Refactor add and update into put method
+  FutureEither<List<WaterLog>> getWaterLogs({
+    AppUser? user,
+    bool? getFromRemote,
+    DateTime? start,
+    DateTime? end,
+  });
+
+  FutureEither<void> addWaterLog({
+    required WaterLog log,
+    required AppUser user,
+    bool updateRemote = false,
+  });
+
+  FutureEither<void> updateWaterLog({
+    required WaterLog log,
+    required AppUser user,
+    bool updateRemote = false,
+  });
+
+  FutureEither<void> deleteLog({
+    required WaterLog log,
+    required AppUser user,
+    bool updateRemote = false,
+  });
+
+  FutureEither<void> clear({required AppUser user, bool updateRemote = false});
+
+  FutureEither<int> count({required AppUser user});
+
+  ///------Water Preferences Section----///
+
+  FutureEither<WaterPreferences> getWaterPreferences({
+    AppUser? user,
+    bool? getFromRemote,
+    DateTime? start,
+    DateTime? end,
+  });
+
+  FutureEither<void> addPreferences({
+    required WaterPreferences preferences,
+    required AppUser? user,
+    bool? updateRemote = false,
+  });
+
+  FutureEither<void> updatePreferences({
+    required WaterPreferences preferences,
+    required AppUser user,
+    bool updateRemote = false,
+  });
+  FutureEither<void> deletePreferences({
+    required AppUser user,
+    bool updateRemote = false,
+  });
+
+  ///Todo: Add Operations for manipulating data, eg querying with filters, calculating stats, etc
+}
+
+class WaterRepositoryImpl implements WaterRepository {
   final WaterService _waterService;
   final WaterLocalService _waterLocalService;
 
-  WaterRepository(
-      {required WaterService waterService,
-      required WaterLocalService waterLocalService})
-      : _waterLocalService = waterLocalService,
-        _waterService = waterService;
+  WaterRepositoryImpl({
+    required WaterService waterService,
+    required WaterLocalService waterLocalService,
+  }) : _waterLocalService = waterLocalService,
+       _waterService = waterService;
 
   ///------Water Log Section----///
-  FutureEither<List<WaterLog>> getWaterLogs(
-      {AppUser? user,
-      bool? getFromRemote,
-      DateTime? start,
-      DateTime? end}) async {
+  @override
+  FutureEither<List<WaterLog>> getWaterLogs({
+    AppUser? user,
+    bool? getFromRemote,
+    DateTime? start,
+    DateTime? end,
+  }) async {
     return futureHandler(() async {
       List<WaterLog> logs = [];
 
@@ -51,9 +112,10 @@ class WaterRepository {
     if (documentSnapshot.exists &&
         documentSnapshot.data() != null &&
         documentSnapshot.data()!.isNotEmpty) {
-      List<WaterLog> otherLogs = documentSnapshot.data()!["entries"].map((e) {
-        return WaterLog.fromMap(e);
-      }).toList();
+      List<WaterLog> otherLogs =
+          documentSnapshot.data()!["entries"].map((e) {
+            return WaterLog.fromMap(e);
+          }).toList();
 
       // List<WaterLog> logs =
       //     List<WaterLog>.from(documentSnapshot.data()!["entries"]);
@@ -66,6 +128,7 @@ class WaterRepository {
     }
   }
 
+  @override
   FutureEither<void> addWaterLog({
     required WaterLog log,
     required AppUser user,
@@ -79,6 +142,7 @@ class WaterRepository {
     });
   }
 
+  @override
   FutureEither<void> updateWaterLog({
     required WaterLog log,
     required AppUser user,
@@ -92,6 +156,7 @@ class WaterRepository {
     });
   }
 
+  @override
   FutureEither<void> deleteLog({
     required WaterLog log,
     required AppUser user,
@@ -105,6 +170,7 @@ class WaterRepository {
     });
   }
 
+  @override
   FutureEither<void> clear({
     required AppUser user,
     bool updateRemote = false,
@@ -117,9 +183,8 @@ class WaterRepository {
     });
   }
 
-  FutureEither<int> count({
-    required AppUser user,
-  }) async {
+  @override
+  FutureEither<int> count({required AppUser user}) async {
     return futureHandler(() async {
       return _waterLocalService.count();
     });
@@ -127,11 +192,13 @@ class WaterRepository {
 
   ///------Water Preferences Section----///
 
-  FutureEither<WaterPreferences> getWaterPreferences(
-      {AppUser? user,
-      bool? getFromRemote,
-      DateTime? start,
-      DateTime? end}) async {
+  @override
+  FutureEither<WaterPreferences> getWaterPreferences({
+    AppUser? user,
+    bool? getFromRemote,
+    DateTime? start,
+    DateTime? end,
+  }) async {
     return futureHandler(() async {
       WaterPreferences? preferences;
 
@@ -171,6 +238,7 @@ class WaterRepository {
     }
   }
 
+  @override
   FutureEither<void> addPreferences({
     required WaterPreferences preferences,
     required AppUser? user,
@@ -180,11 +248,14 @@ class WaterRepository {
       _waterLocalService.addPreferences(preferences);
       if (updateRemote! && user != null) {
         await _waterService.addPreferences(
-            preferences: preferences, uid: user.uid);
+          preferences: preferences,
+          uid: user.uid,
+        );
       }
     });
   }
 
+  @override
   FutureEither<void> updatePreferences({
     required WaterPreferences preferences,
     required AppUser user,
@@ -194,11 +265,14 @@ class WaterRepository {
       _waterLocalService.updatePreferences(preferences);
       if (updateRemote) {
         await _waterService.updatePreferences(
-            preferences: preferences, uid: user.uid);
+          preferences: preferences,
+          uid: user.uid,
+        );
       }
     });
   }
 
+  @override
   FutureEither<void> deletePreferences({
     required AppUser user,
     bool updateRemote = false,

@@ -1,31 +1,31 @@
 import 'dart:developer';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/core.dart';
 import '../../auth/auth.dart';
 import '../water.dart';
 
-class WaterPrefsNotifier extends AsyncNotifier<WaterPreferences> {
-  final WaterRepository _waterRepository;
-  WaterPrefsNotifier({required WaterRepository waterRepository})
-      : _waterRepository = waterRepository;
+part 'water_prefs_notifier.g.dart';
 
-  ///Getters to actually know when an operation is successful or not;
-  bool get isSuccessful =>
-      state.hasValue &&
-      state.value != null &&
-      state.value!.isNotEmpty &&
-      !state.hasError;
 
-  String? get errorMessage => state.error is Failure
-      ? (state.error as Failure).message
-      : state.error.toString();
+
+final WaterPrefsNotifierProvider waterPrefsNotifierProviderImpl = waterPrefsNotifierProvider(
+  waterRepository:waterRepository
+);
+
+
+@Riverpod(keepAlive: true)
+class WaterPrefsNotifier extends _$WaterPrefsNotifier{
+  late final WaterRepository _waterRepository;
+
+
   WaterPreferences _preferences = WaterPreferences.initial();
   WaterPreferences get preferences => _preferences;
 
   @override
-  Future<WaterPreferences> build() async {
+  FutureOr<WaterPreferences> build({required WaterRepository waterRepository}) async {
+    _waterRepository = waterRepository;
     return WaterPreferences.empty;
   }
 
