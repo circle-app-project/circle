@@ -19,9 +19,19 @@ void showCustomSnackBar({
     mode = SnackBarMode.error;
   }
   if (error is Failure) {
-    message = error.message;
+    if (error.message.isEmpty && message == null) {
+      message = "An error occurred";
+    } else {
+      message = error.message;
+    }
+
   } else if (error is AppException) {
-    message = error.message;
+    if (error.message.isEmpty && message == null) {
+      message = "An error occurred";
+    } else {
+      message = error.message;
+    }
+
   } else if (error is Exception) {
     message = error.toString();
   }
