@@ -143,10 +143,7 @@ class AuthRepositoryImpl implements AuthRepository {
     // Create a new AppUser object from the Firebase user
     AppUser newUser = AppUser.fromUser(user: userCredential.user);
     newUser = newUser.copyWith(
-      profile: UserProfile.fromFirebaseUser(user: userCredential.user),
-      preferences: UserPreferences.empty.copyWith(
-        uid: userCredential.user?.uid,
-      ),
+      profile: UserProfile.fromFirebaseUser(user: userCredential.user)
     );
 
     // Fetch existing user by UID from the local database
@@ -183,9 +180,6 @@ class AuthRepositoryImpl implements AuthRepository {
     // Update the existing user with the updated profile and preferences
     AppUser updatedUser = existingUser.copyWith(
       profile: updatedProfile,
-      preferences: existingUser.preferences?.copyWith(
-        uid: userCredential.user?.uid,
-      ),
     );
 
     // Save the updated user back to the database
