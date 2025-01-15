@@ -30,7 +30,7 @@ class SnackBarNotifier extends ConsumerWidget {
           error: (error, stackTrace) {
             ScaffoldMessenger.of(context).clearSnackBars();
             showCustomSnackBar(
-              message: (error as Failure).message ?? "Error",
+              message: (error as Failure).message,
               mode: SnackBarMode.error,
               context: context,
             );

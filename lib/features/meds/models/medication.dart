@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:circle/core/utils/enums.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
+
+import 'dose.dart';
 
 //@Entity()
 // ignore: must_be_immutable
@@ -10,35 +14,34 @@ class Medication extends Equatable {
   @Id()
   int id;
   final String name;
-  final String? description;// Example: "Capsules", "Tablets", etc.
-  final double dosage; // In mg or ml depending on medication
+  final String? description; // Example: "Capsules", "Tablets", etc.
+  @Transient()
+  Dose dose; // In mg or ml depending on medication
   final int frequencyPerDay; // Example: 1, 2, 3 times per day
   @Transient() //Todo: remove transient
-  final List<TimeOfDay> times; // Times of day to take the medication
-  final int durationDays; // Number of days to take medication
+  final List<TimeOfDay> frequencyTimes; // Times of day to take the medication
+  final int?
+  durationDays; // Number of days to take medication //Todo: Use durationDays to calculate end date
   final bool isPermanent; // True if the medication is ongoing
-  final bool? reminderEnabled;
-  @Transient() //Todo: remove transient
-  final TimeOfDay? reminderTime;
-  final bool? notificationEnabled;
-  final String? notificationMessage;
-  final String? warningMessages;
+  /// Whether or not to send a notification reminder to take this medication
+  final bool? shouldRemind;
+  final String? reminderMessage;
+  final String? warningMessage;
   final int? streakCount;
   @Property(type: PropertyType.date)
   final DateTime? startDate;
   @Property(type: PropertyType.date)
   final DateTime? endDate;
-  @Transient()
-  Units dosageUnit;
+
   @Transient()
   MedicationType type;
- // final ToMany<MedicationStreak> streaks = ToMany<MedicationStreak>();
+  // final ToMany<MedicationStreak> streaks = ToMany<MedicationStreak>();
   @Transient()
-  final MedicationStreak? streaks;
+  final Streak? streaks;
 
   //-----Object Box Type Converters-----//
   String? get dbType => type.name;
-  String? get dbDosageUnit => dosageUnit.name;
+  String? get dbDose => jsonEncode(dose.toMap());
 
   set dbType(String? value) {
     if (value != null) {
@@ -48,11 +51,12 @@ class Medication extends Equatable {
     }
   }
 
-  set dbDosageUnit(String? value) {
+  set dbDose(String? value) {
     if (value != null) {
-      dosageUnit = Units.values.byName(value);
+      final Map<String, dynamic> doseMap = jsonDecode(value);
+      dose = Dose.fromMap(doseMap);
     } else {
-      dosageUnit = Units.milligram;
+      dose = Dose.empty;
     }
   }
 
@@ -61,19 +65,16 @@ class Medication extends Equatable {
     this.description,
     required this.name,
     required this.type,
-    required this.dosage,
-    required this.dosageUnit,
+    required this.dose,
     required this.frequencyPerDay,
-    required this.times,
+    required this.frequencyTimes,
     required this.durationDays,
     required this.isPermanent,
     this.startDate,
     this.endDate,
-    this.reminderEnabled,
-    this.reminderTime,
-    this.notificationEnabled,
-    this.notificationMessage,
-    this.warningMessages,
+    this.shouldRemind,
+    this.reminderMessage,
+    this.warningMessage,
     this.streakCount,
     this.streaks,
   });
@@ -83,43 +84,38 @@ class Medication extends Equatable {
     String? name,
     String? description,
     MedicationType? type,
-    double? dosage,
+    Dose? dose,
     Units? dosageUnit,
     int? frequencyPerDay,
-    List<TimeOfDay>? times,
+    List<TimeOfDay>? frequencyTimes,
     int? durationDays,
     bool? isPermanent,
     DateTime? startDate,
     DateTime? endDate,
-    List<MedicationStreak>? streaks,
+    List<Streak>? streaks,
     int? streakCount,
-    bool? reminderEnabled,
-    TimeOfDay? reminderTime,
-    bool? notificationEnabled,
+    bool? shouldRemind,
     String? notificationMessage,
-    String? warningMessages,
+    String? warningMessage,
   }) {
     Medication medication = Medication(
       id: id,
       name: name ?? this.name,
       description: description ?? this.description,
       type: type ?? this.type,
-      dosage: dosage ?? this.dosage,
-      dosageUnit: dosageUnit ?? this.dosageUnit,
+      dose: dose ?? this.dose,
       frequencyPerDay: frequencyPerDay ?? this.frequencyPerDay,
-      times: times ?? this.times,
+      frequencyTimes: frequencyTimes ?? this.frequencyTimes,
       durationDays: durationDays ?? this.durationDays,
       isPermanent: isPermanent ?? this.isPermanent,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
-      warningMessages: warningMessages ?? this.warningMessages,
-      notificationEnabled: notificationEnabled ?? this.notificationEnabled,
-      reminderTime: reminderTime ?? this.reminderTime,
-      reminderEnabled: reminderEnabled ?? this.reminderEnabled,
+      warningMessage: warningMessage ?? this.warningMessage,
+      shouldRemind: shouldRemind ?? this.shouldRemind,
       streakCount: streakCount ?? this.streakCount,
     );
 
-//    medication.streaks.addAll(streaks ?? this.streaks);
+    //    medication.streaks.addAll(streaks ?? this.streaks);
     return medication;
   }
 
@@ -130,18 +126,15 @@ class Medication extends Equatable {
       'name': name,
       'description': description,
       'type': type,
-      'dosage': dosage,
-      'dosageUnit': dosageUnit,
+      'dose': dose.toMap(),
       'frequencyPerDay': frequencyPerDay,
-      'times': times,
+      'frequencyTimes': frequencyTimes,
       'durationDays': durationDays,
       'isPermanent': isPermanent,
       'startDate': startDate?.toIso8601String(),
       'endDate': endDate?.toIso8601String(),
-      'warningMessages': warningMessages,
-      'notificationEnabled': notificationEnabled,
-      'reminderTime': reminderTime,
-      'reminderEnabled': reminderEnabled,
+      'warningMessage': warningMessage,
+      'shouldRemind': shouldRemind,
       'streakCount': streakCount,
     };
   }
@@ -152,11 +145,10 @@ class Medication extends Equatable {
       name: map['name'],
       description: map['description'],
       type: MedicationType.values.byName(map['type']),
-      dosage: map['dosage'],
-      dosageUnit: map['dosageUnit'],
+      dose: map['dose'],
       frequencyPerDay: map['frequencyPerDay'],
-      times:
-          List<String>.from(map['times'])
+      frequencyTimes:
+          List<String>.from(map['frequencyTimes'])
               .map((element) => TimeOfDay.fromDateTime(DateTime.parse(element)))
               .toList(),
       durationDays: map['durationDays'],
@@ -164,10 +156,8 @@ class Medication extends Equatable {
       startDate:
           map['startDate'] != null ? DateTime.parse(map['startDate']) : null,
       endDate: map['endDate'] != null ? DateTime.parse(map['endDate']) : null,
-      warningMessages: map['warningMessages'],
-      notificationEnabled: map['notificationEnabled'],
-      reminderTime: map['reminderTime'],
-      reminderEnabled: map['reminderEnabled'],
+      warningMessage: map['warningMessages'],
+      shouldRemind: map['shouldRemind'],
       streakCount: map['streakCount'],
     );
   }
@@ -177,10 +167,9 @@ class Medication extends Equatable {
   static Medication empty = Medication(
     name: "",
     type: MedicationType.unknown,
-    dosage: 0,
-    dosageUnit: Units.milligram,
+    dose: Dose.empty,
     frequencyPerDay: 1,
-    times: [TimeOfDay(hour: 0, minute: 0)],
+    frequencyTimes: [TimeOfDay(hour: 0, minute: 0)],
     durationDays: 3,
     isPermanent: false,
   );
@@ -209,10 +198,9 @@ class Medication extends Equatable {
     name,
     description,
     type,
-    dosage,
-    dosageUnit,
+    dose,
     frequencyPerDay,
-    times,
+    frequencyTimes,
     durationDays,
     isPermanent,
     startDate,
@@ -221,40 +209,37 @@ class Medication extends Equatable {
     streakCount,
     startDate,
     endDate,
-    warningMessages,
-    notificationEnabled,
-    reminderTime,
-    reminderEnabled,
+    warningMessage,
+    shouldRemind,
   ];
 }
 
-
 //Todo: Properly Evaluate how to do streaks
-
-class MedicationStreak
-    extends Equatable {
+class Streak extends Equatable {
   final int id;
   final DateTime date; // Date the medication was marked as taken
-  final bool taken; // True if the medication was taken, false otherwise
+  final bool isCompleted; // True if the medication was taken, false otherwise
   final String? notes; // Any additional notes for the day
 
-  const MedicationStreak({
+  const Streak({
     this.id = 0,
     required this.date,
-    required this.taken,
+    required this.isCompleted,
     this.notes,
   });
 
   // Copy With
-  MedicationStreak copyWith({DateTime? date, bool? taken, String? notes}) {
-    return MedicationStreak(
+  Streak copyWith({DateTime? date, bool? isCompleted, String? notes}) {
+    return Streak(
       id: id,
       date: date ?? this.date,
-      taken: taken ?? this.taken,
+      isCompleted: isCompleted ?? this.isCompleted,
       notes: notes ?? this.notes,
     );
   }
 
   @override
-  List<Object?> get props => [id, date, taken, notes];
+  List<Object?> get props => [id, date, isCompleted, notes];
 }
+
+

@@ -64,7 +64,7 @@ FutureEither<T> futureHandler<T>(Future<T> Function() function) async {
         e.stackTrace ?? "",
       ],
     );
-    return Left(Failure.firebase(message: e.message, stackTrace: stackTrace));
+    return Left(Failure.firebase(message: e.message ?? "A Firebase exception has occurred", stackTrace: stackTrace));
   } on AppException catch (e, stackTrace) {
     log(
       "An app exception has occurred: ${e.message}",
@@ -170,7 +170,7 @@ Either<Failure, T> methodHandler<T>(T Function() function) {
       stackTrace: stackTrace,
       error: e,
     );
-    return Left(Failure.firebase(message: e.message, code: int.tryParse(e.code), stackTrace: stackTrace));
+    return Left(Failure.firebase(message: e.message ?? "A Firebase exception has occurred", code: int.tryParse(e.code), stackTrace: stackTrace));
   } on AppException catch (e, stackTrace) {
     log(
       "An app exception has occurred: ${e.message}",

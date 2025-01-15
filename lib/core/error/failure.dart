@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'exceptions.dart';
 
 class Failure extends Equatable {
-  final String? message;
+  final String message;
   final int? code;
   final StackTrace? stackTrace;
 
