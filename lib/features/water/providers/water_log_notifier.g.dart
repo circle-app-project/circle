@@ -6,7 +6,7 @@ part of 'water_log_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$waterLogNotifierHash() => r'447fd43dec5085ee9d38a4c161c54e7fa1c03486';
+String _$waterLogNotifierHash() => r'0c08cab052887a0c1492e64de331fb091de035b9';
 
 /// Copied from Dart SDK
 class _SystemHash {

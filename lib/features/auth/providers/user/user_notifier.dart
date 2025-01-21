@@ -38,26 +38,26 @@ class UserNotifier extends _$UserNotifier {
     state = AsyncValue.data(user);
   }
 
-  Future<void> getSelfUserData({bool forceRefresh = false}) async {
-    log("Getting Self User Data", name: "User Notifier");
-    state = const AsyncValue.loading();
-    final Either<Failure, AppUser> response = await _userRepository
-        .getSelfUserData(forceRefresh: forceRefresh);
-    response.fold(
-      (failure) {
-        state = AsyncValue.error(failure, failure.stackTrace!);
-        log(
-          "Failed: $failure, Message:${failure.message}, Code: ${failure.code}",
-          name: "User Notifier",
-          stackTrace: failure.stackTrace,
+      Future<void> getSelfUserData({bool forceRefresh = false}) async {
+        log("Getting Self User Data", name: "User Notifier");
+        state = const AsyncValue.loading();
+        final Either<Failure, AppUser> response = await _userRepository
+            .getSelfUserData(forceRefresh: forceRefresh);
+        response.fold(
+          (failure) {
+            state = AsyncValue.error(failure, failure.stackTrace!);
+            log(
+              "Failed: $failure, Message:${failure.message}, Code: ${failure.code}",
+              name: "User Notifier",
+              stackTrace: failure.stackTrace,
+            );
+          },
+          (user) {
+            state = AsyncValue.data(user);
+            log("Success ${state.value}", name: "User Notifier");
+          },
         );
-      },
-      (user) {
-        state = AsyncValue.data(user);
-        log("Success ${state.value}", name: "User Notifier");
-      },
-    );
-  }
+      }
 
   /// Puts User Data
   /// If data exists, it will be updated, if not, it will be added
