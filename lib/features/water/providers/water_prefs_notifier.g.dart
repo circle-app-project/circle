@@ -7,7 +7,7 @@ part of 'water_prefs_notifier.dart';
 // **************************************************************************
 
 String _$waterPrefsNotifierHash() =>
-    r'775ed86702f0ac9999d32fb65c8ef591718e0c57';
+    r'a22212f3c96bbe01fe6cf58d59b55698df6db836';
 
 /// Copied from Dart SDK
 class _SystemHash {

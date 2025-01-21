@@ -7,7 +7,6 @@ import '../../../auth.dart';
 
 ///This app will eventually have multiple users, so it needs to be able to store multiple users
 
-///Todo: Add try catches to all relevant local storage methods, with custom exceptions
 class UserLocalService {
   late final Box<AppUser> _userBox;
   late final Box<UserProfile> _userProfileBox;

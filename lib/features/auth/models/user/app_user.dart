@@ -4,9 +4,9 @@ import 'package:circle/features/auth/models/user/user_preferences.dart';
 import 'package:circle/features/auth/models/user/user_profile.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:objectbox/objectbox.dart';
 
 import '../../../../core/utils/enums.dart';
-import '../../../../objectbox.g.dart';
 
 /// Represents an application user with various attributes and preferences.
 ///
