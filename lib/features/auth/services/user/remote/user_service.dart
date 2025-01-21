@@ -1,15 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../../../../core/error/exceptions.dart';
 import '../../../auth.dart';
 
 class UserService {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   ///----Get User Data--------///
-  Future<DocumentSnapshot<Map<String, dynamic>>> getUserData(String uid) async {
+  Future<AppUser> getUserData(String uid) async {
     DocumentSnapshot<Map<String, dynamic>> snapshot =
         await firestore.collection('users').doc(uid).get();
-    return snapshot;
+
+    if (snapshot.exists &&
+        snapshot.data() != null &&
+        snapshot.data()!.isNotEmpty) {
+      AppUser remoteUser = AppUser.fromMap(data: snapshot.data()!);
+      return remoteUser;
+    } else {
+      throw AppException( message: "App user doesn't exist", type: ExceptionType.firebase, stackTrace: StackTrace.current);
+    }
+
   }
 
   ///--------Add and Update User Data--------///

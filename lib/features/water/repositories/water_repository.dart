@@ -2,12 +2,10 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:circle/core/core.dart';
-
 import '../../auth/auth.dart';
 import '../water.dart';
 
 abstract class WaterRepository {
-  /// Todo: Refactor add and update into put method
   FutureEither<List<WaterLog>> getWaterLogs({
     AppUser? user,
     bool? getFromRemote,
@@ -85,7 +83,7 @@ class WaterRepositoryImpl implements WaterRepository {
           //If Not empty, return, else get from local
           return logs;
         } else {
-          log("No Logs found from Remote");
+          log("No Logs found from Remote", name: "Water Repository");
           return [];
         }
       }
@@ -113,7 +111,7 @@ class WaterRepositoryImpl implements WaterRepository {
 
       return otherLogs;
     } else {
-      log("Log data doesn't exist from Remote", name: "WATER REPOSITORY");
+      log("Log data doesn't exist from Remote", name: "Water Repository");
       return [];
       // throw Exception("Log data doesn't exist");
     }
@@ -136,7 +134,6 @@ class WaterRepositoryImpl implements WaterRepository {
       return _waterLocalService.putAndGetWaterLog(log);
     });
   }
-
 
   @override
   FutureEither<void> deleteLog({
@@ -183,40 +180,15 @@ class WaterRepositoryImpl implements WaterRepository {
   }) async {
     return futureHandler(() async {
       WaterPreferences? preferences;
-
+      preferences = _waterLocalService.getPreferences();
       ///Get from Remote when instructed
       if (user != null && getFromRemote != null && getFromRemote) {
-        preferences = await _getRemotePreferences(user.uid);
-        if (preferences.isNotEmpty) {
-          //If Not empty, return, else get from local
-          return preferences;
-        } else {
-          throw Exception("No Preferences found");
-        }
+        preferences = await _waterService.getPreferences(user.uid);
+        return preferences;
       }
 
-      preferences = _waterLocalService.getPreferences();
-
-      if (preferences.isEmpty) {
-        throw Exception("No Preferences found found");
-      }
       return preferences;
     });
-  }
-
-  Future<WaterPreferences> _getRemotePreferences(String uid) async {
-    DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-        await _waterService.getPreferences(uid);
-
-    if (documentSnapshot.exists &&
-        documentSnapshot.data() != null &&
-        documentSnapshot.data()!.isNotEmpty) {
-      Map<String, dynamic>? data = documentSnapshot.data();
-      WaterPreferences preferences = WaterPreferences.fromMap(data!);
-      return preferences;
-    } else {
-      throw Exception("Preferences doesn't exist");
-    }
   }
 
   @override
