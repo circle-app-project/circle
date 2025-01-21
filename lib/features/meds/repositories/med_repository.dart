@@ -5,22 +5,51 @@ import 'package:circle/features/meds/services/remote/med_service.dart';
 
 import '../../auth/auth.dart';
 
-class MedRepository {
+abstract class MedRepository {
+
+  FutureEither<Medication> getMedication({required int id});
+  FutureEither<List<Medication>> getAllMedications({
+    required AppUser user,
+    bool getFromRemote = false,
+  });
+
+  FutureEither<Medication> putMedication({
+    required AppUser user,
+    required Medication med,
+    bool updateRemote = false,
+  }) ;
+
+  FutureEither<void> deleteMedication({
+    required AppUser user,
+    required Medication med,
+    bool updateRemote = false,
+  }) ;
+
+  FutureEither<void> clearMedications({
+    required AppUser user,
+    bool updateRemote = false,
+  }) ;
+}
+
+
+class MedRepositoryImpl implements MedRepository {
   final MedService _medService;
   final MedLocalService _medLocalService;
 
-  MedRepository({
+  MedRepositoryImpl({
     required MedService medService,
     required MedLocalService medLocalService,
   }) : _medService = medService,
        _medLocalService = medLocalService;
 
+  @override
   FutureEither<Medication> getMedication({required int id}) async {
     return futureHandler(() async {
       return _medLocalService.getMedication(id: id);
     });
   }
 
+  @override
   FutureEither<List<Medication>> getAllMedications({
     required AppUser user,
     bool getFromRemote = false,
@@ -37,14 +66,22 @@ class MedRepository {
     });
   }
 
-  FutureEither<Medication> addMedication({
+  @override
+  FutureEither<Medication> putMedication({
     required AppUser user,
     required Medication med,
     bool updateRemote = false,
   }) async {
     return futureHandler(() async {
       if (updateRemote) {
-        await _medService.addMedication(user: user, med: med);
+
+        /// Uses Objectbox ids to determine whether to update
+        /// or add medication to the remote database
+        if(med.id == 0){
+          await _medService.addMedication(user: user, med: med);
+        }else{
+          await _medService.updateMedication(user: user, med: med);
+        }
       }
       return await _medLocalService.putAndGetMedication(med);
     });
@@ -63,6 +100,7 @@ class MedRepository {
     });
   }
 
+  @override
   FutureEither<void> deleteMedication({
     required AppUser user,
     required Medication med,
@@ -72,11 +110,12 @@ class MedRepository {
       if (updateRemote) {
         await _medService.deleteMedication(user: user, med: med);
       }
-      _medLocalService.deleteMedication(medication: med);
+      _medLocalService.deleteMedication(med);
     });
   }
 
-  FutureEither<void> clearMedication({
+  @override
+  FutureEither<void> clearMedications({
     required AppUser user,
     bool updateRemote = false,
   }) async {
@@ -84,7 +123,7 @@ class MedRepository {
       if (updateRemote) {
         await _medService.clearMedication(user: user);
       }
-      _medLocalService.deleteMedication();
+      _medLocalService.clearMedications();
     });
   }
 }

@@ -61,7 +61,6 @@ class MedLocalService {
     }
   }
 
-
   List<Medication> getMedicationByName({required String name}) {
     late final Query query;
     try {
@@ -113,52 +112,53 @@ class MedLocalService {
     }
   }
 
-  void deleteMedication({Medication? medication}) {
+  void deleteMedication(Medication medication) {
     try {
-      if (medication == null) {
-        /// Case where we are clearing all medications
-        /// Get all streaks for medication
-        final Query query =
-            _streakBox
-                .query(Streak_.dbType.equals(medication!.type!.name))
-                .build();
-        final List<Streak> streaks = query.find() as List<Streak>;
-        _streakBox.removeMany(streaks.map((e) => e.id).toList());
-        _medBox.removeAll();
-      } else {
-        /// Case where we are deleting only a single medication and it streaks
-        _streakBox.removeMany(medication.streaks.map((e) => e.id).toList());
-        _medBox.remove(medication.id);
-      }
+      _streakBox.removeMany(medication.streaks.map((e) => e.id).toList());
+      _medBox.remove(medication.id);
     } catch (e, stackTrace) {
       /// Log and throw app exception
-      if (medication == null) {
-        log(
-          "Failed to clear medication",
-          error: e,
-          stackTrace: stackTrace,
-          name: "Medication Local Service",
-        );
-        throw AppException(
-          message: "Failed to clear medication",
-          debugMessage: e.toString(),
-          stackTrace: stackTrace,
-          type: ExceptionType.localStorage,
-        );
-      } else {
-        log(
-          "Failed to delete medication",
-          error: e,
-          stackTrace: stackTrace,
-          name: "Medication Local Service",
-        );
-        throw AppException(
-          message: "Failed to delete medication",
-          debugMessage: e.toString(),
-          stackTrace: stackTrace,
-          type: ExceptionType.localStorage,
-        );
-      }
+      log(
+        "Failed to delete medication",
+        error: e,
+        stackTrace: stackTrace,
+        name: "Medication Local Service",
+      );
+      throw AppException(
+        message: "Failed to delete medication",
+        debugMessage: e.toString(),
+        stackTrace: stackTrace,
+        type: ExceptionType.localStorage,
+      );
+    }
+  }
+
+  void clearMedications() {
+    try {
+      /// Case where we are clearing all medications
+      /// Get all streaks for medication
+      final Query query =
+          _streakBox
+              .query(Streak_.dbType.equals(StreakType.medication.name))
+              .build();
+      final List<Streak> streaks = query.find() as List<Streak>;
+      _streakBox.removeMany(streaks.map((e) => e.id).toList());
+      _medBox.removeAll();
+    } catch (e, stackTrace) {
+      /// Log and throw app exception
+
+      log(
+        "Failed to clear medications",
+        error: e,
+        stackTrace: stackTrace,
+        name: "Medication Local Service",
+      );
+      throw AppException(
+        message: "Failed to clear medications",
+        debugMessage: e.toString(),
+        stackTrace: stackTrace,
+        type: ExceptionType.localStorage,
+      );
     }
   }
 }
