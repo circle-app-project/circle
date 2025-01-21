@@ -73,15 +73,15 @@ class Medication extends Equatable {
 
   /// The dosage details of the medication (e.g., amount and unit).
   @Transient()
-  Dose dose;
+  Dose? dose;
 
   /// The frequency at which the medication should be taken (e.g., 2 times per day).
   @Transient()
-  Frequency frequency;
+  Frequency? frequency;
 
   /// The type of medication (e.g., tablet, syrup).
   @Transient()
-  MedicationType type;
+  MedicationType? type;
 
   /// A to-many relationship to store streaks of medication adherence.
   final ToMany<Streak> streaks = ToMany<Streak>();
@@ -89,13 +89,13 @@ class Medication extends Equatable {
   /// ----- OBJECTBOX TYPE CONVERTERS ----- ///
   ///
   /// Converts `MedicationType` to a database-friendly string.
-  String? get dbType => type.name;
+  String? get dbType => type?.name;
 
   /// Converts `Dose` to a JSON string for database storage.
-  String? get dbDose => jsonEncode(dose.toMap());
+  String? get dbDose => jsonEncode(dose?.toMap());
 
   /// Converts `Frequency` to a JSON string for database storage.
-  String? get dbFrequency => jsonEncode(frequency.toMap());
+  String? get dbFrequency => jsonEncode(frequency?.toMap());
 
   /// Sets the `MedicationType` from a database-friendly string.
   set dbType(String? value) {
@@ -116,9 +116,9 @@ class Medication extends Equatable {
     this.id = 0,
     required this.name,
     this.description,
-    required this.type,
-    required this.dose,
-    required this.frequency,
+    this.type,
+    this.dose,
+    this.frequency,
     required this.durationDays,
     required this.isPermanent,
     this.startDate,
@@ -172,9 +172,9 @@ class Medication extends Equatable {
       'id': id,
       'name': name,
       'description': description,
-      'type': type.name,
-      'dose': dose.toMap(),
-      'frequency': frequency.toMap(),
+      'type': type?.name,
+      'dose': dose?.toMap(),
+      'frequency': frequency?.toMap(),
       'durationDays': durationDays,
       'isPermanent': isPermanent,
       'startDate': startDate?.toIso8601String(),

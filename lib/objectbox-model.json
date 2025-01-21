@@ -4,65 +4,6 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:9210468346883610997",
-      "lastPropertyId": "11:391968824388424808",
-      "name": "AppUser",
-      "properties": [
-        {
-          "id": "1:6793769419637763149",
-          "name": "id",
-          "type": 6,
-          "flags": 1
-        },
-        {
-          "id": "2:417247235985229651",
-          "name": "uid",
-          "type": 9,
-          "flags": 34848,
-          "indexId": "4:7025674186731478910"
-        },
-        {
-          "id": "3:5185424966544459360",
-          "name": "email",
-          "type": 9
-        },
-        {
-          "id": "4:927931047185036496",
-          "name": "photoUrl",
-          "type": 9
-        },
-        {
-          "id": "5:8273309073968860340",
-          "name": "isAnonymous",
-          "type": 1
-        },
-        {
-          "id": "6:2555433748586013967",
-          "name": "isEmailVerified",
-          "type": 1
-        },
-        {
-          "id": "7:7223991870356115469",
-          "name": "isPhoneVerified",
-          "type": 1
-        },
-        {
-          "id": "8:8399786612049634084",
-          "name": "profileId",
-          "type": 11,
-          "flags": 520,
-          "indexId": "1:4140018892505963279",
-          "relationTarget": "UserProfile"
-        },
-        {
-          "id": "11:391968824388424808",
-          "name": "dbPreferences",
-          "type": 9
-        }
-      ],
-      "relations": []
-    },
-    {
       "id": "2:7166028067144916976",
       "lastPropertyId": "18:1583331589492315386",
       "name": "UserProfile",
@@ -220,18 +161,202 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "8:3148493177410260898",
+      "lastPropertyId": "14:1814100054573638532",
+      "name": "Medication",
+      "properties": [
+        {
+          "id": "1:8311454502694335069",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:9145557492682008945",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:1789520699936360697",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "4:683296172488219404",
+          "name": "durationDays",
+          "type": 6
+        },
+        {
+          "id": "5:8225477852272397144",
+          "name": "isPermanent",
+          "type": 1
+        },
+        {
+          "id": "6:3484228046199376424",
+          "name": "shouldRemind",
+          "type": 1
+        },
+        {
+          "id": "7:2074261615147149631",
+          "name": "reminderMessage",
+          "type": 9
+        },
+        {
+          "id": "8:2950443469283825435",
+          "name": "warningMessage",
+          "type": 9
+        },
+        {
+          "id": "9:5890801838528296916",
+          "name": "streakCount",
+          "type": 6
+        },
+        {
+          "id": "10:6214859084849299397",
+          "name": "startDate",
+          "type": 10
+        },
+        {
+          "id": "11:8300745868109834209",
+          "name": "endDate",
+          "type": 10
+        },
+        {
+          "id": "12:4695932629066880040",
+          "name": "dbType",
+          "type": 9
+        },
+        {
+          "id": "13:8451063112463280957",
+          "name": "dbDose",
+          "type": 9
+        },
+        {
+          "id": "14:1814100054573638532",
+          "name": "dbFrequency",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "2:2539627836723066308",
+          "name": "streaks",
+          "targetId": "9:1910794932095842795"
+        }
+      ]
+    },
+    {
+      "id": "9:1910794932095842795",
+      "lastPropertyId": "6:7290586427487009004",
+      "name": "Streak",
+      "properties": [
+        {
+          "id": "1:5647413884932250945",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1983841816402486938",
+          "name": "dbType",
+          "type": 9
+        },
+        {
+          "id": "3:6178216030160449883",
+          "name": "date",
+          "type": 10
+        },
+        {
+          "id": "4:3097083884408393914",
+          "name": "isCompleted",
+          "type": 1
+        },
+        {
+          "id": "5:3791689441908872094",
+          "name": "isSkipped",
+          "type": 1
+        },
+        {
+          "id": "6:7290586427487009004",
+          "name": "note",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "10:3540123216790538936",
+      "lastPropertyId": "9:2196504888248073330",
+      "name": "AppUser",
+      "properties": [
+        {
+          "id": "1:8512746970314953838",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:388611142959808954",
+          "name": "uid",
+          "type": 9,
+          "flags": 34848,
+          "indexId": "7:9122980928938211868"
+        },
+        {
+          "id": "3:461186542082764755",
+          "name": "email",
+          "type": 9
+        },
+        {
+          "id": "4:3313684145660166762",
+          "name": "photoUrl",
+          "type": 9
+        },
+        {
+          "id": "5:5645595606836568249",
+          "name": "isAnonymous",
+          "type": 1
+        },
+        {
+          "id": "6:6171172290814305356",
+          "name": "isEmailVerified",
+          "type": 1
+        },
+        {
+          "id": "7:7902560646269532341",
+          "name": "isPhoneVerified",
+          "type": 1
+        },
+        {
+          "id": "8:1030238237745064050",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "8:5330077494103882266",
+          "relationTarget": "UserProfile"
+        },
+        {
+          "id": "9:2196504888248073330",
+          "name": "dbPreferences",
+          "type": 9
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "7:207629943991403341",
-  "lastIndexId": "6:8320414490647314865",
-  "lastRelationId": "1:3092819797569954146",
+  "lastEntityId": "10:3540123216790538936",
+  "lastIndexId": "8:5330077494103882266",
+  "lastRelationId": "2:2539627836723066308",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [
     207629943991403341,
     3501377542454085602,
-    867207695587786430
+    867207695587786430,
+    9210468346883610997
   ],
   "retiredIndexUids": [
     8176574082609213585,
@@ -268,7 +393,16 @@
     4322896623179610370,
     589524113363230822,
     5351588759555286712,
-    8332419882270310101
+    8332419882270310101,
+    6793769419637763149,
+    417247235985229651,
+    5185424966544459360,
+    927931047185036496,
+    8273309073968860340,
+    2555433748586013967,
+    7223991870356115469,
+    8399786612049634084,
+    391968824388424808
   ],
   "retiredRelationUids": [
     3092819797569954146

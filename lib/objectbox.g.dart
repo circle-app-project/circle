@@ -16,69 +16,14 @@ import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'features/auth/models/user/app_user.dart';
 import 'features/auth/models/user/user_profile.dart';
+import 'features/meds/models/medication.dart';
+import 'features/meds/models/streak.dart';
 import 'features/water/models/water_log.dart';
 import 'features/water/models/water_preferences.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
 final _entities = <obx_int.ModelEntity>[
-  obx_int.ModelEntity(
-      id: const obx_int.IdUid(1, 9210468346883610997),
-      name: 'AppUser',
-      lastPropertyId: const obx_int.IdUid(11, 391968824388424808),
-      flags: 0,
-      properties: <obx_int.ModelProperty>[
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(1, 6793769419637763149),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(2, 417247235985229651),
-            name: 'uid',
-            type: 9,
-            flags: 34848,
-            indexId: const obx_int.IdUid(4, 7025674186731478910)),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(3, 5185424966544459360),
-            name: 'email',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(4, 927931047185036496),
-            name: 'photoUrl',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(5, 8273309073968860340),
-            name: 'isAnonymous',
-            type: 1,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(6, 2555433748586013967),
-            name: 'isEmailVerified',
-            type: 1,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(7, 7223991870356115469),
-            name: 'isPhoneVerified',
-            type: 1,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(8, 8399786612049634084),
-            name: 'profileId',
-            type: 11,
-            flags: 520,
-            indexId: const obx_int.IdUid(1, 4140018892505963279),
-            relationTarget: 'UserProfile'),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(11, 391968824388424808),
-            name: 'dbPreferences',
-            type: 9,
-            flags: 0)
-      ],
-      relations: <obx_int.ModelRelation>[],
-      backlinks: <obx_int.ModelBacklink>[]),
   obx_int.ModelEntity(
       id: const obx_int.IdUid(2, 7166028067144916976),
       name: 'UserProfile',
@@ -236,6 +181,186 @@ final _entities = <obx_int.ModelEntity>[
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(8, 3148493177410260898),
+      name: 'Medication',
+      lastPropertyId: const obx_int.IdUid(14, 1814100054573638532),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 8311454502694335069),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 9145557492682008945),
+            name: 'name',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 1789520699936360697),
+            name: 'description',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 683296172488219404),
+            name: 'durationDays',
+            type: 6,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 8225477852272397144),
+            name: 'isPermanent',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 3484228046199376424),
+            name: 'shouldRemind',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(7, 2074261615147149631),
+            name: 'reminderMessage',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(8, 2950443469283825435),
+            name: 'warningMessage',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(9, 5890801838528296916),
+            name: 'streakCount',
+            type: 6,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(10, 6214859084849299397),
+            name: 'startDate',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(11, 8300745868109834209),
+            name: 'endDate',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(12, 4695932629066880040),
+            name: 'dbType',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(13, 8451063112463280957),
+            name: 'dbDose',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(14, 1814100054573638532),
+            name: 'dbFrequency',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[
+        obx_int.ModelRelation(
+            id: const obx_int.IdUid(2, 2539627836723066308),
+            name: 'streaks',
+            targetId: const obx_int.IdUid(9, 1910794932095842795))
+      ],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(9, 1910794932095842795),
+      name: 'Streak',
+      lastPropertyId: const obx_int.IdUid(6, 7290586427487009004),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 5647413884932250945),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 1983841816402486938),
+            name: 'dbType',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 6178216030160449883),
+            name: 'date',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 3097083884408393914),
+            name: 'isCompleted',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 3791689441908872094),
+            name: 'isSkipped',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 7290586427487009004),
+            name: 'note',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(10, 3540123216790538936),
+      name: 'AppUser',
+      lastPropertyId: const obx_int.IdUid(9, 2196504888248073330),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 8512746970314953838),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 388611142959808954),
+            name: 'uid',
+            type: 9,
+            flags: 34848,
+            indexId: const obx_int.IdUid(7, 9122980928938211868)),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 461186542082764755),
+            name: 'email',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 3313684145660166762),
+            name: 'photoUrl',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 5645595606836568249),
+            name: 'isAnonymous',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 6171172290814305356),
+            name: 'isEmailVerified',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(7, 7902560646269532341),
+            name: 'isPhoneVerified',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(8, 1030238237745064050),
+            name: 'profileId',
+            type: 11,
+            flags: 520,
+            indexId: const obx_int.IdUid(8, 5330077494103882266),
+            relationTarget: 'UserProfile'),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(9, 2196504888248073330),
+            name: 'dbPreferences',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
 ];
 
@@ -274,14 +399,15 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(7, 207629943991403341),
-      lastIndexId: const obx_int.IdUid(6, 8320414490647314865),
-      lastRelationId: const obx_int.IdUid(1, 3092819797569954146),
+      lastEntityId: const obx_int.IdUid(10, 3540123216790538936),
+      lastIndexId: const obx_int.IdUid(8, 5330077494103882266),
+      lastRelationId: const obx_int.IdUid(2, 2539627836723066308),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [
         207629943991403341,
         3501377542454085602,
-        867207695587786430
+        867207695587786430,
+        9210468346883610997
       ],
       retiredIndexUids: const [8176574082609213585, 7305761162520707228],
       retiredPropertyUids: const [
@@ -315,7 +441,16 @@ obx_int.ModelDefinition getObjectBoxModel() {
         4322896623179610370,
         589524113363230822,
         5351588759555286712,
-        8332419882270310101
+        8332419882270310101,
+        6793769419637763149,
+        417247235985229651,
+        5185424966544459360,
+        927931047185036496,
+        8273309073968860340,
+        2555433748586013967,
+        7223991870356115469,
+        8399786612049634084,
+        391968824388424808
       ],
       retiredRelationUids: const [3092819797569954146],
       modelVersion: 5,
@@ -323,68 +458,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
       version: 1);
 
   final bindings = <Type, obx_int.EntityDefinition>{
-    AppUser: obx_int.EntityDefinition<AppUser>(
-        model: _entities[0],
-        toOneRelations: (AppUser object) => [object.profile],
-        toManyRelations: (AppUser object) => {},
-        getId: (AppUser object) => object.id,
-        setId: (AppUser object, int id) {
-          object.id = id;
-        },
-        objectToFB: (AppUser object, fb.Builder fbb) {
-          final uidOffset = fbb.writeString(object.uid);
-          final emailOffset = fbb.writeString(object.email);
-          final photoUrlOffset = object.photoUrl == null
-              ? null
-              : fbb.writeString(object.photoUrl!);
-          final dbPreferencesOffset = fbb.writeString(object.dbPreferences);
-          fbb.startTable(12);
-          fbb.addInt64(0, object.id);
-          fbb.addOffset(1, uidOffset);
-          fbb.addOffset(2, emailOffset);
-          fbb.addOffset(3, photoUrlOffset);
-          fbb.addBool(4, object.isAnonymous);
-          fbb.addBool(5, object.isEmailVerified);
-          fbb.addBool(6, object.isPhoneVerified);
-          fbb.addInt64(7, object.profile.targetId);
-          fbb.addOffset(10, dbPreferencesOffset);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (obx.Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-          final idParam =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
-          final emailParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 8, '');
-          final isAnonymousParam =
-              const fb.BoolReader().vTableGet(buffer, rootOffset, 12, false);
-          final uidParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 6, '');
-          final isEmailVerifiedParam =
-              const fb.BoolReader().vTableGet(buffer, rootOffset, 14, false);
-          final isPhoneVerifiedParam =
-              const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 16);
-          final photoUrlParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGetNullable(buffer, rootOffset, 10);
-          final object = AppUser(
-              id: idParam,
-              email: emailParam,
-              isAnonymous: isAnonymousParam,
-              uid: uidParam,
-              isEmailVerified: isEmailVerifiedParam,
-              isPhoneVerified: isPhoneVerifiedParam,
-              photoUrl: photoUrlParam)
-            ..dbPreferences = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 24, '');
-          object.profile.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0);
-          object.profile.attach(store);
-          return object;
-        }),
     UserProfile: obx_int.EntityDefinition<UserProfile>(
-        model: _entities[1],
+        model: _entities[0],
         toOneRelations: (UserProfile object) => [],
         toManyRelations: (UserProfile object) => {},
         getId: (UserProfile object) => object.id,
@@ -516,7 +591,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           return object;
         }),
     WaterLog: obx_int.EntityDefinition<WaterLog>(
-        model: _entities[2],
+        model: _entities[1],
         toOneRelations: (WaterLog object) => [],
         toManyRelations: (WaterLog object) => {},
         getId: (WaterLog object) => object.id,
@@ -550,7 +625,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           return object;
         }),
     WaterPreferences: obx_int.EntityDefinition<WaterPreferences>(
-        model: _entities[3],
+        model: _entities[2],
         toOneRelations: (WaterPreferences object) => [],
         toManyRelations: (WaterPreferences object) => {},
         getId: (WaterPreferences object) => object.id,
@@ -585,160 +660,456 @@ obx_int.ModelDefinition getObjectBoxModel() {
                 .vTableGetNullable(buffer, rootOffset, 10);
 
           return object;
+        }),
+    Medication: obx_int.EntityDefinition<Medication>(
+        model: _entities[3],
+        toOneRelations: (Medication object) => [],
+        toManyRelations: (Medication object) =>
+            {obx_int.RelInfo<Medication>.toMany(2, object.id): object.streaks},
+        getId: (Medication object) => object.id,
+        setId: (Medication object, int id) {
+          object.id = id;
+        },
+        objectToFB: (Medication object, fb.Builder fbb) {
+          final nameOffset = fbb.writeString(object.name);
+          final descriptionOffset = object.description == null
+              ? null
+              : fbb.writeString(object.description!);
+          final reminderMessageOffset = object.reminderMessage == null
+              ? null
+              : fbb.writeString(object.reminderMessage!);
+          final warningMessageOffset = object.warningMessage == null
+              ? null
+              : fbb.writeString(object.warningMessage!);
+          final dbTypeOffset =
+              object.dbType == null ? null : fbb.writeString(object.dbType!);
+          final dbDoseOffset =
+              object.dbDose == null ? null : fbb.writeString(object.dbDose!);
+          final dbFrequencyOffset = object.dbFrequency == null
+              ? null
+              : fbb.writeString(object.dbFrequency!);
+          fbb.startTable(15);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, nameOffset);
+          fbb.addOffset(2, descriptionOffset);
+          fbb.addInt64(3, object.durationDays);
+          fbb.addBool(4, object.isPermanent);
+          fbb.addBool(5, object.shouldRemind);
+          fbb.addOffset(6, reminderMessageOffset);
+          fbb.addOffset(7, warningMessageOffset);
+          fbb.addInt64(8, object.streakCount);
+          fbb.addInt64(9, object.startDate?.millisecondsSinceEpoch);
+          fbb.addInt64(10, object.endDate?.millisecondsSinceEpoch);
+          fbb.addOffset(11, dbTypeOffset);
+          fbb.addOffset(12, dbDoseOffset);
+          fbb.addOffset(13, dbFrequencyOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final startDateValue =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 22);
+          final endDateValue =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 24);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final nameParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 6, '');
+          final descriptionParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 8);
+          final durationDaysParam =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 10);
+          final isPermanentParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 12, false);
+          final startDateParam = startDateValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(startDateValue);
+          final endDateParam = endDateValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(endDateValue);
+          final shouldRemindParam =
+              const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 14);
+          final reminderMessageParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 16);
+          final warningMessageParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 18);
+          final streakCountParam =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 20);
+          final object = Medication(
+              id: idParam,
+              name: nameParam,
+              description: descriptionParam,
+              durationDays: durationDaysParam,
+              isPermanent: isPermanentParam,
+              startDate: startDateParam,
+              endDate: endDateParam,
+              shouldRemind: shouldRemindParam,
+              reminderMessage: reminderMessageParam,
+              warningMessage: warningMessageParam,
+              streakCount: streakCountParam)
+            ..dbType = const fb.StringReader(asciiOptimization: true)
+                .vTableGetNullable(buffer, rootOffset, 26)
+            ..dbDose = const fb.StringReader(asciiOptimization: true)
+                .vTableGetNullable(buffer, rootOffset, 28)
+            ..dbFrequency = const fb.StringReader(asciiOptimization: true)
+                .vTableGetNullable(buffer, rootOffset, 30);
+          obx_int.InternalToManyAccess.setRelInfo<Medication>(object.streaks,
+              store, obx_int.RelInfo<Medication>.toMany(2, object.id));
+          return object;
+        }),
+    Streak: obx_int.EntityDefinition<Streak>(
+        model: _entities[4],
+        toOneRelations: (Streak object) => [],
+        toManyRelations: (Streak object) => {},
+        getId: (Streak object) => object.id,
+        setId: (Streak object, int id) {
+          object.id = id;
+        },
+        objectToFB: (Streak object, fb.Builder fbb) {
+          final dbTypeOffset = fbb.writeString(object.dbType);
+          final noteOffset =
+              object.note == null ? null : fbb.writeString(object.note!);
+          fbb.startTable(7);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, dbTypeOffset);
+          fbb.addInt64(2, object.date.millisecondsSinceEpoch);
+          fbb.addBool(3, object.isCompleted);
+          fbb.addBool(4, object.isSkipped);
+          fbb.addOffset(5, noteOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final dateParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0));
+          final isCompletedParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 10, false);
+          final isSkippedParam =
+              const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 12);
+          final noteParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 14);
+          final object = Streak(
+              id: idParam,
+              date: dateParam,
+              isCompleted: isCompletedParam,
+              isSkipped: isSkippedParam,
+              note: noteParam)
+            ..dbType = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 6, '');
+
+          return object;
+        }),
+    AppUser: obx_int.EntityDefinition<AppUser>(
+        model: _entities[5],
+        toOneRelations: (AppUser object) => [object.profile],
+        toManyRelations: (AppUser object) => {},
+        getId: (AppUser object) => object.id,
+        setId: (AppUser object, int id) {
+          object.id = id;
+        },
+        objectToFB: (AppUser object, fb.Builder fbb) {
+          final uidOffset = fbb.writeString(object.uid);
+          final emailOffset = fbb.writeString(object.email);
+          final photoUrlOffset = object.photoUrl == null
+              ? null
+              : fbb.writeString(object.photoUrl!);
+          final dbPreferencesOffset = fbb.writeString(object.dbPreferences);
+          fbb.startTable(10);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, uidOffset);
+          fbb.addOffset(2, emailOffset);
+          fbb.addOffset(3, photoUrlOffset);
+          fbb.addBool(4, object.isAnonymous);
+          fbb.addBool(5, object.isEmailVerified);
+          fbb.addBool(6, object.isPhoneVerified);
+          fbb.addInt64(7, object.profile.targetId);
+          fbb.addOffset(8, dbPreferencesOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final emailParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 8, '');
+          final uidParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 6, '');
+          final isAnonymousParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 12, false);
+          final isEmailVerifiedParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 14, false);
+          final isPhoneVerifiedParam =
+              const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 16);
+          final photoUrlParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 10);
+          final object = AppUser(
+              id: idParam,
+              email: emailParam,
+              uid: uidParam,
+              isAnonymous: isAnonymousParam,
+              isEmailVerified: isEmailVerifiedParam,
+              isPhoneVerified: isPhoneVerifiedParam,
+              photoUrl: photoUrlParam)
+            ..dbPreferences = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 20, '');
+          object.profile.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0);
+          object.profile.attach(store);
+          return object;
         })
   };
 
   return obx_int.ModelDefinition(model, bindings);
 }
 
-/// [AppUser] entity fields to define ObjectBox queries.
-class AppUser_ {
-  /// See [AppUser.id].
-  static final id =
-      obx.QueryIntegerProperty<AppUser>(_entities[0].properties[0]);
-
-  /// See [AppUser.uid].
-  static final uid =
-      obx.QueryStringProperty<AppUser>(_entities[0].properties[1]);
-
-  /// See [AppUser.email].
-  static final email =
-      obx.QueryStringProperty<AppUser>(_entities[0].properties[2]);
-
-  /// See [AppUser.photoUrl].
-  static final photoUrl =
-      obx.QueryStringProperty<AppUser>(_entities[0].properties[3]);
-
-  /// See [AppUser.isAnonymous].
-  static final isAnonymous =
-      obx.QueryBooleanProperty<AppUser>(_entities[0].properties[4]);
-
-  /// See [AppUser.isEmailVerified].
-  static final isEmailVerified =
-      obx.QueryBooleanProperty<AppUser>(_entities[0].properties[5]);
-
-  /// See [AppUser.isPhoneVerified].
-  static final isPhoneVerified =
-      obx.QueryBooleanProperty<AppUser>(_entities[0].properties[6]);
-
-  /// See [AppUser.profile].
-  static final profile =
-      obx.QueryRelationToOne<AppUser, UserProfile>(_entities[0].properties[7]);
-
-  /// See [AppUser.dbPreferences].
-  static final dbPreferences =
-      obx.QueryStringProperty<AppUser>(_entities[0].properties[8]);
-}
-
 /// [UserProfile] entity fields to define ObjectBox queries.
 class UserProfile_ {
   /// See [UserProfile.id].
   static final id =
-      obx.QueryIntegerProperty<UserProfile>(_entities[1].properties[0]);
+      obx.QueryIntegerProperty<UserProfile>(_entities[0].properties[0]);
 
   /// See [UserProfile.uid].
   static final uid =
-      obx.QueryStringProperty<UserProfile>(_entities[1].properties[1]);
+      obx.QueryStringProperty<UserProfile>(_entities[0].properties[1]);
 
   /// See [UserProfile.name].
   static final name =
-      obx.QueryStringProperty<UserProfile>(_entities[1].properties[2]);
+      obx.QueryStringProperty<UserProfile>(_entities[0].properties[2]);
 
   /// See [UserProfile.displayName].
   static final displayName =
-      obx.QueryStringProperty<UserProfile>(_entities[1].properties[3]);
+      obx.QueryStringProperty<UserProfile>(_entities[0].properties[3]);
 
   /// See [UserProfile.age].
   static final age =
-      obx.QueryIntegerProperty<UserProfile>(_entities[1].properties[4]);
+      obx.QueryIntegerProperty<UserProfile>(_entities[0].properties[4]);
 
   /// See [UserProfile.email].
   static final email =
-      obx.QueryStringProperty<UserProfile>(_entities[1].properties[5]);
+      obx.QueryStringProperty<UserProfile>(_entities[0].properties[5]);
 
   /// See [UserProfile.photoUrl].
   static final photoUrl =
-      obx.QueryStringProperty<UserProfile>(_entities[1].properties[6]);
+      obx.QueryStringProperty<UserProfile>(_entities[0].properties[6]);
 
   /// See [UserProfile.phone].
   static final phone =
-      obx.QueryStringProperty<UserProfile>(_entities[1].properties[7]);
+      obx.QueryStringProperty<UserProfile>(_entities[0].properties[7]);
 
   /// See [UserProfile.painSeverity].
   static final painSeverity =
-      obx.QueryIntegerProperty<UserProfile>(_entities[1].properties[8]);
+      obx.QueryIntegerProperty<UserProfile>(_entities[0].properties[8]);
 
   /// See [UserProfile.crisisFrequency].
   static final crisisFrequency =
-      obx.QueryStringProperty<UserProfile>(_entities[1].properties[9]);
+      obx.QueryStringProperty<UserProfile>(_entities[0].properties[9]);
 
   /// See [UserProfile.height].
   static final height =
-      obx.QueryDoubleProperty<UserProfile>(_entities[1].properties[10]);
+      obx.QueryDoubleProperty<UserProfile>(_entities[0].properties[10]);
 
   /// See [UserProfile.weight].
   static final weight =
-      obx.QueryDoubleProperty<UserProfile>(_entities[1].properties[11]);
+      obx.QueryDoubleProperty<UserProfile>(_entities[0].properties[11]);
 
   /// See [UserProfile.bmi].
   static final bmi =
-      obx.QueryDoubleProperty<UserProfile>(_entities[1].properties[12]);
+      obx.QueryDoubleProperty<UserProfile>(_entities[0].properties[12]);
 
   /// See [UserProfile.bloodGroup].
   static final bloodGroup =
-      obx.QueryStringProperty<UserProfile>(_entities[1].properties[13]);
+      obx.QueryStringProperty<UserProfile>(_entities[0].properties[13]);
 
   /// See [UserProfile.allergies].
   static final allergies =
-      obx.QueryStringVectorProperty<UserProfile>(_entities[1].properties[14]);
+      obx.QueryStringVectorProperty<UserProfile>(_entities[0].properties[14]);
 
   /// See [UserProfile.medicalConditions].
   static final medicalConditions =
-      obx.QueryStringVectorProperty<UserProfile>(_entities[1].properties[15]);
+      obx.QueryStringVectorProperty<UserProfile>(_entities[0].properties[15]);
 
   /// See [UserProfile.dbGender].
   static final dbGender =
-      obx.QueryStringProperty<UserProfile>(_entities[1].properties[16]);
+      obx.QueryStringProperty<UserProfile>(_entities[0].properties[16]);
 
   /// See [UserProfile.dbGenotype].
   static final dbGenotype =
-      obx.QueryStringProperty<UserProfile>(_entities[1].properties[17]);
+      obx.QueryStringProperty<UserProfile>(_entities[0].properties[17]);
 }
 
 /// [WaterLog] entity fields to define ObjectBox queries.
 class WaterLog_ {
   /// See [WaterLog.id].
   static final id =
-      obx.QueryIntegerProperty<WaterLog>(_entities[2].properties[0]);
+      obx.QueryIntegerProperty<WaterLog>(_entities[1].properties[0]);
 
   /// See [WaterLog.timestamp].
   static final timestamp =
-      obx.QueryDateProperty<WaterLog>(_entities[2].properties[1]);
+      obx.QueryDateProperty<WaterLog>(_entities[1].properties[1]);
 
   /// See [WaterLog.value].
   static final value =
-      obx.QueryDoubleProperty<WaterLog>(_entities[2].properties[2]);
+      obx.QueryDoubleProperty<WaterLog>(_entities[1].properties[2]);
 
   /// See [WaterLog.dbUnit].
   static final dbUnit =
-      obx.QueryStringProperty<WaterLog>(_entities[2].properties[3]);
+      obx.QueryStringProperty<WaterLog>(_entities[1].properties[3]);
 }
 
 /// [WaterPreferences] entity fields to define ObjectBox queries.
 class WaterPreferences_ {
   /// See [WaterPreferences.id].
   static final id =
-      obx.QueryIntegerProperty<WaterPreferences>(_entities[3].properties[0]);
+      obx.QueryIntegerProperty<WaterPreferences>(_entities[2].properties[0]);
 
   /// See [WaterPreferences.defaultDailyGoal].
   static final defaultDailyGoal =
-      obx.QueryDoubleProperty<WaterPreferences>(_entities[3].properties[1]);
+      obx.QueryDoubleProperty<WaterPreferences>(_entities[2].properties[1]);
 
   /// See [WaterPreferences.defaultLogValue].
   static final defaultLogValue =
-      obx.QueryDoubleProperty<WaterPreferences>(_entities[3].properties[2]);
+      obx.QueryDoubleProperty<WaterPreferences>(_entities[2].properties[2]);
 
   /// See [WaterPreferences.dbUnit].
   static final dbUnit =
-      obx.QueryStringProperty<WaterPreferences>(_entities[3].properties[3]);
+      obx.QueryStringProperty<WaterPreferences>(_entities[2].properties[3]);
+}
+
+/// [Medication] entity fields to define ObjectBox queries.
+class Medication_ {
+  /// See [Medication.id].
+  static final id =
+      obx.QueryIntegerProperty<Medication>(_entities[3].properties[0]);
+
+  /// See [Medication.name].
+  static final name =
+      obx.QueryStringProperty<Medication>(_entities[3].properties[1]);
+
+  /// See [Medication.description].
+  static final description =
+      obx.QueryStringProperty<Medication>(_entities[3].properties[2]);
+
+  /// See [Medication.durationDays].
+  static final durationDays =
+      obx.QueryIntegerProperty<Medication>(_entities[3].properties[3]);
+
+  /// See [Medication.isPermanent].
+  static final isPermanent =
+      obx.QueryBooleanProperty<Medication>(_entities[3].properties[4]);
+
+  /// See [Medication.shouldRemind].
+  static final shouldRemind =
+      obx.QueryBooleanProperty<Medication>(_entities[3].properties[5]);
+
+  /// See [Medication.reminderMessage].
+  static final reminderMessage =
+      obx.QueryStringProperty<Medication>(_entities[3].properties[6]);
+
+  /// See [Medication.warningMessage].
+  static final warningMessage =
+      obx.QueryStringProperty<Medication>(_entities[3].properties[7]);
+
+  /// See [Medication.streakCount].
+  static final streakCount =
+      obx.QueryIntegerProperty<Medication>(_entities[3].properties[8]);
+
+  /// See [Medication.startDate].
+  static final startDate =
+      obx.QueryDateProperty<Medication>(_entities[3].properties[9]);
+
+  /// See [Medication.endDate].
+  static final endDate =
+      obx.QueryDateProperty<Medication>(_entities[3].properties[10]);
+
+  /// See [Medication.dbType].
+  static final dbType =
+      obx.QueryStringProperty<Medication>(_entities[3].properties[11]);
+
+  /// See [Medication.dbDose].
+  static final dbDose =
+      obx.QueryStringProperty<Medication>(_entities[3].properties[12]);
+
+  /// See [Medication.dbFrequency].
+  static final dbFrequency =
+      obx.QueryStringProperty<Medication>(_entities[3].properties[13]);
+
+  /// see [Medication.streaks]
+  static final streaks =
+      obx.QueryRelationToMany<Medication, Streak>(_entities[3].relations[0]);
+}
+
+/// [Streak] entity fields to define ObjectBox queries.
+class Streak_ {
+  /// See [Streak.id].
+  static final id =
+      obx.QueryIntegerProperty<Streak>(_entities[4].properties[0]);
+
+  /// See [Streak.dbType].
+  static final dbType =
+      obx.QueryStringProperty<Streak>(_entities[4].properties[1]);
+
+  /// See [Streak.date].
+  static final date = obx.QueryDateProperty<Streak>(_entities[4].properties[2]);
+
+  /// See [Streak.isCompleted].
+  static final isCompleted =
+      obx.QueryBooleanProperty<Streak>(_entities[4].properties[3]);
+
+  /// See [Streak.isSkipped].
+  static final isSkipped =
+      obx.QueryBooleanProperty<Streak>(_entities[4].properties[4]);
+
+  /// See [Streak.note].
+  static final note =
+      obx.QueryStringProperty<Streak>(_entities[4].properties[5]);
+}
+
+/// [AppUser] entity fields to define ObjectBox queries.
+class AppUser_ {
+  /// See [AppUser.id].
+  static final id =
+      obx.QueryIntegerProperty<AppUser>(_entities[5].properties[0]);
+
+  /// See [AppUser.uid].
+  static final uid =
+      obx.QueryStringProperty<AppUser>(_entities[5].properties[1]);
+
+  /// See [AppUser.email].
+  static final email =
+      obx.QueryStringProperty<AppUser>(_entities[5].properties[2]);
+
+  /// See [AppUser.photoUrl].
+  static final photoUrl =
+      obx.QueryStringProperty<AppUser>(_entities[5].properties[3]);
+
+  /// See [AppUser.isAnonymous].
+  static final isAnonymous =
+      obx.QueryBooleanProperty<AppUser>(_entities[5].properties[4]);
+
+  /// See [AppUser.isEmailVerified].
+  static final isEmailVerified =
+      obx.QueryBooleanProperty<AppUser>(_entities[5].properties[5]);
+
+  /// See [AppUser.isPhoneVerified].
+  static final isPhoneVerified =
+      obx.QueryBooleanProperty<AppUser>(_entities[5].properties[6]);
+
+  /// See [AppUser.profile].
+  static final profile =
+      obx.QueryRelationToOne<AppUser, UserProfile>(_entities[5].properties[7]);
+
+  /// See [AppUser.dbPreferences].
+  static final dbPreferences =
+      obx.QueryStringProperty<AppUser>(_entities[5].properties[8]);
 }

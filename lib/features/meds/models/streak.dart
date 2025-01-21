@@ -1,5 +1,9 @@
 import 'package:equatable/equatable.dart';
-import '../../../objectbox.g.dart';
+import 'package:objectbox/objectbox.dart';
+
+enum StreakType { medication, water }
+
+/// This streak type can be amended with more streaks
 
 /// Represents a daily record of medication adherence.
 ///
@@ -18,46 +22,84 @@ import '../../../objectbox.g.dart';
 @Entity()
 // ignore: must_be_immutable
 class Streak extends Equatable {
-  /// The unique identifier for the streak record (managed by ObjectBox).
   @Id()
   int id;
-
-  /// The date the medication was marked as taken.
   @Property(type: PropertyType.date)
   final DateTime date;
-
-  /// Whether the medication was taken (`true`) or missed (`false`).
   final bool isCompleted;
-
-  /// Any additional notes for the day (optional).
+  final bool? isSkipped;
   final String? note;
+  @Transient()
+  StreakType type;
 
-  /// Creates a new `Streak` instance.
-  ///
-  /// - [id] is optional and defaults to `0`. It is assigned by ObjectBox when
-  ///   persisted.
-  /// - [date] specifies the date the medication was tracked.
-  /// - [isCompleted] indicates whether the medication was taken.
-  /// - [note] is an optional description or remark for the day.
+  // ////////// Object Box Type Converters /////////// //
+  String get dbType => type.name;
+  set dbType(String value) => type = StreakType.values.byName(value);
+
   Streak({
     this.id = 0,
     required this.date,
     required this.isCompleted,
+    this.isSkipped = false,
     this.note,
+    this.type = StreakType.medication,
   });
 
-  /// Creates a copy of the current `Streak` instance with updated values.
-  ///
-  /// - [date] overrides the existing date if provided.
-  /// - [isCompleted] overrides the existing completion status if provided.
-  /// - [note] overrides the existing note if provided.
-  Streak copyWith({DateTime? date, bool? isCompleted, String? note}) {
+  factory Streak.medication({
+    int id = 0,
+    required DateTime date,
+    required bool isCompleted,
+    bool? isSkipped = false,
+    String? note,
+  }) {
     return Streak(
       id: id,
-      date: date ?? this.date,
-      isCompleted: isCompleted ?? this.isCompleted,
-      note: note ?? this.note,
+      date: date,
+      isCompleted: isCompleted,
+      isSkipped: isSkipped,
+      note: note,
+      type: StreakType.medication,
     );
+  }
+
+  factory Streak.water({
+    int id = 0,
+    required DateTime date,
+    required bool isCompleted,
+    String? note,
+  }) {
+    return Streak(
+      id: id,
+      date: date,
+      isCompleted: isCompleted,
+      isSkipped: null,
+      note: note,
+      type: StreakType.water,
+    );
+  }
+
+  Streak copyWith({
+    DateTime? date,
+    bool? isCompleted,
+    String? note,
+    bool? isSkipped,
+  }) {
+    if (type == StreakType.medication) {
+      return Streak.medication(
+        id: id,
+        date: date ?? this.date,
+        isCompleted: isCompleted ?? this.isCompleted,
+        note: note ?? this.note,
+        isSkipped: isSkipped ?? this.isSkipped,
+      );
+    } else {
+      return Streak.water(
+        id: id,
+        date: date ?? this.date,
+        isCompleted: isCompleted ?? this.isCompleted,
+        note: note ?? this.note,
+      );
+    }
   }
 
   /// Converts the `Streak` instance into a map for serialization.
@@ -66,6 +108,8 @@ class Streak extends Equatable {
       'date': date.toIso8601String(),
       'isCompleted': isCompleted,
       'note': note,
+      'type': type.name,
+      'isSkipped': isSkipped,
     };
   }
 
@@ -74,17 +118,26 @@ class Streak extends Equatable {
   /// - The `map` parameter must contain `date`, `isCompleted`, and `note` keys.
   /// - The `date` key should be a valid ISO8601 string.
   factory Streak.fromMap(Map<String, dynamic> map) {
-    return Streak(
-      date: DateTime.parse(map['date']),
-      isCompleted: map['isCompleted'],
-      note: map['note'],
-    );
+    StreakType type = StreakType.values.byName(map["type"]);
+
+    if (type == StreakType.medication) {
+      return Streak.medication(
+        date: DateTime.parse(map['date']),
+        isCompleted: map['isCompleted'],
+        isSkipped: map['isSkipped'],
+        note: map['note'],
+      );
+    } else {
+      return Streak.water(
+        date: DateTime.parse(map['date']),
+        isCompleted: map['isCompleted'],
+        note: map['note'],
+      );
+    }
   }
 
-  /// Defines the properties that will be used for equality checks.
-  ///
-  /// Two `Streak` instances are considered equal if their `date`, `isCompleted`,
-  /// and `note` properties match.
+
   @override
+  @Transient()
   List<Object?> get props => [date, isCompleted, note];
 }
