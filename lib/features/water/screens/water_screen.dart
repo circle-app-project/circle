@@ -108,7 +108,7 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
                   value: selectedVolume ??
                       waterPreferences.defaultLogValue!.toDouble());
 
-              await waterLogNotifier.addWaterLog(
+              await waterLogNotifier.putWaterLog(
                   entry: waterLog, user: selfUser, updateRemote: false);
               if(ref.watch(waterLogNotifierProviderIml).hasError){
                 if (context.mounted) {
@@ -211,7 +211,7 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
                               false); // Todo: change to true or setup periodic syncing
                     },
                     onEditPressed: (newLog) async {
-                      await waterLogNotifier.updateWaterLog(
+                      await waterLogNotifier.putWaterLog(
                           entry: newLog,
                           user: selfUser,
                           updateRemote:

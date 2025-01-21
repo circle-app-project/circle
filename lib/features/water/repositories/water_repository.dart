@@ -7,7 +7,6 @@ import '../../auth/auth.dart';
 import '../water.dart';
 
 abstract class WaterRepository {
-
   /// Todo: Refactor add and update into put method
   FutureEither<List<WaterLog>> getWaterLogs({
     AppUser? user,
@@ -16,13 +15,7 @@ abstract class WaterRepository {
     DateTime? end,
   });
 
-  FutureEither<void> addWaterLog({
-    required WaterLog log,
-    required AppUser user,
-    bool updateRemote = false,
-  });
-
-  FutureEither<void> updateWaterLog({
+  FutureEither<WaterLog> putWaterLog({
     required WaterLog log,
     required AppUser user,
     bool updateRemote = false,
@@ -34,7 +27,10 @@ abstract class WaterRepository {
     bool updateRemote = false,
   });
 
-  FutureEither<void> clear({required AppUser user, bool updateRemote = false});
+  FutureEither<void> clearLogs({
+    required AppUser user,
+    bool updateRemote = false,
+  });
 
   FutureEither<int> count({required AppUser user});
 
@@ -47,17 +43,12 @@ abstract class WaterRepository {
     DateTime? end,
   });
 
-  FutureEither<void> addPreferences({
+  FutureEither<WaterPreferences> putPreferences({
     required WaterPreferences preferences,
     required AppUser? user,
     bool? updateRemote = false,
   });
 
-  FutureEither<void> updatePreferences({
-    required WaterPreferences preferences,
-    required AppUser user,
-    bool updateRemote = false,
-  });
   FutureEither<void> deletePreferences({
     required AppUser user,
     bool updateRemote = false,
@@ -129,32 +120,23 @@ class WaterRepositoryImpl implements WaterRepository {
   }
 
   @override
-  FutureEither<void> addWaterLog({
+  FutureEither<WaterLog> putWaterLog({
     required WaterLog log,
     required AppUser user,
     bool updateRemote = false,
   }) async {
     return futureHandler(() async {
-      _waterLocalService.addWaterLog(log);
       if (updateRemote) {
-        await _waterService.addLog(waterLog: log, uid: user.uid);
+        if (log.id == 0) {
+          await _waterService.addLog(waterLog: log, uid: user.uid);
+        } else {
+          await _waterService.updateLog(waterLog: log, uid: user.uid);
+        }
       }
+      return _waterLocalService.putAndGetWaterLog(log);
     });
   }
 
-  @override
-  FutureEither<void> updateWaterLog({
-    required WaterLog log,
-    required AppUser user,
-    bool updateRemote = false,
-  }) async {
-    return futureHandler(() async {
-      _waterLocalService.update(log);
-      if (updateRemote) {
-        await _waterService.updateLog(waterLog: log, uid: user.uid);
-      }
-    });
-  }
 
   @override
   FutureEither<void> deleteLog({
@@ -171,15 +153,15 @@ class WaterRepositoryImpl implements WaterRepository {
   }
 
   @override
-  FutureEither<void> clear({
+  FutureEither<void> clearLogs({
     required AppUser user,
     bool updateRemote = false,
   }) async {
     return futureHandler(() async {
-      _waterLocalService.clear();
       if (updateRemote) {
         await _waterService.clear(uid: user.uid);
       }
+      _waterLocalService.clearLogs();
     });
   }
 
@@ -231,7 +213,6 @@ class WaterRepositoryImpl implements WaterRepository {
         documentSnapshot.data()!.isNotEmpty) {
       Map<String, dynamic>? data = documentSnapshot.data();
       WaterPreferences preferences = WaterPreferences.fromMap(data!);
-
       return preferences;
     } else {
       throw Exception("Preferences doesn't exist");
@@ -239,36 +220,29 @@ class WaterRepositoryImpl implements WaterRepository {
   }
 
   @override
-  FutureEither<void> addPreferences({
+  FutureEither<WaterPreferences> putPreferences({
     required WaterPreferences preferences,
     required AppUser? user,
     bool? updateRemote = false,
   }) async {
     return futureHandler(() async {
-      _waterLocalService.addPreferences(preferences);
       if (updateRemote! && user != null) {
-        await _waterService.addPreferences(
-          preferences: preferences,
-          uid: user.uid,
-        );
+        if (preferences.id == 0) {
+          /// Uses object box `id`a to determine if this is an old object or not
+          /// An `id` of z indicates is a new object and means it should be added to the db
+          /// A non `0` `id` means its an old object and should be updated
+          await _waterService.addPreferences(
+            preferences: preferences,
+            uid: user.uid,
+          );
+        } else {
+          await _waterService.updatePreferences(
+            preferences: preferences,
+            uid: user.uid,
+          );
+        }
       }
-    });
-  }
-
-  @override
-  FutureEither<void> updatePreferences({
-    required WaterPreferences preferences,
-    required AppUser user,
-    bool updateRemote = false,
-  }) async {
-    return futureHandler(() async {
-      _waterLocalService.updatePreferences(preferences);
-      if (updateRemote) {
-        await _waterService.updatePreferences(
-          preferences: preferences,
-          uid: user.uid,
-        );
-      }
+      return _waterLocalService.putAndGetPreferences(preferences);
     });
   }
 

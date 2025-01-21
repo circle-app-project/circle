@@ -9,62 +9,71 @@ import '../../../main.dart';
 import '../../auth/models/user/app_user.dart';
 import '../water.dart';
 
-
 part 'water_log_notifier.g.dart';
 
-
 final WaterService waterService = WaterService();
-final WaterLocalService waterLocalService = WaterLocalService(store: database.store);
+final WaterLocalService waterLocalService = WaterLocalService(
+  store: database.store,
+);
 
 final WaterRepository waterRepository = WaterRepositoryImpl(
   waterLocalService: waterLocalService,
   waterService: waterService,
-
 );
 
-final WaterLogNotifierProvider waterLogNotifierProviderIml = waterLogNotifierProvider(
-  waterRepository: waterRepository,
-);
-
+final WaterLogNotifierProvider waterLogNotifierProviderIml =
+    waterLogNotifierProvider(waterRepository: waterRepository);
 
 @Riverpod(keepAlive: true)
 class WaterLogNotifier extends _$WaterLogNotifier {
-late final WaterRepository _waterRepository;
-
+  late final WaterRepository _waterRepository;
 
   @override
-  FutureOr<List<WaterLog>> build({required WaterRepository waterRepository}) async {
-  _waterRepository = waterRepository;
+  FutureOr<List<WaterLog>> build({
+    required WaterRepository waterRepository,
+  }) async {
+    _waterRepository = waterRepository;
     return [];
   }
 
   /// --- Logs ----///
-  Future<void> getWaterLogs(
-      {AppUser? user,
-      bool? getFromRemote,
-      DateTime? start,
-      DateTime? end}) async {
+  Future<void> getWaterLogs({
+    AppUser? user,
+    bool? getFromRemote,
+    DateTime? start,
+    DateTime? end,
+  }) async {
+    log("Getting water logs", name: "Water Log Notifier");
     state = const AsyncValue.loading();
-    final Either<Failure, List<WaterLog>> response =
-        await _waterRepository.getWaterLogs(
-            user: user,
-            getFromRemote: getFromRemote,
-            start:
-                start ?? DateTime.now().copyWith(hour: 0, minute: 0, second: 0),
-            end: end ??
-                DateTime.now().copyWith(hour: 23, minute: 59, second: 59));
-    response.fold((failure) {
-  log("RETURNED FAILURE", name: "WATER LOG NOTIFIER");
-      state = AsyncValue.error(failure, failure.stackTrace ?? StackTrace.current);
-    }, (waterLogs) {
-           log("RETURNED SUCCESS", name: "WATER LOG NOTIFIER");
-      state = AsyncValue.data(waterLogs);
-    });
+    final Either<Failure, List<WaterLog>> response = await _waterRepository
+        .getWaterLogs(
+          user: user,
+          getFromRemote: getFromRemote,
+          start:
+              start ?? DateTime.now().copyWith(hour: 0, minute: 0, second: 0),
+          end: end ?? DateTime.now().copyWith(hour: 23, minute: 59, second: 59),
+        );
+    response.fold(
+      (failure) {
+        log(
+          "Failed: $failure, Message:${failure.message}, Code: ${failure.code}",
+          name: "Water Log Notifier",
+          stackTrace: failure.stackTrace,
+        );
+        state = AsyncValue.error(
+          failure,
+          failure.stackTrace ?? StackTrace.current,
+        );
+      },
+      (waterLogs) {
+        log("Success ${state.value}", name: "Water Log Notifier");
+        state = AsyncValue.data(waterLogs);
+      },
+    );
   }
 
   double calculateTotalFromLogs({List<WaterLog>? logs}) {
     List<WaterLog> allLogs = logs ?? state.value!;
-
     double totalToday = 0;
     //Calculate total
     for (WaterLog log in allLogs) {
@@ -72,68 +81,40 @@ late final WaterRepository _waterRepository;
     }
     return totalToday;
   }
-  //
-  // Future<List<WaterLog>> _getLogsWithinTimeFrame(
-  //     {required DateTime start, required DateTime end}) async {
-  //   List<WaterLog> logs = state.value!;
-  //
-  //   //Filter for just logs within timeframe
-  //   logs = logs.filter((log) {
-  //     return log.timestamp.isAfter(start) && log.timestamp.isBefore(end);
-  //   }).toList();
-  //
-  //   _logsWithinTimeframe = logs;
-  //
-  //   if (logs.isEmpty) {
-  //     _totalWithinTimeframe = 0;
-  //   }
-  //   //Calculate total
-  //   _totalWithinTimeframe = 0;
-  //   for (WaterLog log in logs) {
-  //     _totalWithinTimeframe += log.amount;
-  //   }
-  //
-  //   return logs;
-  // }
 
-  Future<void> addWaterLog(
-      {required WaterLog entry,
-      required AppUser user,
-      bool updateRemote = false}) async {
-    log("ADDING WATER LOG", name: "Water Log Notifier");
-    //print("Adding log");
-    Stopwatch stopwatch = Stopwatch()..start();
-    state = const AsyncValue.loading();
-    final Either<Failure, void> response = await _waterRepository.addWaterLog(
-        log: entry, user: user, updateRemote: updateRemote);
-    response.fold((failure) {
-      log("RETURNED FAILURE", name: "Water Log Notifier");
-      state = AsyncValue.error(failure, failure.stackTrace ?? StackTrace.current);
-    }, (empty) async {
-           log("RETURNED FAILURE", name: "Water Log Notifier");
-      await getWaterLogs();
-      //  print("Added stopwatch and got updated logs");
-      stopwatch.stop();
-      log("Add water log took ${stopwatch.elapsedMilliseconds} ms");
-    });
-  }
-
-  Future<void> updateWaterLog({
+  Future<void> putWaterLog({
     required WaterLog entry,
     required AppUser user,
     bool updateRemote = false,
   }) async {
-    log("UPDATING WATER LOG", name: "Water Log Notifier");
+    log("Adding Water Log", name: "Water Log Notifier");
+    ///Todo: Eventually remove this timer
+    Stopwatch stopwatch = Stopwatch()..start();
     state = const AsyncValue.loading();
-    final Either<Failure, void> response = await _waterRepository.addWaterLog(
-        log: entry, user: user, updateRemote: updateRemote);
-    response.fold((failure) {
-           log("RETURNED FAILURE", name: "Water Log Notifier");
-      state = AsyncValue.error(failure, failure.stackTrace ?? StackTrace.current);
-    }, (empty) async {
-           log("RETURNED FAILURE", name: "Water Log Notifier");
-      await getWaterLogs();
-    });
+    final Either<Failure, WaterLog> response = await _waterRepository.putWaterLog(
+      log: entry,
+      user: user,
+      updateRemote: updateRemote,
+    );
+    response.fold(
+      (failure) {
+        log(
+          "Failed: $failure, Message:${failure.message}, Code: ${failure.code}",
+          name: "Water Log Notifier",
+          stackTrace: failure.stackTrace,
+        );
+        state = AsyncValue.error(
+          failure,
+          failure.stackTrace ?? StackTrace.current,
+        );
+      },
+      (entry) async {
+        log("Success ${state.value}", name: "Water Log Notifier");
+        await getWaterLogs();
+        stopwatch.stop();
+        log("Add water log took ${stopwatch.elapsedMilliseconds} ms");
+      },
+    );
   }
 
   Future<void> deleteWaterLog({
@@ -141,33 +122,56 @@ late final WaterRepository _waterRepository;
     required AppUser user,
     bool updateRemote = false,
   }) async {
-    log("DELETING WATER LOG", name: "Water Log Notifier");
+    log("Deleting water log", name: "Water Log Notifier");
     state = const AsyncValue.loading();
     final Either<Failure, void> response = await _waterRepository.deleteLog(
-        log: entry, user: user, updateRemote: updateRemote);
-    response.fold((failure) {
-           log("RETURNED FAILURE", name: "Water Log Notifier");
-      state = AsyncValue.error(failure, failure.stackTrace ?? StackTrace.current);
-    }, (empty) async {
-           log("RETURNED FAILURE", name: "Water Log Notifier");
-      await getWaterLogs();
-    });
+      log: entry,
+      user: user,
+      updateRemote: updateRemote,
+    );
+    response.fold(
+      (failure) {
+        log(
+          "Failed: $failure, Message:${failure.message}, Code: ${failure.code}",
+          name: "Water Log Notifier",
+          stackTrace: failure.stackTrace,
+        );
+        state = AsyncValue.error(
+          failure,
+          failure.stackTrace!,
+        );
+      },
+      (empty) async {
+        log("Success ${state.value}", name: "Water Log Notifier");
+        await getWaterLogs();
+
+      },
+    );
   }
 
-  Future<void> clear({
-    required AppUser user,
-    bool updateRemote = false,
-  }) async {
-    log("CLEARING WATER LOG", name: "Water Log Notifier");
+  Future<void> clear({required AppUser user, bool updateRemote = false}) async {
+    log("Clearing logs", name: "Water Log Notifier");
     state = const AsyncValue.loading();
-    final Either<Failure, void> response =
-        await _waterRepository.clear(user: user, updateRemote: updateRemote);
-    response.fold((failure) {
-           log("RETURNED FAILURE", name: "Water Log Notifier");
-      state = AsyncValue.error(failure, failure.stackTrace ?? StackTrace.current);
-    }, (empty) async {
-           log("RETURNED FAILURE", name: "Water Log Notifier");
-      await getWaterLogs();
-    });
+    final Either<Failure, void> response = await _waterRepository.clearLogs(
+      user: user,
+      updateRemote: updateRemote,
+    );
+    response.fold(
+      (failure) {
+        log(
+          "Failed: $failure, Message:${failure.message}, Code: ${failure.code}",
+          name: "Water Log Notifier",
+          stackTrace: failure.stackTrace,
+        );
+        state = AsyncValue.error(
+          failure,
+          failure.stackTrace!
+        );
+      },
+      (empty) async {
+        log("Success ${state.value}", name: "Water Log Notifier");
+        await getWaterLogs();
+      },
+    );
   }
 }

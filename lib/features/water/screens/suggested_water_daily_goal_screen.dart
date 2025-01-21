@@ -112,7 +112,7 @@ class _SuggestedWaterDailyGoalScreenState
                     preferences = preferences?.copyWith(
                       defaultDailyGoal: defaultDailyGoal,
                     );
-                    await waterPrefsNotifier.addWaterPreferences(
+                    await waterPrefsNotifier.putWaterPreferences(
                         preferences: preferences!, user: user);
                     if (context.mounted) {
                       if(ref.watch(waterPrefsNotifierProviderImpl).hasError){
