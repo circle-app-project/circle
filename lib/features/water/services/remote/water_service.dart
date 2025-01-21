@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import '../../../../core/error/exceptions.dart';
 import '../../water.dart';
 
 class WaterService {
@@ -11,12 +12,13 @@ class WaterService {
   ///----Water Logs Section----///
 
   Future<DocumentSnapshot<Map<String, dynamic>>> getLogs(String uid) async {
-    DocumentSnapshot<Map<String, dynamic>> snapshot = await firestore
-        .collection('logs')
-        .doc(uid)
-        .collection('water')
-        .doc("${month}_$year")
-        .get();
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await firestore
+            .collection('logs')
+            .doc(uid)
+            .collection('water')
+            .doc("${month}_$year")
+            .get();
     return snapshot;
   }
 
@@ -26,38 +28,39 @@ class WaterService {
         .doc(uid)
         .collection('water')
         .doc("${month}_$year")
-        .set(
-      {
-        "entries": FieldValue.arrayUnion([waterLog.toMap()])
-      },
-      SetOptions(merge: true),
-    );
+        .set({
+          "entries": FieldValue.arrayUnion([waterLog.toMap()]),
+        }, SetOptions(merge: true));
   }
 
   ///----Add Water Log----///
-  Future<void> updateLog(
-      {required WaterLog waterLog, required String uid}) async {
+  Future<void> updateLog({
+    required WaterLog waterLog,
+    required String uid,
+  }) async {
     await firestore
         .collection('logs')
         .doc(uid)
         .collection('water')
         .doc("${month}_$year")
         .update({
-      "entries": FieldValue.arrayUnion([waterLog.toMap()])
-    });
+          "entries": FieldValue.arrayUnion([waterLog.toMap()]),
+        });
   }
 
   ///----delete Water Log----///
-  Future<void> deleteLog(
-      {required WaterLog waterLog, required String uid}) async {
+  Future<void> deleteLog({
+    required WaterLog waterLog,
+    required String uid,
+  }) async {
     await firestore
         .collection('logs')
         .doc(uid)
         .collection('water')
         .doc("${month}_$year")
         .update({
-      "entries": FieldValue.arrayRemove([waterLog.toMap()])
-    });
+          "entries": FieldValue.arrayRemove([waterLog.toMap()]),
+        });
   }
 
   ///----delete Water Log----///
@@ -72,19 +75,30 @@ class WaterService {
 
   /// ----- Water Preferences Section ----- ///
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> getPreferences(
-      String uid) async {
-    DocumentSnapshot<Map<String, dynamic>> snapshot = await firestore
-        .collection('users')
-        .doc(uid)
-        .collection('preferences')
-        .doc('water')
-        .get();
-    return snapshot;
+  Future<WaterPreferences> getPreferences(String uid) async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await firestore
+            .collection('users')
+            .doc(uid)
+            .collection('preferences')
+            .doc('water')
+            .get();
+
+    if (snapshot.exists &&
+        snapshot.data() != null &&
+        snapshot.data()!.isNotEmpty) {
+      Map<String, dynamic>? data = snapshot.data();
+      WaterPreferences preferences = WaterPreferences.fromMap(data!);
+      return preferences;
+    } else {
+      throw AppException( message: "Water preferences doesn't exist", type: ExceptionType.firebase, stackTrace: StackTrace.current);
+    }
   }
 
-  Future<void> addPreferences(
-      {required WaterPreferences preferences, required String uid}) async {
+  Future<void> addPreferences({
+    required WaterPreferences preferences,
+    required String uid,
+  }) async {
     await firestore
         .collection('users')
         .doc(uid)
@@ -93,8 +107,10 @@ class WaterService {
         .set(preferences.toMap(), SetOptions(merge: true));
   }
 
-  Future<void> updatePreferences(
-      {required WaterPreferences preferences, required String uid}) async {
+  Future<void> updatePreferences({
+    required WaterPreferences preferences,
+    required String uid,
+  }) async {
     await firestore
         .collection('users')
         .doc(uid)
