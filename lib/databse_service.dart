@@ -3,7 +3,8 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:circle/objectbox.g.dart';
+
+import 'objectbox.g.dart';
 
 class LocalDatabaseService {
   Store? _store;
