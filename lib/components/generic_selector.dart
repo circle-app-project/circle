@@ -83,15 +83,23 @@ class GenericSelector<T, W extends SelectableWidget> extends StatefulWidget {
   /// For example, if [wrapSpacing] is 10.0, the children will be spaced at least
   /// 10.0 logical pixels apart in the main axis.
   ///
-  /// Defaults to 0.0.
+  /// Defaults to 8.0.
   final double wrapSpacing;
+
+  /// How much space to place between children in the main axis in a Row or Column layout.
+  ///
+  /// For example, if [spacing] is 10.0, the children will be spaced at least
+  /// 10.0 logical pixels apart in the main axis.
+  ///
+  /// Defaults to 8.0.
+  final double spacing;
 
   /// How much space to place between the runs themselves in the cross axis in a wrap layout.
   ///
   /// For example, if [wrapRunSpacing] is 10.0, the runs will be spaced at least
   /// 10.0 logical pixels apart in the cross axis.
   ///
-  /// Defaults to 0.0.
+  /// Defaults to 8.0.
   final double wrapRunSpacing;
 
   /// Creates a [GenericSelector].
@@ -106,8 +114,9 @@ class GenericSelector<T, W extends SelectableWidget> extends StatefulWidget {
     this.isMultiSelectMode = false,
     this.wrapAlignment = WrapAlignment.start,
     this.wrapRunAlignment = WrapAlignment.start,
-    this.wrapSpacing = 8,
-    this.wrapRunSpacing = 8,
+    this.wrapSpacing = 8.0,
+    this.wrapRunSpacing = 8.0,
+    this.spacing = 8.0,
     this.initialSelection,
   });
 
@@ -157,12 +166,14 @@ class _GenericSelectorState<T, W extends SelectableWidget>
     switch (widget.layout) {
       case SelectorLayout.column:
         return Column(
+          spacing: widget.spacing,
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: itemWidgets,
         );
       case SelectorLayout.row:
         return Row(
+          spacing: widget.spacing,
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: itemWidgets,
