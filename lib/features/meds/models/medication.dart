@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:circle/core/extensions/date_time_formatter.dart';
 import 'package:circle/core/utils/enums.dart';
 import 'package:circle/features/meds/models/frequency.dart';
+import 'package:circle/features/meds/models/med_activity_record.dart';
 import 'package:circle/features/meds/models/streak.dart';
 import 'package:equatable/equatable.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:objectbox/objectbox.dart';
 
 import 'dose.dart';
@@ -60,8 +63,6 @@ class Medication extends Equatable {
   /// A warning message related to the medication (e.g., "Take with food").
   final String? warningMessage;
 
-  /// The user's current streak of taking this medication.
-  final int? streakCount;
 
   /// The start date for taking the medication.
   @Property(type: PropertyType.date)
@@ -83,8 +84,11 @@ class Medication extends Equatable {
   @Transient()
   MedicationType? type;
 
+  @Transient()
+  Streak? streak;
+
   /// A to-many relationship to store streaks of medication adherence.
-  final ToMany<Streak> streaks = ToMany<Streak>();
+  final ToMany<MedActivityRecord> activityRecord = ToMany<MedActivityRecord>();
 
   /// ----- OBJECTBOX TYPE CONVERTERS ----- ///
   ///
@@ -97,9 +101,15 @@ class Medication extends Equatable {
   /// Converts `Frequency` to a JSON string for database storage.
   String? get dbFrequency => jsonEncode(frequency?.toMap());
 
+  /// Converts `Streak` to a JSON string for database storage.
+  String? get dbStreak => jsonEncode(streak?.toMap());
+
   /// Sets the `MedicationType` from a database-friendly string.
   set dbType(String? value) {
-    type = value != null ? MedicationType.values.byName(value) : MedicationType.unknown;
+    type =
+        value != null
+            ? MedicationType.values.byName(value)
+            : MedicationType.unknown;
   }
 
   /// Sets the `Dose` from a JSON string.
@@ -109,8 +119,16 @@ class Medication extends Equatable {
 
   /// Sets the `Frequency` from a JSON string.
   set dbFrequency(String? value) {
-    frequency = value != null ? Frequency.fromMap(jsonDecode(value)) : Frequency.empty;
+    frequency =
+        value != null ? Frequency.fromMap(jsonDecode(value)) : Frequency.empty;
   }
+
+  /// Sets the `Frequency` from a JSON string.
+  set dbStreak(String? value) {
+    streak =
+    value != null ? Streak.fromMap(jsonDecode(value)) : Streak.empty;
+  }
+
 
   Medication({
     this.id = 0,
@@ -126,7 +144,7 @@ class Medication extends Equatable {
     this.shouldRemind,
     this.reminderMessage,
     this.warningMessage,
-    this.streakCount,
+    this.streak,
   });
 
   /// Returns a copy of the current `Medication` object with updated fields.
@@ -140,8 +158,8 @@ class Medication extends Equatable {
     bool? isPermanent,
     DateTime? startDate,
     DateTime? endDate,
-    List<Streak>? streaks,
-    int? streakCount,
+    List<MedActivityRecord>? streaks,
+
     bool? shouldRemind,
     String? reminderMessage,
     String? warningMessage,
@@ -160,10 +178,32 @@ class Medication extends Equatable {
       shouldRemind: shouldRemind ?? this.shouldRemind,
       reminderMessage: reminderMessage ?? this.reminderMessage,
       warningMessage: warningMessage ?? this.warningMessage,
-      streakCount: streakCount ?? this.streakCount,
     );
-    medication.streaks.addAll(streaks ?? this.streaks);
+    medication.activityRecord.addAll(streaks ?? this.activityRecord);
     return medication;
+  }
+
+  void putActivityRecord(MedActivityRecord newActivity) {
+    /// Check if the streak already exists
+
+    bool activityExists =
+        activityRecord.where((s) => s.date.isSameDate(newActivity.date)).isNotEmpty;
+    /// If it does, update the existing streak
+
+    /// If it doesn't, add the new streak
+
+    if (activityExists) {
+      int index = activityRecord.indexWhere((s) => s.date.isSameDate(newActivity.date));
+
+      /// Get the index of the existing streak
+      /// Remove the existing streak
+      /// Insert a new streak at that index
+      activityRecord.removeAt(index);
+      activityRecord.insert(index, newActivity);
+    } else {
+      activityRecord.add(newActivity);
+    }
+    activityRecord.add(newActivity);
   }
 
   /// Serializes the `Medication` object to a `Map`.
@@ -182,7 +222,7 @@ class Medication extends Equatable {
       'shouldRemind': shouldRemind,
       'reminderMessage': reminderMessage,
       'warningMessage': warningMessage,
-      'streakCount': streakCount,
+      'streak': streak?.toMap(),
     };
   }
 
@@ -197,12 +237,13 @@ class Medication extends Equatable {
       frequency: Frequency.fromMap(map['frequency']),
       durationDays: map['durationDays'],
       isPermanent: map['isPermanent'],
-      startDate: map['startDate'] != null ? DateTime.parse(map['startDate']) : null,
+      startDate:
+          map['startDate'] != null ? DateTime.parse(map['startDate']) : null,
       endDate: map['endDate'] != null ? DateTime.parse(map['endDate']) : null,
       shouldRemind: map['shouldRemind'],
       reminderMessage: map['reminderMessage'],
       warningMessage: map['warningMessage'],
-      streakCount: map['streakCount'],
+      streak: Streak.fromMap(map['streak']),
     );
   }
 
@@ -248,8 +289,8 @@ class Medication extends Equatable {
     isPermanent,
     startDate,
     endDate,
-    streaks,
-    streakCount,
+    activityRecord,
+    streak,
     warningMessage,
     shouldRemind,
   ];
