@@ -16,8 +16,8 @@ import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'features/auth/models/user/app_user.dart';
 import 'features/auth/models/user/user_profile.dart';
+import 'features/meds/models/med_activity_record.dart';
 import 'features/meds/models/medication.dart';
-import 'features/meds/models/streak.dart';
 import 'features/water/models/water_log.dart';
 import 'features/water/models/water_preferences.dart';
 
@@ -185,7 +185,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(8, 3148493177410260898),
       name: 'Medication',
-      lastPropertyId: const obx_int.IdUid(14, 1814100054573638532),
+      lastPropertyId: const obx_int.IdUid(15, 4314761332996949634),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -229,11 +229,6 @@ final _entities = <obx_int.ModelEntity>[
             type: 9,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(9, 5890801838528296916),
-            name: 'streakCount',
-            type: 6,
-            flags: 0),
-        obx_int.ModelProperty(
             id: const obx_int.IdUid(10, 6214859084849299397),
             name: 'startDate',
             type: 10,
@@ -257,53 +252,19 @@ final _entities = <obx_int.ModelEntity>[
             id: const obx_int.IdUid(14, 1814100054573638532),
             name: 'dbFrequency',
             type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(15, 4314761332996949634),
+            name: 'dbStreak',
+            type: 9,
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[
         obx_int.ModelRelation(
-            id: const obx_int.IdUid(2, 2539627836723066308),
-            name: 'streaks',
-            targetId: const obx_int.IdUid(9, 1910794932095842795))
+            id: const obx_int.IdUid(3, 7294710979211216290),
+            name: 'activityRecord',
+            targetId: const obx_int.IdUid(11, 6957825818410986359))
       ],
-      backlinks: <obx_int.ModelBacklink>[]),
-  obx_int.ModelEntity(
-      id: const obx_int.IdUid(9, 1910794932095842795),
-      name: 'Streak',
-      lastPropertyId: const obx_int.IdUid(6, 7290586427487009004),
-      flags: 0,
-      properties: <obx_int.ModelProperty>[
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(1, 5647413884932250945),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(2, 1983841816402486938),
-            name: 'dbType',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(3, 6178216030160449883),
-            name: 'date',
-            type: 10,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(4, 3097083884408393914),
-            name: 'isCompleted',
-            type: 1,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(5, 3791689441908872094),
-            name: 'isSkipped',
-            type: 1,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(6, 7290586427487009004),
-            name: 'note',
-            type: 9,
-            flags: 0)
-      ],
-      relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[]),
   obx_int.ModelEntity(
       id: const obx_int.IdUid(10, 3540123216790538936),
@@ -361,6 +322,55 @@ final _entities = <obx_int.ModelEntity>[
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(11, 6957825818410986359),
+      name: 'MedActivityRecord',
+      lastPropertyId: const obx_int.IdUid(9, 7177102249851450606),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 1633406102808477893),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 5512567593919371215),
+            name: 'dbType',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 7170542944779333196),
+            name: 'dbStatus',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 4950765526072304608),
+            name: 'dbActivityDetails',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 1340821114564136010),
+            name: 'completedAt',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(7, 5179221082217146965),
+            name: 'date',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(8, 997915738891991722),
+            name: 'note',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(9, 7177102249851450606),
+            name: 'skipReason',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
 ];
 
@@ -399,17 +409,22 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(10, 3540123216790538936),
-      lastIndexId: const obx_int.IdUid(8, 5330077494103882266),
-      lastRelationId: const obx_int.IdUid(2, 2539627836723066308),
+      lastEntityId: const obx_int.IdUid(11, 6957825818410986359),
+      lastIndexId: const obx_int.IdUid(9, 7057256903890307851),
+      lastRelationId: const obx_int.IdUid(3, 7294710979211216290),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [
         207629943991403341,
         3501377542454085602,
         867207695587786430,
-        9210468346883610997
+        9210468346883610997,
+        1910794932095842795
       ],
-      retiredIndexUids: const [8176574082609213585, 7305761162520707228],
+      retiredIndexUids: const [
+        8176574082609213585,
+        7305761162520707228,
+        7057256903890307851
+      ],
       retiredPropertyUids: const [
         1282289976025498362,
         1939078546095740939,
@@ -450,9 +465,17 @@ obx_int.ModelDefinition getObjectBoxModel() {
         2555433748586013967,
         7223991870356115469,
         8399786612049634084,
-        391968824388424808
+        391968824388424808,
+        5890801838528296916,
+        5647413884932250945,
+        1983841816402486938,
+        6178216030160449883,
+        3097083884408393914,
+        3791689441908872094,
+        7290586427487009004,
+        2133907886604377565
       ],
-      retiredRelationUids: const [3092819797569954146],
+      retiredRelationUids: const [3092819797569954146, 2539627836723066308],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
       version: 1);
@@ -664,8 +687,10 @@ obx_int.ModelDefinition getObjectBoxModel() {
     Medication: obx_int.EntityDefinition<Medication>(
         model: _entities[3],
         toOneRelations: (Medication object) => [],
-        toManyRelations: (Medication object) =>
-            {obx_int.RelInfo<Medication>.toMany(2, object.id): object.streaks},
+        toManyRelations: (Medication object) => {
+              obx_int.RelInfo<Medication>.toMany(3, object.id):
+                  object.activityRecord
+            },
         getId: (Medication object) => object.id,
         setId: (Medication object, int id) {
           object.id = id;
@@ -688,7 +713,10 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final dbFrequencyOffset = object.dbFrequency == null
               ? null
               : fbb.writeString(object.dbFrequency!);
-          fbb.startTable(15);
+          final dbStreakOffset = object.dbStreak == null
+              ? null
+              : fbb.writeString(object.dbStreak!);
+          fbb.startTable(16);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, nameOffset);
           fbb.addOffset(2, descriptionOffset);
@@ -697,12 +725,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
           fbb.addBool(5, object.shouldRemind);
           fbb.addOffset(6, reminderMessageOffset);
           fbb.addOffset(7, warningMessageOffset);
-          fbb.addInt64(8, object.streakCount);
           fbb.addInt64(9, object.startDate?.millisecondsSinceEpoch);
           fbb.addInt64(10, object.endDate?.millisecondsSinceEpoch);
           fbb.addOffset(11, dbTypeOffset);
           fbb.addOffset(12, dbDoseOffset);
           fbb.addOffset(13, dbFrequencyOffset);
+          fbb.addOffset(14, dbStreakOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -738,8 +766,6 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final warningMessageParam =
               const fb.StringReader(asciiOptimization: true)
                   .vTableGetNullable(buffer, rootOffset, 18);
-          final streakCountParam =
-              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 20);
           final object = Medication(
               id: idParam,
               name: nameParam,
@@ -750,66 +776,23 @@ obx_int.ModelDefinition getObjectBoxModel() {
               endDate: endDateParam,
               shouldRemind: shouldRemindParam,
               reminderMessage: reminderMessageParam,
-              warningMessage: warningMessageParam,
-              streakCount: streakCountParam)
+              warningMessage: warningMessageParam)
             ..dbType = const fb.StringReader(asciiOptimization: true)
                 .vTableGetNullable(buffer, rootOffset, 26)
             ..dbDose = const fb.StringReader(asciiOptimization: true)
                 .vTableGetNullable(buffer, rootOffset, 28)
             ..dbFrequency = const fb.StringReader(asciiOptimization: true)
-                .vTableGetNullable(buffer, rootOffset, 30);
-          obx_int.InternalToManyAccess.setRelInfo<Medication>(object.streaks,
-              store, obx_int.RelInfo<Medication>.toMany(2, object.id));
-          return object;
-        }),
-    Streak: obx_int.EntityDefinition<Streak>(
-        model: _entities[4],
-        toOneRelations: (Streak object) => [],
-        toManyRelations: (Streak object) => {},
-        getId: (Streak object) => object.id,
-        setId: (Streak object, int id) {
-          object.id = id;
-        },
-        objectToFB: (Streak object, fb.Builder fbb) {
-          final dbTypeOffset = fbb.writeString(object.dbType);
-          final noteOffset =
-              object.note == null ? null : fbb.writeString(object.note!);
-          fbb.startTable(7);
-          fbb.addInt64(0, object.id);
-          fbb.addOffset(1, dbTypeOffset);
-          fbb.addInt64(2, object.date.millisecondsSinceEpoch);
-          fbb.addBool(3, object.isCompleted);
-          fbb.addBool(4, object.isSkipped);
-          fbb.addOffset(5, noteOffset);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (obx.Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-          final idParam =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
-          final dateParam = DateTime.fromMillisecondsSinceEpoch(
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0));
-          final isCompletedParam =
-              const fb.BoolReader().vTableGet(buffer, rootOffset, 10, false);
-          final isSkippedParam =
-              const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 12);
-          final noteParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGetNullable(buffer, rootOffset, 14);
-          final object = Streak(
-              id: idParam,
-              date: dateParam,
-              isCompleted: isCompletedParam,
-              isSkipped: isSkippedParam,
-              note: noteParam)
-            ..dbType = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 6, '');
-
+                .vTableGetNullable(buffer, rootOffset, 30)
+            ..dbStreak = const fb.StringReader(asciiOptimization: true)
+                .vTableGetNullable(buffer, rootOffset, 32);
+          obx_int.InternalToManyAccess.setRelInfo<Medication>(
+              object.activityRecord,
+              store,
+              obx_int.RelInfo<Medication>.toMany(3, object.id));
           return object;
         }),
     AppUser: obx_int.EntityDefinition<AppUser>(
-        model: _entities[5],
+        model: _entities[4],
         toOneRelations: (AppUser object) => [object.profile],
         toManyRelations: (AppUser object) => {},
         getId: (AppUser object) => object.id,
@@ -866,6 +849,67 @@ obx_int.ModelDefinition getObjectBoxModel() {
           object.profile.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0);
           object.profile.attach(store);
+          return object;
+        }),
+    MedActivityRecord: obx_int.EntityDefinition<MedActivityRecord>(
+        model: _entities[5],
+        toOneRelations: (MedActivityRecord object) => [],
+        toManyRelations: (MedActivityRecord object) => {},
+        getId: (MedActivityRecord object) => object.id,
+        setId: (MedActivityRecord object, int id) {
+          object.id = id;
+        },
+        objectToFB: (MedActivityRecord object, fb.Builder fbb) {
+          final dbTypeOffset = fbb.writeString(object.dbType);
+          final dbStatusOffset = fbb.writeString(object.dbStatus);
+          final dbActivityDetailsOffset =
+              fbb.writeString(object.dbActivityDetails);
+          final noteOffset =
+              object.note == null ? null : fbb.writeString(object.note!);
+          final skipReasonOffset = object.skipReason == null
+              ? null
+              : fbb.writeString(object.skipReason!);
+          fbb.startTable(10);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(2, dbTypeOffset);
+          fbb.addOffset(3, dbStatusOffset);
+          fbb.addOffset(4, dbActivityDetailsOffset);
+          fbb.addInt64(5, object.completedAt?.millisecondsSinceEpoch);
+          fbb.addInt64(6, object.date.millisecondsSinceEpoch);
+          fbb.addOffset(7, noteOffset);
+          fbb.addOffset(8, skipReasonOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final completedAtValue =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 14);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final dateParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0));
+          final noteParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 18);
+          final skipReasonParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 20);
+          final completedAtParam = completedAtValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(completedAtValue);
+          final object = MedActivityRecord(
+              id: idParam,
+              date: dateParam,
+              note: noteParam,
+              skipReason: skipReasonParam,
+              completedAt: completedAtParam)
+            ..dbType = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 8, '')
+            ..dbStatus = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 10, '')
+            ..dbActivityDetails = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 12, '');
+
           return object;
         })
   };
@@ -1020,96 +1064,106 @@ class Medication_ {
   static final warningMessage =
       obx.QueryStringProperty<Medication>(_entities[3].properties[7]);
 
-  /// See [Medication.streakCount].
-  static final streakCount =
-      obx.QueryIntegerProperty<Medication>(_entities[3].properties[8]);
-
   /// See [Medication.startDate].
   static final startDate =
-      obx.QueryDateProperty<Medication>(_entities[3].properties[9]);
+      obx.QueryDateProperty<Medication>(_entities[3].properties[8]);
 
   /// See [Medication.endDate].
   static final endDate =
-      obx.QueryDateProperty<Medication>(_entities[3].properties[10]);
+      obx.QueryDateProperty<Medication>(_entities[3].properties[9]);
 
   /// See [Medication.dbType].
   static final dbType =
-      obx.QueryStringProperty<Medication>(_entities[3].properties[11]);
+      obx.QueryStringProperty<Medication>(_entities[3].properties[10]);
 
   /// See [Medication.dbDose].
   static final dbDose =
-      obx.QueryStringProperty<Medication>(_entities[3].properties[12]);
+      obx.QueryStringProperty<Medication>(_entities[3].properties[11]);
 
   /// See [Medication.dbFrequency].
   static final dbFrequency =
+      obx.QueryStringProperty<Medication>(_entities[3].properties[12]);
+
+  /// See [Medication.dbStreak].
+  static final dbStreak =
       obx.QueryStringProperty<Medication>(_entities[3].properties[13]);
 
-  /// see [Medication.streaks]
-  static final streaks =
-      obx.QueryRelationToMany<Medication, Streak>(_entities[3].relations[0]);
-}
-
-/// [Streak] entity fields to define ObjectBox queries.
-class Streak_ {
-  /// See [Streak.id].
-  static final id =
-      obx.QueryIntegerProperty<Streak>(_entities[4].properties[0]);
-
-  /// See [Streak.dbType].
-  static final dbType =
-      obx.QueryStringProperty<Streak>(_entities[4].properties[1]);
-
-  /// See [Streak.date].
-  static final date = obx.QueryDateProperty<Streak>(_entities[4].properties[2]);
-
-  /// See [Streak.isCompleted].
-  static final isCompleted =
-      obx.QueryBooleanProperty<Streak>(_entities[4].properties[3]);
-
-  /// See [Streak.isSkipped].
-  static final isSkipped =
-      obx.QueryBooleanProperty<Streak>(_entities[4].properties[4]);
-
-  /// See [Streak.note].
-  static final note =
-      obx.QueryStringProperty<Streak>(_entities[4].properties[5]);
+  /// see [Medication.activityRecord]
+  static final activityRecord =
+      obx.QueryRelationToMany<Medication, MedActivityRecord>(
+          _entities[3].relations[0]);
 }
 
 /// [AppUser] entity fields to define ObjectBox queries.
 class AppUser_ {
   /// See [AppUser.id].
   static final id =
-      obx.QueryIntegerProperty<AppUser>(_entities[5].properties[0]);
+      obx.QueryIntegerProperty<AppUser>(_entities[4].properties[0]);
 
   /// See [AppUser.uid].
   static final uid =
-      obx.QueryStringProperty<AppUser>(_entities[5].properties[1]);
+      obx.QueryStringProperty<AppUser>(_entities[4].properties[1]);
 
   /// See [AppUser.email].
   static final email =
-      obx.QueryStringProperty<AppUser>(_entities[5].properties[2]);
+      obx.QueryStringProperty<AppUser>(_entities[4].properties[2]);
 
   /// See [AppUser.photoUrl].
   static final photoUrl =
-      obx.QueryStringProperty<AppUser>(_entities[5].properties[3]);
+      obx.QueryStringProperty<AppUser>(_entities[4].properties[3]);
 
   /// See [AppUser.isAnonymous].
   static final isAnonymous =
-      obx.QueryBooleanProperty<AppUser>(_entities[5].properties[4]);
+      obx.QueryBooleanProperty<AppUser>(_entities[4].properties[4]);
 
   /// See [AppUser.isEmailVerified].
   static final isEmailVerified =
-      obx.QueryBooleanProperty<AppUser>(_entities[5].properties[5]);
+      obx.QueryBooleanProperty<AppUser>(_entities[4].properties[5]);
 
   /// See [AppUser.isPhoneVerified].
   static final isPhoneVerified =
-      obx.QueryBooleanProperty<AppUser>(_entities[5].properties[6]);
+      obx.QueryBooleanProperty<AppUser>(_entities[4].properties[6]);
 
   /// See [AppUser.profile].
   static final profile =
-      obx.QueryRelationToOne<AppUser, UserProfile>(_entities[5].properties[7]);
+      obx.QueryRelationToOne<AppUser, UserProfile>(_entities[4].properties[7]);
 
   /// See [AppUser.dbPreferences].
   static final dbPreferences =
-      obx.QueryStringProperty<AppUser>(_entities[5].properties[8]);
+      obx.QueryStringProperty<AppUser>(_entities[4].properties[8]);
+}
+
+/// [MedActivityRecord] entity fields to define ObjectBox queries.
+class MedActivityRecord_ {
+  /// See [MedActivityRecord.id].
+  static final id =
+      obx.QueryIntegerProperty<MedActivityRecord>(_entities[5].properties[0]);
+
+  /// See [MedActivityRecord.dbType].
+  static final dbType =
+      obx.QueryStringProperty<MedActivityRecord>(_entities[5].properties[1]);
+
+  /// See [MedActivityRecord.dbStatus].
+  static final dbStatus =
+      obx.QueryStringProperty<MedActivityRecord>(_entities[5].properties[2]);
+
+  /// See [MedActivityRecord.dbActivityDetails].
+  static final dbActivityDetails =
+      obx.QueryStringProperty<MedActivityRecord>(_entities[5].properties[3]);
+
+  /// See [MedActivityRecord.completedAt].
+  static final completedAt =
+      obx.QueryDateProperty<MedActivityRecord>(_entities[5].properties[4]);
+
+  /// See [MedActivityRecord.date].
+  static final date =
+      obx.QueryDateProperty<MedActivityRecord>(_entities[5].properties[5]);
+
+  /// See [MedActivityRecord.note].
+  static final note =
+      obx.QueryStringProperty<MedActivityRecord>(_entities[5].properties[6]);
+
+  /// See [MedActivityRecord.skipReason].
+  static final skipReason =
+      obx.QueryStringProperty<MedActivityRecord>(_entities[5].properties[7]);
 }

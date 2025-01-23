@@ -1,8 +1,5 @@
 import 'dart:core';
 
-import 'package:fpdart/fpdart.dart';
-import 'package:objectbox/objectbox.dart';
-
 import 'activity_record.dart';
 
 class Streak {
@@ -163,7 +160,6 @@ class Streak {
   static List<DateTime> _getCurrentStreakDates(List<ActivityRecord> records) {
     /// Should skipped days be considered part of the streak???
     List<DateTime> currentStreakDate = [];
-    int longestStreakCount = 0;
 
     for (int i = records.length; i < records.length; i--) {
       if (records[i].status == CompletionsStatus.completed) {
