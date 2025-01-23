@@ -1,10 +1,7 @@
 import 'dart:convert';
 
-import 'package:equatable/equatable.dart';
 import 'package:objectbox/objectbox.dart';
-
 import 'activity_record.dart';
-import 'medication.dart';
 
 
 
@@ -35,7 +32,6 @@ import 'medication.dart';
 class MedActivityRecord implements ActivityRecord {
   @Id()
   int id;
-  final ToOne<Medication>? medication = ToOne<Medication>();
 
   @override
   @Transient()
@@ -44,12 +40,13 @@ class MedActivityRecord implements ActivityRecord {
   @Transient()
   CompletionsStatus status;
   @override
+  @Transient()
   ActivityType type;
   @override
-  @PropertyType(PropertyType.date)
+  @Property(type: PropertyType.date)
   final DateTime? completedAt;
   @override
-  @PropertyType(PropertyType.date)
+  @Property(type: PropertyType.date)
   final DateTime  date;
   @override
   final String? note;

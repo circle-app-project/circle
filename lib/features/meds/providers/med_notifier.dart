@@ -9,9 +9,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/error/failure.dart';
-import '../../auth/models/user/app_user.dart';
 import '../models/activity_record.dart';
-import '../models/frequency.dart';
 import '../models/medication.dart';
 import '../models/med_activity_record.dart';
 part 'med_notifier.g.dart';
@@ -42,9 +40,7 @@ class MedNotifier extends _$MedNotifier {
     required MedRepository medRepository,
   }) async {
     _medRepository = medRepository;
-    selfUser = ref
-        .watch(userNotifierProviderImpl)
-        .value;
+    selfUser = ref.watch(userNotifierProviderImpl).value;
 
     return [];
   }
@@ -56,7 +52,7 @@ class MedNotifier extends _$MedNotifier {
     final Either<Failure, List<Medication>> response = await _medRepository
         .getAllMedications(user: selfUser!);
     response.fold(
-          (failure) {
+      (failure) {
         state = AsyncValue.error(failure, failure.stackTrace!);
         log(
           "Failed: $failure, Message:${failure.message}, Code: ${failure.code}",
@@ -64,7 +60,7 @@ class MedNotifier extends _$MedNotifier {
           stackTrace: failure.stackTrace,
         );
       },
-          (medications) {
+      (medications) {
         state = AsyncValue.data(medications);
         log("Success ${state.value}", name: "Med Notifier");
       },
@@ -80,12 +76,12 @@ class MedNotifier extends _$MedNotifier {
     state = const AsyncValue.loading();
     final Either<Failure, Medication> response = await _medRepository
         .putMedication(
-      med: medication,
-      updateRemote: forceRefresh,
-      user: user ?? selfUser!,
-    );
+          med: medication,
+          updateRemote: forceRefresh,
+          user: user ?? selfUser!,
+        );
     response.fold(
-          (failure) {
+      (failure) {
         state = AsyncValue.error(failure, failure.stackTrace!);
         log(
           "Failed: $failure, Message:${failure.message}, Code: ${failure.code}",
@@ -93,7 +89,7 @@ class MedNotifier extends _$MedNotifier {
           stackTrace: failure.stackTrace,
         );
       },
-          (medication) async {
+      (medication) async {
         log("Success ${state.value}", name: "Med Notifier");
         await getMedications();
       },
@@ -109,12 +105,12 @@ class MedNotifier extends _$MedNotifier {
     state = const AsyncValue.loading();
     final Either<Failure, void> response = await _medRepository
         .deleteMedication(
-      med: medication,
-      updateRemote: forceRefresh,
-      user: user ?? selfUser!,
-    );
+          med: medication,
+          updateRemote: forceRefresh,
+          user: user ?? selfUser!,
+        );
     response.fold(
-          (failure) {
+      (failure) {
         state = AsyncValue.error(failure, failure.stackTrace!);
         log(
           "Failed: $failure, Message:${failure.message}, Code: ${failure.code}",
@@ -122,13 +118,12 @@ class MedNotifier extends _$MedNotifier {
           stackTrace: failure.stackTrace,
         );
       },
-          (empty) async {
+      (empty) async {
         log("Success ${state.value}", name: "Med Notifier");
         await getMedications();
       },
     );
   }
-
 
   Future<void> clearMedications({
     bool forceRefresh = false,
@@ -139,7 +134,7 @@ class MedNotifier extends _$MedNotifier {
     final Either<Failure, void> response = await _medRepository
         .clearMedications(updateRemote: forceRefresh, user: user ?? selfUser!);
     response.fold(
-          (failure) {
+      (failure) {
         state = AsyncValue.error(failure, failure.stackTrace!);
         log(
           "Failed: $failure, Message:${failure.message}, Code: ${failure.code}",
@@ -147,13 +142,12 @@ class MedNotifier extends _$MedNotifier {
           stackTrace: failure.stackTrace,
         );
       },
-          (empty) async {
+      (empty) async {
         state = AsyncValue.data([]);
         log("Success ${state.value}", name: "Med Notifier");
       },
     );
   }
-
 
   Future<void> markDoseAsTaken({
     bool forceRefresh = false,
@@ -176,14 +170,17 @@ class MedNotifier extends _$MedNotifier {
     bool forceRefresh = false,
     required Medication medication,
     String? note,
-    String? skipReason
+    String? skipReason,
   }) async {
     final MedActivityRecord activityRecord = MedActivityRecord(
-      date: DateTime.now(), /// Todo: this should be the date the dose was scheduled for
+      date: DateTime.now(),
+
+      /// Todo: this should be the date the dose was scheduled for
       status: CompletionsStatus.skipped,
       note: note,
       completedAt: DateTime.now(),
       skipReason: skipReason,
+
       ///Todo: Add a backlink to the medication this record is for
     );
 
@@ -196,16 +193,20 @@ class MedNotifier extends _$MedNotifier {
     bool forceRefresh = false,
     required Medication medication,
     String? note,
-    String? skipReason
+    String? skipReason,
   }) async {
     final MedActivityRecord activityRecord = MedActivityRecord(
-      date: DateTime.now(), /// Todo: this should be the date the dose was scheduled for
+      date: DateTime.now(),
+
+      /// Todo: this should be the date the dose was scheduled for
       status: CompletionsStatus.missed,
       note: note,
       completedAt: DateTime.now(),
       skipReason: skipReason,
+
       ///Todo: Add a backlink to the medication this record is for
     );
+
     /// Add streak to the medications
     medication.putActivityRecord(activityRecord);
     await putMedication(medication: medication, forceRefresh: forceRefresh);
@@ -215,16 +216,20 @@ class MedNotifier extends _$MedNotifier {
     bool forceRefresh = false,
     required Medication medication,
     String? note,
-    String? skipReason
+    String? skipReason,
   }) async {
     final MedActivityRecord activityRecord = MedActivityRecord(
-      date: DateTime.now(), /// Todo: this should be the date the dose was scheduled for
+      date: DateTime.now(),
+
+      /// Todo: this should be the date the dose was scheduled for
       status: CompletionsStatus.missed,
       note: note,
       completedAt: DateTime.now(),
       skipReason: skipReason,
+
       ///Todo: Add a backlink to the medication this record is for
     );
+
     /// Add streak to the medications
     medication.putActivityRecord(activityRecord);
     await putMedication(medication: medication, forceRefresh: forceRefresh);
@@ -234,10 +239,17 @@ class MedNotifier extends _$MedNotifier {
     bool forceRefresh = false,
     required Medication medication,
     String? note,
-    String? skipReason
+    String? skipReason,
   }) async {
-
-    List<DateTime> upcomingDoses = medication.frequency;
+    List<DateTime> upcomingDoses = [];
+    if (medication.frequency?.times != null) {
+      upcomingDoses =
+          medication.frequency!.times!
+              .map(
+                (e) => DateTime.now().copyWith(hour: e.hour, minute: e.minute),
+              )
+              .toList();
+    }
 
     /// Check if medication should be taken today;
 
@@ -248,27 +260,27 @@ class MedNotifier extends _$MedNotifier {
     return upcomingDoses;
   }
 
-//// Todo: METHODS TO IMPLEMENT
+  //// Todo: METHODS TO IMPLEMENT
 
-/// Todo: Marks as Completed ✅
-/// Todo: Marks as Missed ✅
-/// Todo: Mark as skipped ✅
-///
-/// Todo: Get upcoming doses {
-/// this should create a list of upcoming doses for medications that are due, so it means a medication with 2 doses in a day should appear 2 times
-/// And a notification should be sent for each dose
-/// }
-/// Todo: schedule notifications for each medication at each dose
-/// Todo: get next due medication dose
-/// Todo: schedule medication doses notifications
-/// Todo: get adherenceRate within a start date
-///
-/// ///I think this should be moved to a streak specific med provider
-/// Which means a streak class that takes an activyrecord object with some methods
-/// Todo: Get current streak (counts the number of days) ✅
-/// Todo: is taken on Time (compare completion time with scheduled time +- some interval minutes)
-/// Todo: get streak stats ✅
-/// Todo: analyze patterns
-///
-///
+  /// Todo: Marks as Completed ✅
+  /// Todo: Marks as Missed ✅
+  /// Todo: Mark as skipped ✅
+  ///
+  /// Todo: Get upcoming doses {
+  /// this should create a list of upcoming doses for medications that are due, so it means a medication with 2 doses in a day should appear 2 times
+  /// And a notification should be sent for each dose
+  /// }
+  /// Todo: schedule notifications for each medication at each dose
+  /// Todo: get next due medication dose
+  /// Todo: schedule medication doses notifications
+  /// Todo: get adherenceRate within a start date
+  ///
+  /// ///I think this should be moved to a streak specific med provider
+  /// Which means a streak class that takes an activyrecord object with some methods
+  /// Todo: Get current streak (counts the number of days) ✅
+  /// Todo: is taken on Time (compare completion time with scheduled time +- some interval minutes)
+  /// Todo: get streak stats ✅
+  /// Todo: analyze patterns
+  ///
+  ///
 }

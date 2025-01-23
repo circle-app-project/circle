@@ -6,7 +6,6 @@ import 'package:circle/features/meds/models/frequency.dart';
 import 'package:circle/features/meds/models/med_activity_record.dart';
 import 'package:circle/features/meds/models/streak.dart';
 import 'package:equatable/equatable.dart';
-import 'package:jiffy/jiffy.dart';
 import 'package:objectbox/objectbox.dart';
 
 import 'dose.dart';
@@ -158,7 +157,7 @@ class Medication extends Equatable {
     bool? isPermanent,
     DateTime? startDate,
     DateTime? endDate,
-    List<MedActivityRecord>? streaks,
+    List<MedActivityRecord>? activityRecord,
 
     bool? shouldRemind,
     String? reminderMessage,
@@ -179,7 +178,7 @@ class Medication extends Equatable {
       reminderMessage: reminderMessage ?? this.reminderMessage,
       warningMessage: warningMessage ?? this.warningMessage,
     );
-    medication.activityRecord.addAll(streaks ?? this.activityRecord);
+    medication.activityRecord.addAll(activityRecord ?? this.activityRecord);
     return medication;
   }
 
