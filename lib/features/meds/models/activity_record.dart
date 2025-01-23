@@ -1,10 +1,12 @@
 import 'package:equatable/equatable.dart';
+import 'package:objectbox/objectbox.dart';
 
 enum ActivityType { medication, water }
 
 enum CompletionsStatus { pending, completed, missed, skipped }
 // ignore: must_be_immutable
 abstract class ActivityRecord extends Equatable {
+
   final DateTime date;
   final String? note;
   final String? skipReason;
