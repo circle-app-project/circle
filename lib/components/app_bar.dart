@@ -1,3 +1,4 @@
+import 'package:circle/core/core.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -47,6 +48,7 @@ class CustomAppBar extends StatelessWidget {
             ),
           ],
         ),
+        Gap(kPadding32),
         if (showTitle!) Text(pageTitle, style: theme.textTheme.headlineMedium),
 
         const Gap(32),
