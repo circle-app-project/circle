@@ -60,7 +60,7 @@ class _SelectableChipState extends State<SelectableChip> {
       checkmarkColor: widget.isItemSelected
           ? theme.scaffoldBackgroundColor
           : theme.iconTheme.color,
-      selected: widget.isSelected,
+      selected: widget.isItemSelected,
       onSelected: (val) {
         widget.onPressed.call();
       },
