@@ -10,24 +10,32 @@ enum SelectorLayout {
   row,
 
   /// Arranges items in a wrap layout, moving to the next line when space runs out.
-  wrap
+  wrap,
+
+  /// Arranges items in a grid layout
+  grid,
 }
+
 
 /// A flexible, customizable selector widget that supports single and multi-select modes.
 ///
-/// This widget allows for selection from a list of items of any type T. It can be
-/// configured to display items in a column, row, or wrap layout, and supports both
+/// This widget allows for selection from a list of items of any type [T]. It can be
+/// configured to display items in a `column`, `row`, `wrap` or `grid` layout, and supports both
 /// single-select and multi-select modes.
 ///
 /// The generic type [T] represents the type of items being selected. This can be
-/// any type, such as String, int, or a custom object.
+/// any type, such as `string`, `int`, or a custom `object`.
 ///
 /// The generic type [W] represents the type of selectable widget used to display
 /// each item. It must be a subclass of [SelectableWidget].
 ///
-/// For consistency, all widgets made to use with this selector should follow the
+/// For consistency, all widgets made to be used with this selector should follow the
 /// naming convention 'Selectable[WidgetName]'. For example, a selectable version
 /// of a Chip would be named 'SelectableChip'.
+///
+/// Creates a [GenericSelector].
+///
+/// The [items], [onItemSelected], and [selectableWidgetBuilder] parameters are required.
 class GenericSelector<T, W extends SelectableWidget> extends StatefulWidget {
   /// Callback function called when the selection changes.
   ///
@@ -41,7 +49,7 @@ class GenericSelector<T, W extends SelectableWidget> extends StatefulWidget {
   /// of type [W] that represents that item. The [isSelected] parameter indicates
   /// whether the item is currently selected.
   final W Function(T item, bool isSelected, VoidCallback onPressed)
-      selectableWidgetBuilder;
+  selectableWidgetBuilder;
 
   /// The list of selectable items.
   final List<T> items;
@@ -102,6 +110,43 @@ class GenericSelector<T, W extends SelectableWidget> extends StatefulWidget {
   /// Defaults to 8.0.
   final double wrapRunSpacing;
 
+  /// How many items to be arranged in the cross Axis if the Layout is set to [SelectorLayout.grid]
+  ///
+  /// For example, if [crossAxisCount] is 4, 4 items will be
+  /// placed in the cross Axis of the resulting grid view
+  ///
+  /// Defaults to 4.
+  final int crossAxisCount;
+
+  /// The `mainAxisSpacing`, `mainAxisExtent` and `crossAxisSpacing` arguments
+  /// must not be negative. The `crossAxisCount` and `childAspectRatio`
+  /// arguments must be greater than zero and are used to configure the grid view delegate
+  /// when the layout is set to [SelectorLayout.grid].
+  /// These parameters use the built in defaults and are not explicitly required.
+  final double crossAxisSpacing;
+
+  /// The `mainAxisSpacing`, `mainAxisExtent` and `crossAxisSpacing` arguments
+  /// must not be negative. The `crossAxisCount` and `childAspectRatio`
+  /// arguments must be greater than zero and are used to configure the grid view delegate
+  /// when the layout is set to [SelectorLayout.grid].
+  /// These parameters use the built in defaults and are not explicitly required.
+  final double mainAxisSpacing;
+
+  /// The `mainAxisSpacing`, `mainAxisExtent` and `crossAxisSpacing` arguments
+  /// must not be negative. The `crossAxisCount` and `childAspectRatio`
+  /// arguments must be greater than zero and are used to configure the grid view delegate
+  /// when the layout is set to [SelectorLayout.grid].
+  /// These parameters use the built in defaults and are not explicitly required.
+  final double? mainAxisExtent;
+
+  /// The `mainAxisSpacing`, `mainAxisExtent` and `crossAxisSpacing` arguments
+  /// must not be negative. The `crossAxisCount` and `childAspectRatio`
+  /// arguments must be greater than zero and are used to configure the grid view delegate
+  /// when the layout is set to [SelectorLayout.grid].
+  /// These parameters use the built in defaults and are not explicitly required.
+  final double childAspectRatio;
+
+
   /// Creates a [GenericSelector].
   ///
   /// The [items], [onItemSelected], and [selectableWidgetBuilder] parameters are required.
@@ -117,6 +162,11 @@ class GenericSelector<T, W extends SelectableWidget> extends StatefulWidget {
     this.wrapSpacing = 8.0,
     this.wrapRunSpacing = 8.0,
     this.spacing = 8.0,
+    this.crossAxisCount = 4,
+    this.mainAxisSpacing = 0.0,
+    this.childAspectRatio = 1.0,
+    this.crossAxisSpacing = 0.0,
+    this.mainAxisExtent,
     this.initialSelection,
   });
 
@@ -156,12 +206,16 @@ class _GenericSelectorState<T, W extends SelectableWidget>
 
   @override
   Widget build(BuildContext context) {
-    List<W> itemWidgets = List.generate(widget.items.length, (index) {
-      return widget.selectableWidgetBuilder(
-          widget.items[index], selectedItems.contains(widget.items[index]), () {
-        _toggleSelection(item: widget.items[index], index: index);
-      });
-    }).toList();
+    List<W> itemWidgets =
+        List.generate(widget.items.length, (index){
+          return widget.selectableWidgetBuilder(
+            widget.items[index],
+            selectedItems.contains(widget.items[index]),
+            () {
+              _toggleSelection(item: widget.items[index], index: index);
+            },
+          );
+        }).toList();
 
     switch (widget.layout) {
       case SelectorLayout.column:
@@ -185,6 +239,30 @@ class _GenericSelectorState<T, W extends SelectableWidget>
           spacing: widget.wrapSpacing,
           runSpacing: widget.wrapRunSpacing,
           children: itemWidgets,
+        );
+
+      case SelectorLayout.grid:
+        return GridView.builder(
+          shrinkWrap: true,
+          itemCount: widget.items.length,
+          padding: EdgeInsets.zero,
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: widget.crossAxisCount,
+            mainAxisExtent: widget.mainAxisExtent,
+            childAspectRatio: widget.childAspectRatio,
+            mainAxisSpacing: widget.mainAxisSpacing,
+            crossAxisSpacing: widget.crossAxisSpacing,
+          ),
+          itemBuilder: (context, index) {
+            return widget.selectableWidgetBuilder(
+              widget.items[index],
+              selectedItems.contains(widget.items[index]),
+              () {
+                _toggleSelection(item: widget.items[index], index: index);
+              },
+            );
+          },
         );
     }
   }
