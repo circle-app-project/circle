@@ -138,22 +138,19 @@ class _AddEmergencyContactScreenState extends State<AddEmergencyContactScreen> {
                       ],
                     ),
                     const Gap(8),
+
+                    /// Todo: Implement Generic Selector
                     Row(
+                      spacing: 8,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ///Todo: Replace with the actual relations
-                        MedsTypeItem(
-                            medicationType: MedicationType.droplets,
-                            onPressed: () {}),
-                        MedsTypeItem(
-                            medicationType: MedicationType.droplets,
-                            onPressed: () {}),
-                        MedsTypeItem(
-                            medicationType: MedicationType.droplets,
-                            onPressed: () {}),
-                        MedsTypeItem(
-                            medicationType: MedicationType.droplets,
-                            onPressed: () {}),
+
+                        SelectableCircularButton(onPressed: (){}, isItemSelected: false, label: "Brother",),
+                        SelectableCircularButton(onPressed: (){}, isItemSelected: false,  label: "Brother"),
+                        SelectableCircularButton(onPressed: (){}, isItemSelected: false,  label: "Brother"),
+                        SelectableCircularButton(onPressed: (){}, isItemSelected: false,  label: "Brother"),
+
                       ],
                     )
                   ],

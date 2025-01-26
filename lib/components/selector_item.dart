@@ -7,7 +7,7 @@ import '../../../core/core.dart';
 
 ///Todo: Refactor this widget into a more generic form so it can be used elsewhere
 
-@Deprecated("Prefer using the `GenericSelector` ans `SelectableWidget` classes")
+@Deprecated("Prefer using the `GenericSelector` and `SelectableWidget` classes ie `SelectableCircularButton`")
 class AppSelectorItem extends StatefulWidget {
   const AppSelectorItem({
     super.key,
