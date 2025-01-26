@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'core/core.dart';
+import 'features/meds/screens/add_edit_meds_screen.dart';
 import 'firebase_options.dart';
 
 late LocalDatabaseService database;
@@ -55,18 +56,18 @@ class _MyAppState extends ConsumerState<MyApp> {
               : SystemUiOverlayStyle.light.copyWith(
                 statusBarColor: Colors.transparent,
               ),
-      child: MaterialApp.router(
+      child: MaterialApp(
         title: 'Circle',
         debugShowCheckedModeBanner: false,
         theme: AppThemeData.lightTheme,
         darkTheme: AppThemeData.darkTheme,
         themeMode: ThemeMode.system,
         themeAnimationStyle: AnimationStyle(
-          curve: Curves.easeInOut,
+          curve: Curves.easeInOutQuart,
           duration: const Duration(milliseconds: 300),
         ),
-        routerConfig: router,
-         //home: const OnboardingBaseScreen(),
+        // routerConfig: router,
+         home: const AddMedsScreen(),
       ),
     );
   }
