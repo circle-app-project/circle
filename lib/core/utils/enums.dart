@@ -1,3 +1,7 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:flutter/cupertino.dart';
+
+import '../../gen/assets.gen.dart';
 
 enum AppState { initial, submitting, success, error }
 
@@ -18,15 +22,70 @@ enum Genotype { as, ss, aa, unknown }
 enum AppListWheelScrollViewPickerMode { integer, duration, time, decimal, text }
 
 enum MedicationType {
-  tabletsPills,
-  capsules,
-  droplets,
-  injections,
-  liquids,
-  inhaler,
-  creamsOrGels,
-  custom,
-  unknown,
+  tabletsPills(
+    icon: FluentIcons.pill_24_regular,
+    iconFilled: FluentIcons.pill_24_filled,
+    iconPath: "assets/svg/tablet.svg",
+    label: 'Tablets/Pills',
+  ),
+  capsules(
+    icon: FluentIcons.pill_24_regular,
+    iconFilled: FluentIcons.pill_24_filled,
+    label: "Capsules",
+  ),
+  droplets(
+    icon: FluentIcons.drop_16_regular,
+    iconFilled: FluentIcons.drop_16_filled,
+    iconPath: "assets/svg/droplet-alt.svg",
+    iconPathFilled: "assets/svg/droplet-alt-filled.svg",
+    label: "Droplets",
+  ),
+  injections(
+    icon: FluentIcons.syringe_24_regular,
+    iconFilled: FluentIcons.syringe_24_filled,
+    label: "Injections",
+  ),
+  liquids(
+    icon: FluentIcons.drop_16_regular,
+    iconFilled: FluentIcons.drop_16_filled,
+    iconPath: "assets/svg/droplet-alt.svg",
+    iconPathFilled: "assets/svg/droplet-alt-filled.svg",
+    label: "Liquids",
+  ),
+  inhaler(
+    icon: FluentIcons.drink_bottle_20_regular,
+    iconFilled: FluentIcons.drink_bottle_20_filled,
+    label: "Inhaler",
+  ),
+  creamsOrGels(
+    icon: FluentIcons.stream_24_regular,
+    iconFilled: FluentIcons.stream_24_filled,
+    label: "Creams/Gels",
+  ),
+  unknown(
+    icon: FluentIcons.pill_24_regular,
+    iconFilled: FluentIcons.pill_24_filled,
+    label: 'Unknown',
+  );
+  // custom(
+  //   icon: FluentIcons.add_24_regular,
+  //   iconFilled: FluentIcons.add_24_filled,
+  //   label: "Custom",
+  // );
+
+
+  final String label;
+  final IconData? icon;
+  final IconData? iconFilled;
+  final String? iconPath;
+  final String? iconPathFilled;
+  const MedicationType({
+    required this.label,
+    this.icon,
+    this.iconPath,
+    this.iconFilled,
+    this.iconPathFilled,
+  });
 }
 
 enum Units {
@@ -70,7 +129,7 @@ enum MedsScheduleEndingState {
   ///An Enum to define the states of the Medication repeat ending format.
   never,
   onDate,
-  afterNumberOfOccurrences
+  afterNumberOfOccurrences,
 }
 
 enum MedsHistoryMode {
@@ -81,13 +140,12 @@ enum MedsHistoryMode {
   daily,
   weekly,
   monthly,
-  yearly
+  yearly,
 }
 
 enum RelationType {
   ///An Enum to define the Relation Types
   ///Can be used for selecting Emergency Contact Relations
-
   brother,
   sister,
   mother,
