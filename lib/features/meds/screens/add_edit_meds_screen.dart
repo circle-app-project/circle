@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:circle/core/extensions/date_time_formatter.dart';
 import 'package:circle/features/meds/models/dose.dart';
+import 'package:circle/features/meds/screens/components/dose_bottomsheet.dart';
+import 'package:circle/features/meds/screens/components/duration_bottomsheet.dart';
+import 'package:circle/features/meds/screens/components/emphasized_container.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +19,7 @@ import '../meds.dart';
 import '../models/frequency.dart';
 import '../models/medication.dart';
 import '../providers/med_notifier.dart';
+import 'components/custom_dose_dialog.dart';
 
 class AddMedsScreen extends ConsumerStatefulWidget {
   static const String id = "add_meds";
@@ -37,7 +41,7 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
       TextEditingController();
 
   List<int> defaultDoseValues = [5, 10, 50, 100, 250, 500, 1000, 0];
-  List<int> defaultDurationValues = [3, 7, 14, 21, 30, 60, 90, 180, 0];
+  List<int> defaultDurationValues = [3, 7, 14, 21, 30, 60, 90, 0];
 
   /// Fields to be created by the medication
   bool isTakingMedsPermanently = false;
@@ -45,14 +49,8 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
   Dose selectedDose = Dose.empty;
   Frequency selectedFrequency = Frequency.empty;
   DateTime? selectedStartDate = DateTime.now();
-  DateTime? selectedEndDate = DateTime.now().add(Duration(days: 1));
   Duration? selectedDuration;
-
-  @override
-  void initState() {
-    selectedDuration = selectedStartDate?.difference(selectedEndDate!);
-    super.initState();
-  }
+  bool showSelectedDuration = false;
 
   @override
   void dispose() {
@@ -63,6 +61,30 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
     startDateController.dispose();
 
     super.dispose();
+  }
+
+  void _selectDuration() async {
+    selectedDuration = await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return DurationBottomSheet();
+      },
+    );
+
+    /// Add the selected duration to the default duration values
+    /// to visually show the user
+
+    defaultDurationValues.insert(
+      defaultDurationValues.length - 1,
+      selectedDuration!.inDays,
+    );
+
+    showSelectedDuration = true;
+
+    print("Selected duration is ${selectedDuration!.inDays} days");
+
+    setState(() {});
   }
 
   @override
@@ -167,8 +189,8 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
               const Text("What's the dose of your medication "),
               const Gap(12),
               GenericSelector<Dose, SelectableChip>(
-                wrapSpacing: 16,
-                wrapRunSpacing: 12,
+                wrapSpacing: 8,
+                wrapRunSpacing: 6,
                 layout: SelectorLayout.wrap,
                 onItemSelected: (List<Dose> dosesSelected) {
                   print("selectedDoses: $dosesSelected");
@@ -200,34 +222,28 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                       if (item.dose == 0) {
                         ///Todo: Refactor and rebuild this into a Dose picker, which can be used anywhere
                         showModalBottomSheet(
+                          isScrollControlled: true,
                           context: context,
                           builder: (context) {
-                            return AppBottomSheet(
-                              title: "Select Dose",
-                              onPressed: () {
-                                Navigator.pop(context, selectedDose);
-                              },
-                              child: ListWheelScrollViewPicker(
-                                mode:
-                                    AppListWheelScrollViewPickerMode.integer,
-                                primaryInitialValue: 50,
-                                primaryFinalValue: 1000,
-                                primaryValueInterval: 50,
-                                primaryUnitLabels:
-                                    Units.values
-                                        .map((e) => e.symbol)
-                                        .toList(),
-                                scrollViewToLabelPadding: 24,
-                                onSelectedItemChanged: (selectedValue) {
-                                  Dose constructedDose = Dose(
-                                    dose: selectedValue as double,
-                                    unit: Units.milligram,
-                                  );
+                            return  DoseBottomSheet();
+                              // child: ListWheelScrollViewPicker(
+                              //   mode: AppListWheelScrollViewPickerMode.integer,
+                              //   primaryInitialValue: 50,
+                              //   primaryFinalValue: 1000,
+                              //   primaryValueInterval: 50,
+                              //   primaryUnitLabels:
+                              //       Units.values.map((e) => e.symbol).toList(),
+                              //   scrollViewToLabelPadding: 24,
+                              //   onSelectedItemChanged: (selectedValue) {
+                              //     Dose constructedDose = Dose(
+                              //       dose: selectedValue as double,
+                              //       unit: Units.milligram,
+                              //     );
+                              //
+                              //     selectedDose = constructedDose;
+                              //   },
+                              // ),
 
-                                  selectedDose = constructedDose;
-                                },
-                              ),
-                            );
                           },
                         );
                       }
@@ -253,6 +269,8 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                 },
                 items: MedicationType.values,
                 layout: SelectorLayout.wrap,
+                wrapSpacing: 8,
+                wrapRunSpacing: 6,
 
                 selectableWidgetBuilder: (item, isSelected, onSelected) {
                   String label = item.label;
@@ -333,27 +351,22 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
               const Text("Duration"),
               const Gap(kPadding16),
               GenericSelector<int, SelectableChip>(
-                wrapSpacing: 16,
-                wrapRunSpacing: 12,
+                wrapSpacing: 8,
+                wrapRunSpacing: 6,
                 layout: SelectorLayout.wrap,
                 onItemSelected: (List<int> duration) {
-                  print("selectedDoses: $duration");
+                  print("selectedDuration: $duration");
                   selectedDuration = Duration(days: duration.first);
                 },
                 items: defaultDurationValues,
 
                 selectableWidgetBuilder: (item, isSelected, onSelected) {
-                  /// Will create an empty dose of 0 to represent the case of a custom dose
-                  /// Will check for that dose and properly launch the dose picker.
-                  ///
-
                   String label = "$item days";
                   if (item >= 14) {
-                    label = "${(item / 7).round().toStringAsFixed(0)} weeks";
+                    label = "${(item / 7).round().toInt()} weeks";
                   }
                   if (item > 30) {
-                    label =
-                        "${(item / 30).round().toStringAsFixed(0)} months";
+                    label = "${(item / 30).round().toInt()} months";
                   }
                   if (item == 0) {
                     label = "Custom";
@@ -363,55 +376,21 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                     icon: item == 0 ? FluentIcons.add_24_regular : null,
                     label: label,
                     onPressed: () {
-                      onSelected.call();
-
                       if (item == 0) {
-                        ///Todo: Refactor and a popup or bottom sheet that allows you to select duration
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) {
-                            return AppBottomSheet(
-                              title: "Select Duration",
-                              onPressed: () {
-                                Navigator.pop(context, selectedDose);
-                              },
-                              child: Column(
-                                spacing: kPadding16,
-                                children: [
-                                  Text("Select Duration"),
-
-                                  Row(
-                                    spacing: 4,
-                                    children: [
-                                      Expanded(
-                                        flex: 2,
-                                        child: TextFormField(
-                                          decoration:
-                                              AppInputDecoration.inputDecoration(
-                                                context,
-                                              ).copyWith(hintText: "Duration"),
-                                        ),
-                                      ),
-                                      Expanded(child: TextFormField(
-                                        decoration:
-                                        AppInputDecoration.inputDecoration(
-                                          context,
-                                        ).copyWith(hintText: "Weeks"),
-                                      )),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        );
+                        _selectDuration();
                       }
+                      onSelected.call();
                     },
                     isItemSelected: isSelected,
                   );
                 },
               ),
-
+              //
+              // if (showSelectedDuration)
+              //   EmphasizedContainer(
+              //     label: "Selected Duration",
+              //     value: "${selectedDuration?.inDays} days",
+              //   ),
               Gap(kPadding16),
               Row(
                 children: [
@@ -442,7 +421,10 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                       durationDays: selectedDuration?.inDays,
                       isPermanent: isTakingMedsPermanently,
                       startDate: selectedStartDate,
-                      endDate: selectedEndDate,
+                      endDate:
+                          selectedDuration != null
+                              ? selectedStartDate?.add(selectedDuration!)
+                              : null,
                     );
                     await ref
                         .watch(medNotifierProviderImpl.notifier)
@@ -462,8 +444,7 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                     }
                   }
                 },
-                label:
-                    widget.isEditing ? "Save Medication" : "Add Medication",
+                label: widget.isEditing ? "Save Medication" : "Add Medication",
                 icon: FluentIcons.checkmark_24_regular,
               ),
 
