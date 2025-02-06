@@ -13,7 +13,7 @@ import '../../features/water/water.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: "/${LoadingScreen.id}",
+    initialLocation: "${AddMedsScreen.id}",
     routes: [
       ///-------H
       GoRoute(

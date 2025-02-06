@@ -1,16 +1,16 @@
 import 'dart:developer';
 
 import 'package:circle/features/meds/models/medication.dart';
-import 'package:circle/objectbox.g.dart';
 import '../../../../core/error/exceptions.dart';
-import '../../models/streak.dart';
+import '../../../../objectbox.g.dart';
+import '../../models/med_activity_record.dart';
 
 class MedLocalService {
   late final Box<Medication> _medBox;
-  late final Box<Streak> _streakBox;
+  late final Box<MedActivityRecord> _medActivityBox;
   MedLocalService({required Store store})
     : _medBox = store.box<Medication>(),
-      _streakBox = store.box<Streak>();
+      _medActivityBox = store.box<MedActivityRecord>();
 
   Stream<List<Medication>> listenMedication() async* {
     yield* _medBox
@@ -88,8 +88,8 @@ class MedLocalService {
   Future<Medication> putAndGetMedication(Medication medication) async {
     try {
       /// Save Relations
-      if (medication.streaks.isNotEmpty) {
-        _streakBox.putMany(medication.streaks);
+      if (medication.activityRecord.isNotEmpty) {
+        _medActivityBox.putMany(medication.activityRecord);
       }
       return await _medBox.putAndGetAsync(
         medication,
@@ -114,7 +114,7 @@ class MedLocalService {
 
   void deleteMedication(Medication medication) {
     try {
-      _streakBox.removeMany(medication.streaks.map((e) => e.id).toList());
+      _medActivityBox.removeMany(medication.activityRecord.map((e) => e.id).toList());
       _medBox.remove(medication.id);
     } catch (e, stackTrace) {
       /// Log and throw app exception
@@ -137,12 +137,15 @@ class MedLocalService {
     try {
       /// Case where we are clearing all medications
       /// Get all streaks for medication
-      final Query query =
-          _streakBox
-              .query(Streak_.dbType.equals(StreakType.medication.name))
-              .build();
-      final List<Streak> streaks = query.find() as List<Streak>;
-      _streakBox.removeMany(streaks.map((e) => e.id).toList());
+      // final Query query =
+      //     _medActivityRecordBox.
+      //         .query(Medication_.dbType.equals(ActivityType.medication.name))
+      //         .build();
+      //
+      // final List<MedActivityRecord> activityRecords = query.find() as List<MedActivityRecord>;
+      // _medActivityRecordBox.removeMany(activityRecords.map((e) => e.id).toList());
+
+      _medActivityBox.removeAll();
       _medBox.removeAll();
     } catch (e, stackTrace) {
       /// Log and throw app exception
