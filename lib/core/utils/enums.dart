@@ -110,6 +110,7 @@ enum Units {
   millilitres(symbol: 'ml'),
   centilitres(symbol: 'cl'),
   gallons(symbol: 'gal'),
+  droplet(symbol: 'droplet'),
 
   ///Energy measurement units
   kilocalories(symbol: 'kcal'),
