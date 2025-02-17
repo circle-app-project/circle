@@ -61,6 +61,8 @@ dependencies:
   cached_network_image: ^3.4.1
   jiffy: ^6.3.2
   hugeicons: ^0.0.7
+  springster: ^0.4.0
+  sprung: ^3.0.1
 
 dev_dependencies:
   flutter_test:

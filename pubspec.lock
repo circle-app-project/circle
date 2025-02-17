@@ -1122,6 +1122,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.1"
+  springster:
+    dependency: "direct main"
+    description:
+      name: springster
+      sha256: b8a98d0158de51408813fe276035baf9928efc6000048456d43ca56b2f023665
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0"
   sprintf:
     dependency: transitive
     description:
@@ -1130,6 +1138,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  sprung:
+    dependency: "direct main"
+    description:
+      name: sprung
+      sha256: "54322638f5e393d2b808175f7eadbaa4836a4425456e98d93c3d676dc56ebdf1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
   sqflite:
     dependency: transitive
     description:
