@@ -24,9 +24,9 @@ class WaterPreferences extends Equatable {
   // Sync Related Fields
   final bool isDeleted;
   final bool isSynced;
-  @PropertyType(PropertyType.date)
+  @Property(type: PropertyType.date)
   final DateTime? updatedAt;
-  @PropertyType(PropertyType.date)
+  @Property(type: PropertyType.date)
   final DateTime? createdAt;
   /// Converts the [unit] to its string representation for ObjectBox storage.
   String? get dbUnit => unit?.symbol;
