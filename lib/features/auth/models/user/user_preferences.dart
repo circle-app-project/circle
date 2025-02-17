@@ -54,7 +54,7 @@ class UserPreferences extends Equatable {
       "isOnboarded": isOnboarded,
       "themeMode": themeMode?.name,
       "lastUpdated": lastUpdated?.toIso8601String() ?? DateTime.now().toIso8601String(),
-      "unitPreferences": unitPreferences?.toMap() ?? UnitPreferences.metric().toMap(),
+      "unitPreferences": unitPreferences?.toMap() ?? const UnitPreferences.metric().toMap(),
     };
   }
 

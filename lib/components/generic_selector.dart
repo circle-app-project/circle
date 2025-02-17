@@ -246,7 +246,7 @@ class _GenericSelectorState<T, W extends SelectableWidget>
           shrinkWrap: true,
           itemCount: widget.items.length,
           padding: EdgeInsets.zero,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: widget.crossAxisCount,
             mainAxisExtent: widget.mainAxisExtent,

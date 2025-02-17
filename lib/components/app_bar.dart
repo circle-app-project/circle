@@ -39,7 +39,7 @@ class CustomAppBar extends StatelessWidget {
                   Feedback.forTap(context);
                   context.pop();
                 },
-                icon: Icon(FluentIcons.arrow_left_24_regular),
+                icon: const Icon(FluentIcons.arrow_left_24_regular),
               ),
             const Spacer(),
             Visibility(
@@ -48,7 +48,7 @@ class CustomAppBar extends StatelessWidget {
             ),
           ],
         ),
-        Gap(kPadding32),
+        const Gap(kPadding32),
         if (showTitle!) Text(pageTitle, style: theme.textTheme.headlineMedium),
 
         const Gap(32),

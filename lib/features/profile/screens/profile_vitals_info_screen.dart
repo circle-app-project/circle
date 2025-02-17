@@ -71,7 +71,7 @@ class _ProfileVitalsInfoScreenState
           child: Form(
             key: _formKey,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
                   CustomAppBar(

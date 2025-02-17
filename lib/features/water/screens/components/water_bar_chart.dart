@@ -77,7 +77,7 @@ class WaterBarChart extends StatelessWidget {
         parentAxisSize: 3,
         axisPosition: 0,
         appliedInterval: 0,
-        sideTitles: SideTitles(showTitles: false),
+        sideTitles: const SideTitles(showTitles: false),
         formattedValue: '',
         axisSide: AxisSide.bottom,
         rotationQuarterTurns: 0,

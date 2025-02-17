@@ -67,14 +67,14 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                         color: Theme.of(context).colorScheme.error,
                         width: 1,
                       ),
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(12),
                         bottomLeft: Radius.circular(12),
                         topRight: Radius.circular(4),
                         bottomRight: Radius.circular(4),
                       ),
                     ),
-                    border: OutlineInputBorder(
+                    border: const OutlineInputBorder(
                       gapPadding: 0,
                       borderSide: BorderSide.none,
                       borderRadius: BorderRadius.only(
@@ -84,7 +84,7 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                         bottomRight: Radius.circular(4),
                       ),
                     ),
-                    enabledBorder: OutlineInputBorder(
+                    enabledBorder: const OutlineInputBorder(
                       gapPadding: 0,
                       borderSide: BorderSide.none,
                       borderRadius: BorderRadius.only(
@@ -94,7 +94,7 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                         bottomRight: Radius.circular(4),
                       ),
                     ),
-                    disabledBorder: OutlineInputBorder(
+                    disabledBorder: const OutlineInputBorder(
                       gapPadding: 0,
                       borderSide: BorderSide.none,
                       borderRadius: BorderRadius.only(
@@ -104,9 +104,9 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                         bottomRight: Radius.circular(4),
                       ),
                     ),
-                    focusedBorder: OutlineInputBorder(
+                    focusedBorder: const OutlineInputBorder(
                       gapPadding: 0,
-                      borderSide: const BorderSide(
+                      borderSide: BorderSide(
                         width: 1,
                         color: AppColours.purple60,
                       ),
@@ -153,14 +153,14 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                               color: Theme.of(context).colorScheme.error,
                               width: 1,
                             ),
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(4),
                               bottomLeft: Radius.circular(4),
                               topRight: Radius.circular(12),
                               bottomRight: Radius.circular(12),
                             ),
                           ),
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             gapPadding: 0,
                             borderSide: BorderSide.none,
                             borderRadius: BorderRadius.only(
@@ -170,7 +170,7 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                               bottomRight: Radius.circular(12),
                             ),
                           ),
-                          enabledBorder: OutlineInputBorder(
+                          enabledBorder: const OutlineInputBorder(
                             gapPadding: 0,
                             borderSide: BorderSide.none,
                             borderRadius: BorderRadius.only(
@@ -180,7 +180,7 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                               bottomRight: Radius.circular(12),
                             ),
                           ),
-                          disabledBorder: OutlineInputBorder(
+                          disabledBorder: const OutlineInputBorder(
                             gapPadding: 0,
                             borderSide: BorderSide.none,
                             borderRadius: BorderRadius.only(
@@ -190,9 +190,9 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                               bottomRight: Radius.circular(12),
                             ),
                           ),
-                          focusedBorder: OutlineInputBorder(
+                          focusedBorder: const OutlineInputBorder(
                             gapPadding: 0,
-                            borderSide: const BorderSide(
+                            borderSide: BorderSide(
                               width: 1,
                               color: AppColours.purple60,
                             ),
@@ -214,7 +214,7 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                     trailingIcon: const Icon(
                       FluentIcons.chevron_down_24_regular,
                     ),
-                    selectedTrailingIcon: Icon(
+                    selectedTrailingIcon: const Icon(
                       FluentIcons.chevron_up_24_regular,
                     ),
                     dropdownMenuEntries:

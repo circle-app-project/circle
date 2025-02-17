@@ -143,7 +143,7 @@ class MedNotifier extends _$MedNotifier {
         );
       },
       (empty) async {
-        state = AsyncValue.data([]);
+        state = const AsyncValue.data([]);
         log("Success ${state.value}", name: "Med Notifier");
       },
     );
