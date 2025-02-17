@@ -40,6 +40,7 @@ class _WaterVolumeSelectorState extends State<WaterVolumeSelector> {
       ),
       itemBuilder: (BuildContext context, int index) {
         isVolumeSelected.putIfAbsent(index, () => false);
+        //Todo: Refactor this to use generic selector
         return AppSelectorItem(
             color: theme.colorScheme.tertiary,
             backgroundColor: isDarkMode
