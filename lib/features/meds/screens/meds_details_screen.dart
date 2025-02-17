@@ -59,9 +59,9 @@ class MedsDetailsScreen extends StatelessWidget {
               spacing: 12,
               runSpacing: 12,
               children: [
-                AppChip(chipType: ChipType.info, label: "Daily"),
-                AppChip(chipType: ChipType.info, label: "8:00 AM"),
-                AppChip(chipType: ChipType.info, label: "3:00 PM"),
+                AppChip( label: "Daily"),
+                AppChip( label: "8:00 AM"),
+                AppChip( label: "3:00 PM"),
               ],
             ),
             const Gap(24),

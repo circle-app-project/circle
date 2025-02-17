@@ -11,6 +11,7 @@ class AppBottomSheet extends StatelessWidget {
   final Widget child;
   final String buttonLabel;
   final bool showLip;
+  final double bottomPadding;
   const AppBottomSheet({
     super.key,
     required this.title,
@@ -18,6 +19,7 @@ class AppBottomSheet extends StatelessWidget {
     this.buttonLabel = "Continue",
     this.showLip = false,
     required this.child,
+    this.bottomPadding = 64,
   });
 
   @override
@@ -25,17 +27,14 @@ class AppBottomSheet extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final bool isDarkMode = theme.brightness == Brightness.dark;
     return Padding(
-
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.viewInsetsOf(context).bottom,
-      ),
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       child: Container(
         decoration: BoxDecoration(
           color:
               isDarkMode
                   ? theme.colorScheme.surfaceContainerLowest
                   : theme.scaffoldBackgroundColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(48)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -60,21 +59,26 @@ class AppBottomSheet extends StatelessWidget {
                   Text(
                     title,
                     style: theme.textTheme.titleMedium!.copyWith(
-                     // fontSize: 18,
+                      // fontSize: 18,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
 
-                  Spacer(),
-                  IconButton(onPressed: (){}, icon: Icon(FluentIcons.dismiss_20_regular))
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(FluentIcons.dismiss_20_regular),
+                  ),
                 ],
               ),
 
-              const SizedBox(height: 16),
+              const Gap(kPadding16),
               child,
               const Gap(32),
               AppButton(onPressed: onPressed, label: buttonLabel),
-              const SizedBox(height: 64),
+              Gap(bottomPadding),
             ],
           ),
         ),
