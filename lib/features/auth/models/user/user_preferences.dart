@@ -18,16 +18,22 @@ class UserPreferences extends Equatable {
   /// Stores the theme mode preferred by the user (e.g., light, dark, or system default).
   final ThemeMode? themeMode;
 
-  /// The last time the user preferences were updated.
-  final DateTime? lastUpdated;
+  /// Sync Related Fields
+  final bool isDeleted;
+  final bool isSynced;
+  final DateTime? updatedAt;
+  final DateTime? createdAt;
 
   /// Creates an instance of [UserPreferences].
   const UserPreferences({
     required this.isFirstTime,
     required this.isOnboarded,
-    this.lastUpdated,
     this.themeMode = ThemeMode.system,
     this.unitPreferences,
+    this.isDeleted = false,
+    this.isSynced = false,
+    this.updatedAt,
+    this.createdAt,
   });
 
   /// Creates a copy of [UserPreferences] with updated properties.
@@ -35,14 +41,19 @@ class UserPreferences extends Equatable {
     final bool? isFirstTime,
     final bool? isOnboarded,
     final ThemeMode? themeMode,
-    final DateTime? lastUpdated,
     final UnitPreferences? unitPreferences,
+    final bool? isDeleted,
+    final bool? isSynced,
+    final DateTime? updatedAt,
   }) {
+
     return UserPreferences(
       isFirstTime: isFirstTime ?? this.isFirstTime,
       isOnboarded: isOnboarded ?? this.isOnboarded,
       themeMode: themeMode ?? this.themeMode,
-      lastUpdated: lastUpdated ?? this.lastUpdated,
+      isDeleted: isDeleted ?? this.isDeleted,
+      isSynced: isSynced ?? this.isSynced,
+      updatedAt: updatedAt ?? this.updatedAt,
       unitPreferences: unitPreferences ?? this.unitPreferences,
     );
   }
@@ -53,7 +64,10 @@ class UserPreferences extends Equatable {
       "isFirstTime": isFirstTime,
       "isOnboarded": isOnboarded,
       "themeMode": themeMode?.name,
-      "lastUpdated": lastUpdated?.toIso8601String() ?? DateTime.now().toIso8601String(),
+      "isDeleted": isDeleted,
+      "isSynced": isSynced,
+      "updatedAt": updatedAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
+      "createdAt": createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
       "unitPreferences": unitPreferences?.toMap() ?? const UnitPreferences.metric().toMap(),
     };
   }
@@ -66,7 +80,10 @@ class UserPreferences extends Equatable {
       themeMode: data["themeMode"] != null
           ? ThemeMode.values.byName(data["themeMode"] as String)
           : null,
-      lastUpdated: data["lastUpdated"] != null ? DateTime.parse(data["lastUpdated"]) : null,
+      isDeleted: data["isDeleted"] as bool,
+      isSynced: data["isSynced"] as bool,
+      updatedAt: data["updatedAt"] != null ? DateTime.parse(data["updatedAt"]) : null,
+      createdAt: data["createdAt"] != null ? DateTime.parse(data["createdAt"]) : null,
       unitPreferences: data["unitPreferences"] != null
           ? UnitPreferences.fromMap(data: data["unitPreferences"])
           : null,
@@ -101,7 +118,10 @@ class UserPreferences extends Equatable {
     themeMode,
     isFirstTime,
     isOnboarded,
-    lastUpdated,
+    isDeleted,
+    isSynced,
+    updatedAt,
+    createdAt,
     unitPreferences,
   ];
 }

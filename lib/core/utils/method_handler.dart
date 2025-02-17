@@ -72,6 +72,21 @@ FutureEither<T> futureHandler<T>(Future<T> Function() function) async {
       stackTrace: stackTrace,
       name: "Method Handler",
     );
+
+    // Log this caught exception to Crashlytics
+    CrashlyticsService.recordError(
+      error: e,
+      stack: stackTrace,
+      reason: "An App exception has occurred",
+      information: [
+        "Future Handler",
+        e.type.name,
+        e.type,
+        e.code?? "code: unknown",
+        e.message,
+        e.stackTrace ?? "",
+      ],
+    );
     switch (e.type) {
       case ExceptionType.api:
         return Left(Failure.fromApi(e));
@@ -118,7 +133,7 @@ FutureEither<T> futureHandler<T>(Future<T> Function() function) async {
     CrashlyticsService.recordError(
       error: e,
       stack: stackTrace,
-      reason: "An exception exception has occurred",
+      reason: "An exception has occurred",
       information: ["Future Handler", "Generic Error", e.toString()],
     );
 

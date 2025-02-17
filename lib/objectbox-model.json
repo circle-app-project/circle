@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "2:7166028067144916976",
-      "lastPropertyId": "18:1583331589492315386",
+      "lastPropertyId": "22:7473741569339705467",
       "name": "UserProfile",
       "properties": [
         {
@@ -100,6 +100,26 @@
           "id": "18:1583331589492315386",
           "name": "dbGenotype",
           "type": 9
+        },
+        {
+          "id": "19:2015269629626789463",
+          "name": "isDeleted",
+          "type": 1
+        },
+        {
+          "id": "20:8568252093008437148",
+          "name": "isSynced",
+          "type": 1
+        },
+        {
+          "id": "21:6958654057075105045",
+          "name": "updatedAt",
+          "type": 10
+        },
+        {
+          "id": "22:7473741569339705467",
+          "name": "createdAt",
+          "type": 10
         }
       ],
       "relations": []
@@ -135,7 +155,7 @@
     },
     {
       "id": "5:8525861671860013939",
-      "lastPropertyId": "4:5185646952489030688",
+      "lastPropertyId": "8:2412091363281165",
       "name": "WaterPreferences",
       "properties": [
         {
@@ -158,13 +178,33 @@
           "id": "4:5185646952489030688",
           "name": "dbUnit",
           "type": 9
+        },
+        {
+          "id": "5:8185185093777238402",
+          "name": "isDeleted",
+          "type": 1
+        },
+        {
+          "id": "6:543910472144146717",
+          "name": "isSynced",
+          "type": 1
+        },
+        {
+          "id": "7:7935083643204063984",
+          "name": "updatedAt",
+          "type": 10
+        },
+        {
+          "id": "8:2412091363281165",
+          "name": "createdAt",
+          "type": 10
         }
       ],
       "relations": []
     },
     {
       "id": "8:3148493177410260898",
-      "lastPropertyId": "15:4314761332996949634",
+      "lastPropertyId": "19:3614142052002170477",
       "name": "Medication",
       "properties": [
         {
@@ -237,6 +277,26 @@
           "id": "15:4314761332996949634",
           "name": "dbStreak",
           "type": 9
+        },
+        {
+          "id": "16:303937560231408961",
+          "name": "isDeleted",
+          "type": 1
+        },
+        {
+          "id": "17:4891944372309835817",
+          "name": "isSynced",
+          "type": 1
+        },
+        {
+          "id": "18:3488073738162862170",
+          "name": "updatedAt",
+          "type": 10
+        },
+        {
+          "id": "19:3614142052002170477",
+          "name": "createdAt",
+          "type": 10
         }
       ],
       "relations": [
@@ -249,7 +309,7 @@
     },
     {
       "id": "10:3540123216790538936",
-      "lastPropertyId": "9:2196504888248073330",
+      "lastPropertyId": "12:7806579562095076535",
       "name": "AppUser",
       "properties": [
         {
@@ -302,6 +362,21 @@
           "id": "9:2196504888248073330",
           "name": "dbPreferences",
           "type": 9
+        },
+        {
+          "id": "10:547505417067333554",
+          "name": "isDeleted",
+          "type": 1
+        },
+        {
+          "id": "11:2448644833171259802",
+          "name": "isSynced",
+          "type": 1
+        },
+        {
+          "id": "12:7806579562095076535",
+          "name": "updatedAt",
+          "type": 10
         }
       ],
       "relations": []

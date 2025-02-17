@@ -21,6 +21,13 @@ class WaterPreferences extends Equatable {
   /// The default value for each water log entry.
   final double? defaultLogValue;
 
+  // Sync Related Fields
+  final bool isDeleted;
+  final bool isSynced;
+  @PropertyType(PropertyType.date)
+  final DateTime? updatedAt;
+  @PropertyType(PropertyType.date)
+  final DateTime? createdAt;
   /// Converts the [unit] to its string representation for ObjectBox storage.
   String? get dbUnit => unit?.symbol;
 
@@ -39,6 +46,10 @@ class WaterPreferences extends Equatable {
     this.defaultDailyGoal,
     this.unit,
     this.defaultLogValue,
+    this.isDeleted = false,
+    this.isSynced = false,
+    this.updatedAt,
+    this.createdAt,
   });
 
   /// Creates an instance of [WaterPreferences] with default initial values.
@@ -47,6 +58,10 @@ class WaterPreferences extends Equatable {
     this.defaultDailyGoal = 2000,
     this.unit = Units.millilitres,
     this.defaultLogValue = 250,
+    this.isDeleted = false,
+    this.isSynced = false,
+    this.updatedAt,
+    this.createdAt,
   });
 
   /// Creates a copy of [WaterPreferences] with updated properties.
@@ -54,12 +69,18 @@ class WaterPreferences extends Equatable {
     double? defaultDailyGoal,
     Units? unit,
     double? defaultLogValue,
+    bool? isDeleted,
+    bool? isSynced,
+    DateTime? updatedAt,
   }) {
     return WaterPreferences(
       id: id,
       defaultDailyGoal: defaultDailyGoal ?? this.defaultDailyGoal,
       unit: unit ?? this.unit,
       defaultLogValue: defaultLogValue ?? this.defaultLogValue,
+      isDeleted: isDeleted ?? this.isDeleted,
+      isSynced: isSynced ?? this.isSynced,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
@@ -69,6 +90,10 @@ class WaterPreferences extends Equatable {
       'defaultDailyGoal': defaultDailyGoal,
       'unit': unit?.symbol,
       'defaultLogValue': defaultLogValue,
+      'isDeleted': isDeleted,
+      'isSynced': isSynced,
+      'updatedAt': updatedAt?.toUtc().toIso8601String(),
+      'createdAt': createdAt?.toUtc().toIso8601String(),
     };
   }
 
@@ -78,6 +103,10 @@ class WaterPreferences extends Equatable {
       defaultDailyGoal: data["defaultDailyGoal"],
       unit: Units.values.byName(data["unit"]),
       defaultLogValue: data["defaultLogValue"],
+      isDeleted: data["isDeleted"],
+      isSynced: data["isSynced"],
+      updatedAt: data["updatedAt"] != null ? DateTime.parse(data["updatedAt"]) : null,
+      createdAt: data["createdAt"] != null ? DateTime.parse(data["createdAt"]) : null,
     );
   }
 
@@ -107,5 +136,5 @@ class WaterPreferences extends Equatable {
 
   @override
   @Transient()
-  List<Object?> get props => [defaultDailyGoal, unit, defaultLogValue];
+  List<Object?> get props => [defaultDailyGoal, unit, defaultLogValue, isDeleted, isSynced, updatedAt, createdAt];
 }

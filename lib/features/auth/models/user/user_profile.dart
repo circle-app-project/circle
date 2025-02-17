@@ -78,7 +78,16 @@ class UserProfile extends Equatable {
   /// List of medical conditions the user has reported.
   List<String>? medicalConditions;
 
-  // ObjectBox Type Converters
+  // Sync Related Fields
+  final bool isDeleted;
+  final bool isSynced;
+  @Property(type: PropertyType.date)
+  final DateTime? updatedAt;
+  @Property(type: PropertyType.date)
+  final DateTime? createdAt;
+
+  /// ----- OBJECTBOX TYPE CONVERTERS ----- ///
+  ///
   /// Converts the gender enum to a string for database persistence.
   String? get dbGender => gender?.name;
 
@@ -126,6 +135,12 @@ class UserProfile extends Equatable {
     this.bloodGroup,
     this.allergies,
     this.medicalConditions,
+
+    // Sync Related Fields
+    this.isDeleted = false,
+    this.isSynced = false,
+    this.updatedAt,
+    this.createdAt,
   });
 
   /// Creates a copy of this [UserProfile] with optional modifications.
@@ -147,6 +162,11 @@ class UserProfile extends Equatable {
     String? bloodGroup,
     List<String>? allergies,
     List<String>? medicalConditions,
+
+    // Sync Related Fields
+    bool? isDeleted,
+    bool? isSynced,
+    DateTime? updatedAt,
   }) {
     return UserProfile(
       id: id,
@@ -167,6 +187,11 @@ class UserProfile extends Equatable {
       bloodGroup: bloodGroup ?? this.bloodGroup,
       allergies: allergies ?? this.allergies,
       medicalConditions: medicalConditions ?? this.medicalConditions,
+
+      // Sync Related Fields
+      isDeleted: isDeleted ?? this.isDeleted,
+      isSynced: isSynced ?? this.isSynced,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
@@ -194,6 +219,12 @@ class UserProfile extends Equatable {
         "allergies": allergies,
         "medicalConditions": medicalConditions,
       },
+      "sync": {
+        "isDeleted": isDeleted,
+        "isSynced": isSynced,
+        "updatedAt": updatedAt?.toUtc().toIso8601String(),
+        "createdAt": createdAt?.toUtc().toIso8601String(),
+      },
     };
   }
 
@@ -213,7 +244,13 @@ class UserProfile extends Equatable {
       bmi: data["health"]["bmi"] as double?,
       bloodGroup: data["health"]["bloodGroup"] as String?,
       allergies: List<String>.from(data["health"]["allergies"] as List),
-      medicalConditions: List<String>.from(data["health"]["medicalConditions"] as List),
+      medicalConditions: List<String>.from(
+        data["health"]["medicalConditions"] as List,
+      ),
+      isDeleted: data["sync"]["isDeleted"] as bool,
+      isSynced: data["sync"]["isSynced"] as bool,
+      updatedAt: DateTime.parse(data["sync"]["updatedAt"] as String),
+      createdAt: DateTime.parse(data["sync"]["createdAt"] as String),
     );
   }
 
@@ -225,6 +262,10 @@ class UserProfile extends Equatable {
       phone: user?.phoneNumber,
       email: user?.email,
       displayName: user?.displayName,
+      createdAt: DateTime.now(), // If I am signing in, then should I overide this??
+      updatedAt: DateTime.now(),
+      isDeleted: false,
+      isSynced: false,
     );
   }
 
@@ -277,5 +318,10 @@ class UserProfile extends Equatable {
     bloodGroup,
     allergies,
     medicalConditions,
+    isDeleted,
+    isSynced,
+    updatedAt,
+    createdAt,
+
   ];
 }
