@@ -128,7 +128,6 @@ class _ProfileMedicalInfoScreenState
                 for (String allergy in allergies)
                   AppChip(
                     label: allergy,
-                    chipType: ChipType.info,
                     onDeleted: () {
                       setState(() {
                         allergies.remove(allergy);
@@ -180,7 +179,7 @@ class _ProfileMedicalInfoScreenState
                 for (String medicalCondition in medicalConditions)
                   AppChip(
                     label: medicalCondition,
-                    chipType: ChipType.info,
+
                     onDeleted: () {
                       setState(() {
                         medicalConditions.remove(medicalCondition);
@@ -190,7 +189,7 @@ class _ProfileMedicalInfoScreenState
               ],
             ),
 
-            Spacer(),
+            const Spacer(),
             AppButton(
               isLoading: ref.watch(userNotifierProviderImpl).isLoading,
               onPressed: () async {

@@ -278,7 +278,6 @@ class ProfileScreen extends ConsumerWidget {
                           index,
                         ) {
                           return AppChip(
-                            chipType: ChipType.info,
                             label: userProfile.allergies![index],
                           );
                         }),
@@ -313,7 +312,6 @@ class ProfileScreen extends ConsumerWidget {
                           index,
                           ) {
                         return AppChip(
-                          chipType: ChipType.info,
                           label: userProfile.medicalConditions![index],
                         );
                       }),

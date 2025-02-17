@@ -113,11 +113,10 @@ class _AddEmergencyContactScreenState extends State<AddEmergencyContactScreen> {
                       children: [
                         AppChip(
                           label: "6 77 77 77 77",
-                          chipType: ChipType.info,
                         ),
                         AppChip(
                             label: "6 77 77 77 77",
-                            chipType: ChipType.info),
+                          ),
                       ],
                     ),
                     const Gap(24),

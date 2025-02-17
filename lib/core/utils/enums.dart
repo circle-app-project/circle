@@ -1,8 +1,6 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../../gen/assets.gen.dart';
-
 enum AppState { initial, submitting, success, error }
 
 enum AuthState { authenticated, unauthenticated }

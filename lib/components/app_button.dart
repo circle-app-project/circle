@@ -87,7 +87,7 @@ class AppButton extends StatelessWidget {
           ),
           fixedSize: isChipButton! ? const Size.fromHeight(42) : null,
           backgroundColor:
-          backgroundColor ?? (isDarkMode? theme.colorScheme.surfaceContainerHigh : theme.colorScheme.primaryContainer),
+          backgroundColor ?? (isDarkMode? theme.colorScheme.surfaceContainerLow : theme.colorScheme.primaryContainer),
           foregroundColor: labelColor,
         );
         break;
@@ -133,32 +133,37 @@ class AppButton extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (iconPath != null || icon != null)
+              ...[
               AppIcon(
                 size: 24,
                 icon: icon,
                 iconPath: iconPath,
                 color: labelColor,
               ),
-            // Gap for the leading icon if visible
-            if (iconPath != null || icon != null)
-              Gap(kPadding8),
+              const Gap(kPadding8),
+            ]
+,
+
             Text(
               label,
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                 color: labelColor,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w500,
               ),
             ),
 
             // Gap for the trailing icon if visible
             if (trailingIconPath != null || trailingIcon != null)
-              Gap(kPadding8),
-            if (trailingIconPath != null || trailingIcon != null)
+              ...[
+              const Gap(kPadding8),
               AppIcon(
                 icon: trailingIcon,
                 iconPath: trailingIconPath,
                 color: labelColor,
               ),
+            ]
+
+
           ],
         ),
       ),
