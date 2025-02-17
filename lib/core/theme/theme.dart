@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:sprung/sprung.dart';
 
 import '../core.dart';
 
@@ -13,6 +15,24 @@ class AppThemeData {
     iconTheme: const IconThemeData(color: AppColours.black),
     primaryIconTheme: const IconThemeData(color: AppColours.black),
     splashFactory: InkSparkle.splashFactory,
+    expansionTileTheme: ExpansionTileThemeData(
+      expansionAnimationStyle: AnimationStyle(
+        curve: Sprung.overDamped,
+        duration: 500.ms,
+        reverseCurve: Sprung.overDamped,
+        reverseDuration: 500.ms,
+      ),
+      shape: RoundedRectangleBorder(
+        side: const BorderSide(width: 1, color: AppColours.neutral90),
+        borderRadius: BorderRadius.circular(kPadding24),
+      ),
+      collapsedShape: RoundedRectangleBorder(
+        side: const BorderSide(width: 1, color: AppColours.neutral90),
+        borderRadius: BorderRadius.circular(kPadding16),
+      ),
+      childrenPadding: const EdgeInsets.only(
+          left: kPadding16, right: kPadding16, bottom: kPadding8),
+    ),
     cardTheme: CardTheme(
       color: AppColours.purple95,
       elevation: 0,
@@ -143,6 +163,26 @@ class AppThemeData {
     iconTheme: const IconThemeData(color: AppColours.white),
     primaryIconTheme: const IconThemeData(color: AppColours.white),
     splashFactory: InkSparkle.splashFactory,
+    expansionTileTheme: ExpansionTileThemeData(
+
+        expansionAnimationStyle: AnimationStyle(
+          curve: Sprung.overDamped,
+          duration: 500.ms,
+          reverseCurve: Sprung.overDamped,
+          reverseDuration: 500.ms,
+
+      ),
+      shape: RoundedRectangleBorder(
+        side: const BorderSide(width: 1, color: AppColours.neutral20),
+        borderRadius: BorderRadius.circular(kPadding24),
+      ),
+      collapsedShape: RoundedRectangleBorder(
+        side: const BorderSide(width: 1, color: AppColours.neutral20),
+        borderRadius: BorderRadius.circular(kPadding16),
+      ),
+      childrenPadding: const EdgeInsets.only(
+          left: kPadding16, right: kPadding16, bottom: kPadding8),
+    ),
     switchTheme: SwitchThemeData(
       thumbColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
