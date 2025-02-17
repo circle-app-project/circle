@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:sprung/sprung.dart';
 
 import '../../core/core.dart';
 
@@ -224,15 +225,17 @@ class _MedsTypeItemState extends State<MedsTypeItem>
 
 
 
+enum SelectableCircularButtonMode { small, medium }
 class SelectableCircularButton extends StatefulWidget implements SelectableWidget{
   const SelectableCircularButton({
     super.key,
     this.iconPath,
-
     this.color,
     this.backgroundColor,
     this.label,
     this.icon,
+    this.size = const Size.square(72),
+    this.child,
     required this.onPressed,
     required this.isItemSelected,
   });
@@ -243,6 +246,8 @@ class SelectableCircularButton extends StatefulWidget implements SelectableWidge
   final Color? backgroundColor;
   final Color? color;
   final VoidCallback onPressed;
+  final Size size;
+  final Widget? child;
 
   @override
   State<SelectableCircularButton> createState() => _SelectableCircularButtonState();
@@ -261,9 +266,9 @@ class _SelectableCircularButtonState extends State<SelectableCircularButton> wit
 
   @override
   void initState() {
-    animationController = AnimationController(vsync: this, duration: 200.ms);
+    animationController = AnimationController(vsync: this, duration: 300.ms);
     _radiusAnimation = Tween<double>(begin: 36, end: 20).animate(
-        CurvedAnimation(parent: animationController, curve: Curves.easeInOutQuart));
+        CurvedAnimation(parent: animationController, curve: Sprung.overDamped));
 
     super.initState();
   }
@@ -299,15 +304,15 @@ class _SelectableCircularButtonState extends State<SelectableCircularButton> wit
               splashFactory: InkSparkle.splashFactory,
               borderRadius: BorderRadius.circular(_radiusAnimation.value),
               child: Ink(
-                height: 72,
-                width: 72,
+                height: widget.size.height,
+                width: widget.size.width,
                 decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.circular(_radiusAnimation.value),
-                  color: widget.isItemSelected? theme.colorScheme.primary: widget.backgroundColor ?? theme.colorScheme.surfaceContainer,
+                  color: widget.isItemSelected ? theme.colorScheme.primary : widget.backgroundColor ?? theme.colorScheme.surfaceContainerLow,
                 ),
                 child: Center(
-                  child:  AppIcon(
+                  child: widget.child?? AppIcon(
                     size: 24,
                     color: widget.color ?? (widget.isSelected? Colors.white : theme.colorScheme.onSurface),
                     iconPath: widget.iconPath,
