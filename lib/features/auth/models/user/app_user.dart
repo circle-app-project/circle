@@ -46,11 +46,20 @@ class AppUser extends Equatable {
   @Transient()
   UserPreferences? preferences;
 
+  /// Sync Related Fields
+  final bool isDeleted;
+  final bool isSynced;
+  @Property(type: PropertyType.date)
+  final DateTime? updatedAt;
+  @Property(type: PropertyType.date)
+  final DateTime? createdAt;
+
 
   /// ----- OBJECTBOX TYPE CONVERTERS ----- ///
   ///
   /// Encodes user preferences into a JSON string for storage.
-  String get dbPreferences => jsonEncode(preferences?.toMap());
+  String? get dbPreferences =>
+      preferences?.toMap() != null ? jsonEncode(preferences!.toMap()) : null;
 
   /// Decodes a JSON string into user preferences.
   set dbPreferences(String? jsonString) {
@@ -72,7 +81,10 @@ class AppUser extends Equatable {
     this.isPhoneVerified,
     this.photoUrl,
     this.preferences,
-  });
+    this.isDeleted = false,
+    this.isSynced = false,
+    this.updatedAt,
+  }) : createdAt = DateTime.now().toUtc();
 
   /// Creates a copy of the current `AppUser` instance with updated values.
   AppUser copyWith({
@@ -84,6 +96,9 @@ class AppUser extends Equatable {
     bool? isPhoneVerified,
     UserProfile? profile,
     UserPreferences? preferences,
+    bool? isDeleted,
+    bool? isSynced,
+    DateTime? updatedAt,
   }) {
     AppUser user = AppUser(
       id: id,
@@ -109,7 +124,8 @@ class AppUser extends Equatable {
       "isEmailVerified": isEmailVerified,
       "isPhoneVerified": isPhoneVerified,
       "profile": profile.target?.toMap(),
-      "preferences": preferences?.toMap() ?? const UnitPreferences.metric().toMap(),
+      "preferences":
+          preferences?.toMap() ?? const UnitPreferences.metric().toMap(),
     };
   }
 
@@ -227,7 +243,6 @@ class AppUser extends Equatable {
   @Transient()
   bool? get stringify => true;
 
-
   /// Enables stringification for easier debugging.
   @override
   String toString() {
@@ -250,5 +265,9 @@ class AppUser extends Equatable {
     isPhoneVerified,
     profile,
     preferences,
+    isDeleted,
+    isSynced,
+    updatedAt,
+    createdAt,
   ];
 }

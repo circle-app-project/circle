@@ -27,7 +27,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(2, 7166028067144916976),
       name: 'UserProfile',
-      lastPropertyId: const obx_int.IdUid(18, 1583331589492315386),
+      lastPropertyId: const obx_int.IdUid(22, 7473741569339705467),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -120,6 +120,26 @@ final _entities = <obx_int.ModelEntity>[
             id: const obx_int.IdUid(18, 1583331589492315386),
             name: 'dbGenotype',
             type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(19, 2015269629626789463),
+            name: 'isDeleted',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(20, 8568252093008437148),
+            name: 'isSynced',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(21, 6958654057075105045),
+            name: 'updatedAt',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(22, 7473741569339705467),
+            name: 'createdAt',
+            type: 10,
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
@@ -156,7 +176,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(5, 8525861671860013939),
       name: 'WaterPreferences',
-      lastPropertyId: const obx_int.IdUid(4, 5185646952489030688),
+      lastPropertyId: const obx_int.IdUid(8, 2412091363281165),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -178,6 +198,26 @@ final _entities = <obx_int.ModelEntity>[
             id: const obx_int.IdUid(4, 5185646952489030688),
             name: 'dbUnit',
             type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 8185185093777238402),
+            name: 'isDeleted',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 543910472144146717),
+            name: 'isSynced',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(7, 7935083643204063984),
+            name: 'updatedAt',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(8, 2412091363281165),
+            name: 'createdAt',
+            type: 10,
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
@@ -185,7 +225,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(8, 3148493177410260898),
       name: 'Medication',
-      lastPropertyId: const obx_int.IdUid(15, 4314761332996949634),
+      lastPropertyId: const obx_int.IdUid(19, 3614142052002170477),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -257,6 +297,26 @@ final _entities = <obx_int.ModelEntity>[
             id: const obx_int.IdUid(15, 4314761332996949634),
             name: 'dbStreak',
             type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(16, 303937560231408961),
+            name: 'isDeleted',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(17, 4891944372309835817),
+            name: 'isSynced',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(18, 3488073738162862170),
+            name: 'updatedAt',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(19, 3614142052002170477),
+            name: 'createdAt',
+            type: 10,
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[
@@ -269,7 +329,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(10, 3540123216790538936),
       name: 'AppUser',
-      lastPropertyId: const obx_int.IdUid(9, 2196504888248073330),
+      lastPropertyId: const obx_int.IdUid(12, 7806579562095076535),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -319,6 +379,21 @@ final _entities = <obx_int.ModelEntity>[
             id: const obx_int.IdUid(9, 2196504888248073330),
             name: 'dbPreferences',
             type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(10, 547505417067333554),
+            name: 'isDeleted',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(11, 2448644833171259802),
+            name: 'isSynced',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(12, 7806579562095076535),
+            name: 'updatedAt',
+            type: 10,
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
@@ -526,7 +601,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final dbGenotypeOffset = object.dbGenotype == null
               ? null
               : fbb.writeString(object.dbGenotype!);
-          fbb.startTable(19);
+          fbb.startTable(23);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, uidOffset);
           fbb.addOffset(2, nameOffset);
@@ -545,12 +620,20 @@ obx_int.ModelDefinition getObjectBoxModel() {
           fbb.addOffset(15, medicalConditionsOffset);
           fbb.addOffset(16, dbGenderOffset);
           fbb.addOffset(17, dbGenotypeOffset);
+          fbb.addBool(18, object.isDeleted);
+          fbb.addBool(19, object.isSynced);
+          fbb.addInt64(20, object.updatedAt?.millisecondsSinceEpoch);
+          fbb.addInt64(21, object.createdAt?.millisecondsSinceEpoch);
           fbb.finish(fbb.endTable());
           return object.id;
         },
         objectFromFB: (obx.Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
+          final updatedAtValue =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 44);
+          final createdAtValue =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 46);
           final idParam =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           final uidParam = const fb.StringReader(asciiOptimization: true)
@@ -589,6 +672,16 @@ obx_int.ModelDefinition getObjectBoxModel() {
                   fb.StringReader(asciiOptimization: true),
                   lazy: false)
               .vTableGetNullable(buffer, rootOffset, 34);
+          final isDeletedParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 40, false);
+          final isSyncedParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 42, false);
+          final updatedAtParam = updatedAtValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(updatedAtValue);
+          final createdAtParam = createdAtValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(createdAtValue);
           final object = UserProfile(
               id: idParam,
               uid: uidParam,
@@ -605,7 +698,11 @@ obx_int.ModelDefinition getObjectBoxModel() {
               bmi: bmiParam,
               bloodGroup: bloodGroupParam,
               allergies: allergiesParam,
-              medicalConditions: medicalConditionsParam)
+              medicalConditions: medicalConditionsParam,
+              isDeleted: isDeletedParam,
+              isSynced: isSyncedParam,
+              updatedAt: updatedAtParam,
+              createdAt: createdAtParam)
             ..dbGender = const fb.StringReader(asciiOptimization: true)
                 .vTableGetNullable(buffer, rootOffset, 36)
             ..dbGenotype = const fb.StringReader(asciiOptimization: true)
@@ -658,27 +755,49 @@ obx_int.ModelDefinition getObjectBoxModel() {
         objectToFB: (WaterPreferences object, fb.Builder fbb) {
           final dbUnitOffset =
               object.dbUnit == null ? null : fbb.writeString(object.dbUnit!);
-          fbb.startTable(5);
+          fbb.startTable(9);
           fbb.addInt64(0, object.id);
           fbb.addFloat64(1, object.defaultDailyGoal);
           fbb.addFloat64(2, object.defaultLogValue);
           fbb.addOffset(3, dbUnitOffset);
+          fbb.addBool(4, object.isDeleted);
+          fbb.addBool(5, object.isSynced);
+          fbb.addInt64(6, object.updatedAt?.millisecondsSinceEpoch);
+          fbb.addInt64(7, object.createdAt?.millisecondsSinceEpoch);
           fbb.finish(fbb.endTable());
           return object.id;
         },
         objectFromFB: (obx.Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
+          final updatedAtValue =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 16);
+          final createdAtValue =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 18);
           final idParam =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           final defaultDailyGoalParam =
               const fb.Float64Reader().vTableGetNullable(buffer, rootOffset, 6);
           final defaultLogValueParam =
               const fb.Float64Reader().vTableGetNullable(buffer, rootOffset, 8);
+          final isDeletedParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 12, false);
+          final isSyncedParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 14, false);
+          final updatedAtParam = updatedAtValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(updatedAtValue);
+          final createdAtParam = createdAtValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(createdAtValue);
           final object = WaterPreferences(
               id: idParam,
               defaultDailyGoal: defaultDailyGoalParam,
-              defaultLogValue: defaultLogValueParam)
+              defaultLogValue: defaultLogValueParam,
+              isDeleted: isDeletedParam,
+              isSynced: isSyncedParam,
+              updatedAt: updatedAtParam,
+              createdAt: createdAtParam)
             ..dbUnit = const fb.StringReader(asciiOptimization: true)
                 .vTableGetNullable(buffer, rootOffset, 10);
 
@@ -716,7 +835,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final dbStreakOffset = object.dbStreak == null
               ? null
               : fbb.writeString(object.dbStreak!);
-          fbb.startTable(16);
+          fbb.startTable(20);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, nameOffset);
           fbb.addOffset(2, descriptionOffset);
@@ -731,6 +850,10 @@ obx_int.ModelDefinition getObjectBoxModel() {
           fbb.addOffset(12, dbDoseOffset);
           fbb.addOffset(13, dbFrequencyOffset);
           fbb.addOffset(14, dbStreakOffset);
+          fbb.addBool(15, object.isDeleted);
+          fbb.addBool(16, object.isSynced);
+          fbb.addInt64(17, object.updatedAt?.millisecondsSinceEpoch);
+          fbb.addInt64(18, object.createdAt?.millisecondsSinceEpoch);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -741,6 +864,10 @@ obx_int.ModelDefinition getObjectBoxModel() {
               const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 22);
           final endDateValue =
               const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 24);
+          final updatedAtValue =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 38);
+          final createdAtValue =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 40);
           final idParam =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           final nameParam = const fb.StringReader(asciiOptimization: true)
@@ -766,6 +893,16 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final warningMessageParam =
               const fb.StringReader(asciiOptimization: true)
                   .vTableGetNullable(buffer, rootOffset, 18);
+          final isDeletedParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 34, false);
+          final isSyncedParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 36, false);
+          final updatedAtParam = updatedAtValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(updatedAtValue);
+          final createdAtParam = createdAtValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(createdAtValue);
           final object = Medication(
               id: idParam,
               name: nameParam,
@@ -776,7 +913,11 @@ obx_int.ModelDefinition getObjectBoxModel() {
               endDate: endDateParam,
               shouldRemind: shouldRemindParam,
               reminderMessage: reminderMessageParam,
-              warningMessage: warningMessageParam)
+              warningMessage: warningMessageParam,
+              isDeleted: isDeletedParam,
+              isSynced: isSyncedParam,
+              updatedAt: updatedAtParam,
+              createdAt: createdAtParam)
             ..dbType = const fb.StringReader(asciiOptimization: true)
                 .vTableGetNullable(buffer, rootOffset, 26)
             ..dbDose = const fb.StringReader(asciiOptimization: true)
@@ -805,8 +946,10 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final photoUrlOffset = object.photoUrl == null
               ? null
               : fbb.writeString(object.photoUrl!);
-          final dbPreferencesOffset = fbb.writeString(object.dbPreferences);
-          fbb.startTable(10);
+          final dbPreferencesOffset = object.dbPreferences == null
+              ? null
+              : fbb.writeString(object.dbPreferences!);
+          fbb.startTable(13);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, uidOffset);
           fbb.addOffset(2, emailOffset);
@@ -816,12 +959,17 @@ obx_int.ModelDefinition getObjectBoxModel() {
           fbb.addBool(6, object.isPhoneVerified);
           fbb.addInt64(7, object.profile.targetId);
           fbb.addOffset(8, dbPreferencesOffset);
+          fbb.addBool(9, object.isDeleted);
+          fbb.addBool(10, object.isSynced);
+          fbb.addInt64(11, object.updatedAt?.millisecondsSinceEpoch);
           fbb.finish(fbb.endTable());
           return object.id;
         },
         objectFromFB: (obx.Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
+          final updatedAtValue =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 26);
           final idParam =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           final emailParam = const fb.StringReader(asciiOptimization: true)
@@ -836,6 +984,13 @@ obx_int.ModelDefinition getObjectBoxModel() {
               const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 16);
           final photoUrlParam = const fb.StringReader(asciiOptimization: true)
               .vTableGetNullable(buffer, rootOffset, 10);
+          final isDeletedParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 22, false);
+          final isSyncedParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 24, false);
+          final updatedAtParam = updatedAtValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(updatedAtValue);
           final object = AppUser(
               id: idParam,
               email: emailParam,
@@ -843,9 +998,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
               isAnonymous: isAnonymousParam,
               isEmailVerified: isEmailVerifiedParam,
               isPhoneVerified: isPhoneVerifiedParam,
-              photoUrl: photoUrlParam)
+              photoUrl: photoUrlParam,
+              isDeleted: isDeletedParam,
+              isSynced: isSyncedParam,
+              updatedAt: updatedAtParam)
             ..dbPreferences = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 20, '');
+                .vTableGetNullable(buffer, rootOffset, 20);
           object.profile.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0);
           object.profile.attach(store);
@@ -990,6 +1148,22 @@ class UserProfile_ {
   /// See [UserProfile.dbGenotype].
   static final dbGenotype =
       obx.QueryStringProperty<UserProfile>(_entities[0].properties[17]);
+
+  /// See [UserProfile.isDeleted].
+  static final isDeleted =
+      obx.QueryBooleanProperty<UserProfile>(_entities[0].properties[18]);
+
+  /// See [UserProfile.isSynced].
+  static final isSynced =
+      obx.QueryBooleanProperty<UserProfile>(_entities[0].properties[19]);
+
+  /// See [UserProfile.updatedAt].
+  static final updatedAt =
+      obx.QueryDateProperty<UserProfile>(_entities[0].properties[20]);
+
+  /// See [UserProfile.createdAt].
+  static final createdAt =
+      obx.QueryDateProperty<UserProfile>(_entities[0].properties[21]);
 }
 
 /// [WaterLog] entity fields to define ObjectBox queries.
@@ -1028,6 +1202,22 @@ class WaterPreferences_ {
   /// See [WaterPreferences.dbUnit].
   static final dbUnit =
       obx.QueryStringProperty<WaterPreferences>(_entities[2].properties[3]);
+
+  /// See [WaterPreferences.isDeleted].
+  static final isDeleted =
+      obx.QueryBooleanProperty<WaterPreferences>(_entities[2].properties[4]);
+
+  /// See [WaterPreferences.isSynced].
+  static final isSynced =
+      obx.QueryBooleanProperty<WaterPreferences>(_entities[2].properties[5]);
+
+  /// See [WaterPreferences.updatedAt].
+  static final updatedAt =
+      obx.QueryDateProperty<WaterPreferences>(_entities[2].properties[6]);
+
+  /// See [WaterPreferences.createdAt].
+  static final createdAt =
+      obx.QueryDateProperty<WaterPreferences>(_entities[2].properties[7]);
 }
 
 /// [Medication] entity fields to define ObjectBox queries.
@@ -1088,6 +1278,22 @@ class Medication_ {
   static final dbStreak =
       obx.QueryStringProperty<Medication>(_entities[3].properties[13]);
 
+  /// See [Medication.isDeleted].
+  static final isDeleted =
+      obx.QueryBooleanProperty<Medication>(_entities[3].properties[14]);
+
+  /// See [Medication.isSynced].
+  static final isSynced =
+      obx.QueryBooleanProperty<Medication>(_entities[3].properties[15]);
+
+  /// See [Medication.updatedAt].
+  static final updatedAt =
+      obx.QueryDateProperty<Medication>(_entities[3].properties[16]);
+
+  /// See [Medication.createdAt].
+  static final createdAt =
+      obx.QueryDateProperty<Medication>(_entities[3].properties[17]);
+
   /// see [Medication.activityRecord]
   static final activityRecord =
       obx.QueryRelationToMany<Medication, MedActivityRecord>(
@@ -1131,6 +1337,18 @@ class AppUser_ {
   /// See [AppUser.dbPreferences].
   static final dbPreferences =
       obx.QueryStringProperty<AppUser>(_entities[4].properties[8]);
+
+  /// See [AppUser.isDeleted].
+  static final isDeleted =
+      obx.QueryBooleanProperty<AppUser>(_entities[4].properties[9]);
+
+  /// See [AppUser.isSynced].
+  static final isSynced =
+      obx.QueryBooleanProperty<AppUser>(_entities[4].properties[10]);
+
+  /// See [AppUser.updatedAt].
+  static final updatedAt =
+      obx.QueryDateProperty<AppUser>(_entities[4].properties[11]);
 }
 
 /// [MedActivityRecord] entity fields to define ObjectBox queries.

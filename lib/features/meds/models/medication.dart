@@ -86,6 +86,15 @@ class Medication extends Equatable {
   @Transient()
   Streak? streak;
 
+  // Sync Related Fields
+  final bool isDeleted;
+  final bool isSynced;
+  @Property(type: PropertyType.date)
+  final DateTime? updatedAt;
+  @Property(type: PropertyType.date)
+  final DateTime? createdAt;
+
+
   /// A to-many relationship to store streaks of medication adherence.
   final ToMany<MedActivityRecord> activityRecord = ToMany<MedActivityRecord>();
 
@@ -144,6 +153,10 @@ class Medication extends Equatable {
     this.reminderMessage,
     this.warningMessage,
     this.streak,
+    this.isDeleted = false,
+    this.isSynced = false,
+    this.updatedAt,
+    this.createdAt,
   });
 
   /// Returns a copy of the current `Medication` object with updated fields.
@@ -162,6 +175,10 @@ class Medication extends Equatable {
     bool? shouldRemind,
     String? reminderMessage,
     String? warningMessage,
+
+    bool? isDeleted,
+    bool? isSynced,
+    DateTime? updatedAt,
   }) {
     final medication = Medication(
       id: id,
@@ -177,6 +194,10 @@ class Medication extends Equatable {
       shouldRemind: shouldRemind ?? this.shouldRemind,
       reminderMessage: reminderMessage ?? this.reminderMessage,
       warningMessage: warningMessage ?? this.warningMessage,
+
+      isDeleted: isDeleted ?? this.isDeleted,
+      isSynced: isSynced ?? this.isSynced,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
     medication.activityRecord.addAll(activityRecord ?? this.activityRecord);
     return medication;
@@ -190,7 +211,6 @@ class Medication extends Equatable {
     /// If it does, update the existing streak
 
     /// If it doesn't, add the new streak
-
     if (activityExists) {
       int index = activityRecord.indexWhere((s) => s.date.isSameDate(newActivity.date));
 
@@ -216,12 +236,16 @@ class Medication extends Equatable {
       'frequency': frequency?.toMap(),
       'durationDays': durationDays,
       'isPermanent': isPermanent,
-      'startDate': startDate?.toIso8601String(),
-      'endDate': endDate?.toIso8601String(),
+      'startDate': startDate?.toUtc().toIso8601String(),
+      'endDate': endDate?.toUtc().toIso8601String(),
       'shouldRemind': shouldRemind,
       'reminderMessage': reminderMessage,
       'warningMessage': warningMessage,
       'streak': streak?.toMap(),
+      'isDeleted': isDeleted,
+      'isSynced': isSynced,
+      'updatedAt': updatedAt?.toUtc().toIso8601String(),
+      'createdAt': createdAt?.toUtc().toIso8601String(),
     };
   }
 
@@ -243,6 +267,10 @@ class Medication extends Equatable {
       reminderMessage: map['reminderMessage'],
       warningMessage: map['warningMessage'],
       streak: Streak.fromMap(map['streak']),
+      isDeleted: map['isDeleted'],
+      isSynced: map['isSynced'],
+      updatedAt: map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null,
+      createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
     );
   }
 
@@ -255,6 +283,8 @@ class Medication extends Equatable {
     frequency: Frequency.empty,
     durationDays: 0,
     isPermanent: false,
+    isDeleted: false,
+    isSynced: false,
   );
 
   @Transient()
@@ -292,5 +322,9 @@ class Medication extends Equatable {
     streak,
     warningMessage,
     shouldRemind,
+    isDeleted,
+    isSynced,
+    updatedAt,
+    createdAt,
   ];
 }
