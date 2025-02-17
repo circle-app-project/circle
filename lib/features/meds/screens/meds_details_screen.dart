@@ -5,7 +5,6 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../components/components.dart';
-import '../../../core/core.dart';
 import '../meds.dart';
 
 class MedsDetailsScreen extends StatelessWidget {

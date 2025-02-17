@@ -324,10 +324,8 @@ class _FrequencyBottomSheetState extends State<FrequencyBottomSheet> {
                     //Todo: reimplement this calendar weekday selector using the new [SelectableWidget] API
 
                     GenericSelector<String, SelectableCircularButton>(
-
                       isMultiSelectMode: true,
                       onItemSelected: (daysSelected) {
-                        print("selectedDays: $daysSelected");
                         setState(() {
                           selectedDays = daysSelected;
                         });
