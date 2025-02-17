@@ -1,4 +1,4 @@
-
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -10,9 +10,13 @@ class CupertinoDatePickerCustomized extends StatelessWidget {
   const CupertinoDatePickerCustomized({
     super.key,
     required this.onDateTimeChanged,
+    this.mode = CupertinoDatePickerMode.time,
+    this.label = "Select Time",
   });
 
   final Function(DateTime value) onDateTimeChanged;
+  final CupertinoDatePickerMode mode;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +28,31 @@ class CupertinoDatePickerCustomized extends StatelessWidget {
       ),
       height: MediaQuery.sizeOf(context).height * .6,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: kPadding16),
+        padding: const EdgeInsets.symmetric(horizontal: kPadding16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Gap(kPadding12),
+            const Gap(kPadding12),
+            Row(
+              children: [
+                Text(
+                  label,
+                  style: theme.textTheme.titleMedium!.copyWith(
+                    // fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+
+                const Spacer(),
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(FluentIcons.dismiss_20_regular),
+                ),
+              ],
+            ),
+
             Align(
               alignment: Alignment.center,
               child: Container(
@@ -40,24 +64,25 @@ class CupertinoDatePickerCustomized extends StatelessWidget {
                 ),
               ),
             ),
-            Gap(kPadding12),
-            Text("Select Date", style: theme.textTheme.titleMedium),
-            //  Gap(kPadding16),
-            Expanded(
-              child: CupertinoDatePicker(
-                initialDateTime: DateTime.now(),
-                mode: CupertinoDatePickerMode.date,
-                onDateTimeChanged: onDateTimeChanged,
+
+            SizedBox(
+              height: MediaQuery.sizeOf(context).height * .4,
+              child: Expanded(
+                child: CupertinoDatePicker(
+                  initialDateTime: DateTime.now(),
+                  mode: mode,
+                  onDateTimeChanged: onDateTimeChanged,
+                ),
               ),
             ),
-            Gap(kPadding8),
+            const Gap(kPadding8),
             AppButton(
               onPressed: () {
                 Navigator.pop(context);
               },
               label: "Select Date",
             ),
-            Gap(kPadding64),
+            const Gap(kPadding64),
           ],
         ),
       ),

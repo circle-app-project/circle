@@ -53,7 +53,7 @@ class _SelectableChipState extends State<SelectableChip> {
       ),
       backgroundColor: widget.isItemSelected
           ? theme.colorScheme.primary
-          : theme.colorScheme.surfaceContainer,
+          : theme.colorScheme.surfaceContainerLow,
       selectedColor: theme.colorScheme.primary,
       showCheckmark:
           (widget.icon != null || widget.iconPath != null) ? false : true,
