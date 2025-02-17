@@ -109,7 +109,7 @@ class AppUser extends Equatable {
       "isEmailVerified": isEmailVerified,
       "isPhoneVerified": isPhoneVerified,
       "profile": profile.target?.toMap(),
-      "preferences": preferences?.toMap() ?? UnitPreferences.metric().toMap(),
+      "preferences": preferences?.toMap() ?? const UnitPreferences.metric().toMap(),
     };
   }
 
@@ -190,7 +190,7 @@ class AppUser extends Equatable {
       isAnonymous: false,
       isEmailVerified: true,
       isPhoneVerified: true,
-      preferences: UserPreferences(
+      preferences: const UserPreferences(
         isFirstTime: false,
         isOnboarded: true,
         unitPreferences: UnitPreferences.metric(),
@@ -209,8 +209,8 @@ class AppUser extends Equatable {
         bloodGroup: "O+",
         gender: Gender.male,
         genotype: Genotype.ss,
-        allergies: ["Penicillin", "Aspirin"],
-        medicalConditions: ["Diabetes", "Heart Disease"],
+        allergies: const ["Penicillin", "Aspirin"],
+        medicalConditions: const ["Diabetes", "Heart Disease"],
         painSeverity: 8,
         crisisFrequency: "Daily",
         displayName: "Johny",

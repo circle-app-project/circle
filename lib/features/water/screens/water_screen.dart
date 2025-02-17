@@ -55,10 +55,10 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
 
     WaterStats waterStats = WaterStats(
         logsToday: logsToday,
-        logsLastSevenDays: [],
-        logsLastThirtyDays: [],
-        logsThisWeek: [],
-        logsThisMonth: [],
+        logsLastSevenDays: const [],
+        logsLastThirtyDays: const [],
+        logsThisWeek: const [],
+        logsThisMonth: const [],
         dailyGoal: 2000);
     WaterPreferences waterPreferences =
         ref.watch(waterPrefsNotifierProviderImpl).value!;
@@ -274,9 +274,9 @@ class WaterStatsCard extends StatelessWidget {
                   "assets/svg/illustrations/emojis/smiling-face-with-tear.svg",
                   height: 48,
                 ),
-                Gap(kPadding12),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                const Gap(kPadding12),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 32),
                   child: Text(
                     "No data to show, try adding some logs to see your stats here.",
                     textAlign: TextAlign.center,

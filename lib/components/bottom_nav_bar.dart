@@ -71,7 +71,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
                 label: "Home",
                 icon: SvgPicture.asset(
                   "assets/svg/home-alt.svg",
-                  colorFilter: ColorFilter.mode(
+                  colorFilter: const ColorFilter.mode(
                       AppColours.neutral50, BlendMode.srcIn),
                 ),
                 selectedIcon: SvgPicture.asset(
@@ -83,7 +83,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
               label: "Water",
               icon: SvgPicture.asset(
                 "assets/svg/droplet-alt.svg",
-                colorFilter: ColorFilter.mode(
+                colorFilter: const ColorFilter.mode(
                     AppColours.neutral50, BlendMode.srcIn),
               ),
               selectedIcon: SvgPicture.asset(
@@ -96,7 +96,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
                 label: "Emergency",
                 icon: SvgPicture.asset(
                   "assets/svg/emergency-alt.svg",
-                  colorFilter: ColorFilter.mode(
+                  colorFilter: const ColorFilter.mode(
                       AppColours.neutral50, BlendMode.srcIn),
                 ),
                 selectedIcon: SvgPicture.asset(
@@ -106,14 +106,14 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
                 )),
             NavigationDestination(
               label: "Meds",
-              icon: Icon(FluentIcons.pill_24_regular,
+              icon: const Icon(FluentIcons.pill_24_regular,
                   color: AppColours.neutral50),
               selectedIcon: Icon(FluentIcons.pill_24_filled,
                   color: Theme.of(context).iconTheme.color),
             ),
             NavigationDestination(
               label: "Profile",
-              icon: Icon(FluentIcons.person_24_regular,
+              icon: const Icon(FluentIcons.person_24_regular,
                   color: AppColours.neutral50),
               selectedIcon: Icon(FluentIcons.person_24_filled,
                   color: Theme.of(context).iconTheme.color),

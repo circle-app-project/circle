@@ -19,7 +19,7 @@ class EmphasizedContainer extends StatelessWidget {
     final bool isDarkMode = theme.brightness == Brightness.dark;
     return Container(
       height: 76,
-      padding: EdgeInsets.symmetric(horizontal: kPadding24),
+      padding: const EdgeInsets.symmetric(horizontal: kPadding24),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(kPadding16),
         color:
@@ -36,7 +36,7 @@ class EmphasizedContainer extends StatelessWidget {
               color: theme.colorScheme.primary,
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisSize: MainAxisSize.min,
