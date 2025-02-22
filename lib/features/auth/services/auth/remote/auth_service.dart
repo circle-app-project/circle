@@ -1,3 +1,4 @@
+import 'package:circle/core/error/exceptions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -9,7 +10,9 @@ class AuthService {
     required String password,
   }) async {
     UserCredential newUser = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email, password: password);
+      email: email,
+      password: password,
+    );
 
     return newUser;
   }
@@ -23,19 +26,34 @@ class AuthService {
     return loggedInUser;
   }
 
+  //
   Future<UserCredential> signInWithGoogle() async {
-    GoogleSignIn googleSignIn =
-        GoogleSignIn(scopes: ["email", "profile", "openid"]);
+    GoogleSignIn googleSignIn = GoogleSignIn(
+      scopes: ["email", "profile", "openid"],
+    );
 
     GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-    GoogleSignInAuthentication? googleAuth = await googleUser!.authentication;
+    GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    if (googleAuth == null) {
+      throw AppException(
+        debugMessage:
+            "No Google user found, User probably cancelled the request",
+        message: "Unable to Continue with Google",
+        type: ExceptionType.firebase,
+        stackTrace: StackTrace.current,
+      );
+    }
 
     final AuthCredential credential = GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+      idToken: googleAuth.idToken,
+      accessToken: googleAuth.accessToken,
+    );
 
-    UserCredential loggedInUser =
-        await _firebaseAuth.signInWithCredential(credential);
+    UserCredential loggedInUser = await _firebaseAuth.signInWithCredential(
+      credential,
+    );
     return loggedInUser;
   }
 
@@ -55,9 +73,13 @@ class AuthService {
     await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
-  Future<void> confirmPasswordReset(
-      {required String code, required String newPassword}) async {
+  Future<void> confirmPasswordReset({
+    required String code,
+    required String newPassword,
+  }) async {
     await _firebaseAuth.confirmPasswordReset(
-        code: code, newPassword: newPassword);
+      code: code,
+      newPassword: newPassword,
+    );
   }
 }
