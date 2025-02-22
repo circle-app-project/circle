@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
-import 'package:sprung/sprung.dart';
+import 'package:springster/springster.dart';
 
 import '../../core/core.dart';
 
@@ -268,7 +268,7 @@ class _SelectableCircularButtonState extends State<SelectableCircularButton> wit
   void initState() {
     animationController = AnimationController(vsync: this, duration: 300.ms);
     _radiusAnimation = Tween<double>(begin: 36, end: 20).animate(
-        CurvedAnimation(parent: animationController, curve: Sprung.overDamped));
+        CurvedAnimation(parent: animationController, curve: Spring.defaultIOS.toCurve));
 
     super.initState();
   }

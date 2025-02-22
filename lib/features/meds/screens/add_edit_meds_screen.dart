@@ -13,7 +13,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:sprung/sprung.dart';
+import 'package:springster/springster.dart';
 import '../../../components/components.dart';
 import '../../../components/customized_cupertino_date_picker.dart';
 import '../../../core/core.dart';
@@ -86,9 +86,9 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
   void _selectDuration() async {
     selectedDuration = await showModalBottomSheet(
       sheetAnimationStyle: AnimationStyle(
-        curve: Sprung.overDamped,
+        curve: Spring.defaultIOS.toCurve,
         duration: 300.ms,
-        reverseCurve: Sprung.overDamped,
+        reverseCurve: Spring.defaultIOS.toCurve,
       ),
       backgroundColor: Colors.transparent,
       context: context,
@@ -118,9 +118,9 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
   void _selectDoses() async {
     selectedDose = await showModalBottomSheet(
       sheetAnimationStyle: AnimationStyle(
-        curve: Sprung.overDamped,
+        curve: Spring.defaultIOS.toCurve,
         duration: 300.ms,
-        reverseCurve: Sprung.overDamped,
+        reverseCurve: Spring.defaultIOS.toCurve,
       ),
       backgroundColor: Colors.transparent,
       context: context,
@@ -555,7 +555,7 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                       begin: -50,
                       end: 0,
                       duration: 500.ms,
-                      curve: Sprung.overDamped,
+                      curve: Spring.defaultIOS.toCurve,
                     )
                     .fade(duration: 500.ms),
 
