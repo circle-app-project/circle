@@ -46,15 +46,14 @@ class UserLocalService {
   /// Attempts to get a user with this uid, returns null if a user doesn't exits
   /// Throws an exception if the query fails for any other reason
   AppUser? getUserByUid(String uid) {
-    print("trying to get the firbase user of this user id from local db: $uid");
+    print("trying to get the firebase user of this user id from local db: $uid");
     // Build the query to find the user with the specified UID
    late final Query<AppUser> query;
     try {
       // Find the first user matching the query
       query = _userBox.query(AppUser_.uid.equals(uid)).build();
-      print("printing the query ${query.toString()}");
       final List<AppUser> results = query.find();
-      print("list of returned users $results");
+      print("count of returned users ${results.length}");
       return results.isNotEmpty ? results.first : null;
     } catch (e, stackTrace) {
       // Throws app exception
