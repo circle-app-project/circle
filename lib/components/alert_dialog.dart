@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:springster/springster.dart';
 
 class AppAlertDialog extends StatelessWidget {
   const AppAlertDialog(
@@ -35,7 +36,7 @@ class AppAlertDialog extends StatelessWidget {
     )
         .animate()
         .moveY(
-            duration: 800.ms, begin: 120, end: 0, curve: Curves.easeInOutQuart)
+            duration: 800.ms, begin: 120, end: 0, curve: Spring.defaultIOS.toCurve)
         .fadeIn(
           delay: 300.ms,
           duration: 500.ms,
