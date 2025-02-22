@@ -1,24 +1,28 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
-    id "com.android.application"
+    id("com.android.application")
     // START: FlutterFire Configuration
-    id 'com.google.gms.google-services'
-    id 'com.google.firebase.crashlytics'
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
     // END: FlutterFire Configuration
-    id "kotlin-android"
+    id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
-    id "dev.flutter.flutter-gradle-plugin"
+    id("dev.flutter.flutter-gradle-plugin")
 }
 
-def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
 if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
 android {
     namespace = "co.circleapp.app"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+//    ndkVersion = flutter.ndkVersion
+    ndkVersion = "26.1.10909125"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -26,7 +30,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
     defaultConfig {
@@ -41,17 +45,17 @@ android {
     }
 
     signingConfigs {
-        release {
-            keyAlias = keystoreProperties['keyAlias']
-            keyPassword = keystoreProperties['keyPassword']
-            storeFile = keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword = keystoreProperties['storePassword']
+        create("release") {
+            keyAlias = keystoreProperties["keyAlias"] as String?
+            keyPassword = keystoreProperties["keyPassword"] as String?
+            storeFile = keystoreProperties["storeFile"]?.let { file(it as String) }
+            storePassword = keystoreProperties["storePassword"] as String?
         }
     }
 
     buildTypes {
-        release {
-            signingConfig = signingConfigs.release
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }
@@ -61,19 +65,15 @@ flutter {
 }
 
 dependencies {
-    implementation "androidx.core:core-splashscreen:1.0.0"
+    implementation("androidx.core:core-splashscreen:1.0.0")
     // Add objectbox-android-objectbrowser only for debug builds.
-    // Replace <version> with the included objectbox-android version,
-    // e.g. check https://github.com/objectbox/objectbox-dart/releases
-    // Warning: when ObjectBox for Dart updates check if <version>
-    // needs to be updated.
-    debugImplementation "io.objectbox:objectbox-android-objectbrowser:4.0.3"
+    debugImplementation("io.objectbox:objectbox-android-objectbrowser:4.0.3")
 }
 
 // Tell Gradle to exclude the objectbox-android dependency
 // that is added by objectbox_flutter_libs for debug builds.
 configurations {
-    debugImplementation {
-        exclude group: 'io.objectbox', module: 'objectbox-android'
+    named("debugImplementation") {
+    exclude(group = "io.objectbox", module = "objectbox-android")
     }
 }
