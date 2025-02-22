@@ -18,10 +18,10 @@ class AppButton extends StatelessWidget {
     this.icon,
     this.trailingIcon,
     this.trailingIconPath,
-    this.overrideIconColor = false,
     this.buttonType = ButtonType.primary,
     this.isChipButton = false,
     this.isLoading = false,
+    this.iconIgnoresLabelColor = false,
   });
 
   final VoidCallback onPressed;
@@ -33,9 +33,9 @@ class AppButton extends StatelessWidget {
   final String? trailingIconPath;
   final Color? color;
   final Color? backgroundColor;
-  final bool? overrideIconColor;
   final bool? isChipButton;
   final bool? isLoading;
+  final bool iconIgnoresLabelColor;
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +49,6 @@ class AppButton extends StatelessWidget {
     if (trailingIcon != null && trailingIconPath != null) {
       throw ErrorHint(
         "Cannot set both a trailingIcon and a trailingIconPath property simultaneously, consider removing one",
-      );
-    }
-    if (overrideIconColor == true && color == null) {
-      throw ErrorHint(
-        "Must provide a color property if overrideIconColor is set to true",
       );
     }
 
@@ -73,7 +68,7 @@ class AppButton extends StatelessWidget {
           fixedSize: isChipButton! ? const Size.fromHeight(42) : null,
           alignment: Alignment.center,
           //backgroundColor: backgroundColor ?? theme.colorScheme.primary,
-          backgroundColor: backgroundColor ??  theme.iconTheme.color,
+          backgroundColor: backgroundColor ??  theme.colorScheme.onSurface,
           foregroundColor: color ??  theme.colorScheme.onPrimary,
         );
         break;
@@ -102,7 +97,7 @@ class AppButton extends StatelessWidget {
           fixedSize: isChipButton! ? const Size.fromHeight(42) : null,
           backgroundColor: Colors.transparent,
          // foregroundColor: color ?? theme.colorScheme.primary,
-          foregroundColor: color ?? theme.iconTheme.color,
+          foregroundColor: color ?? theme.colorScheme.onSurface,
           side: BorderSide(width: 1, color: labelColor),
         );
 
@@ -123,6 +118,12 @@ class AppButton extends StatelessWidget {
       } : onPressed, // Disabling the button when loading
       style: style,
       child: Center(
+        /// Todo: Evaluate design choices.
+        /// Should we animate button when on loading state?
+        /// See `Save Toggle` interaction at https://khagwal.com/interactions/
+        ///
+        /// Also, we might consider changing this loading animation from `SpinKitThreeBounce`
+        /// to the new M3 spec`CircularProgressIndicator`, that one looks real nice.
         child:
         isLoading!
             ? SpinKitThreeBounce(
@@ -138,7 +139,9 @@ class AppButton extends StatelessWidget {
                 size: 24,
                 icon: icon,
                 iconPath: iconPath,
+                iconIgnoresColor: iconIgnoresLabelColor,
                 color: labelColor,
+
               ),
               const Gap(kPadding8),
             ]
@@ -159,7 +162,9 @@ class AppButton extends StatelessWidget {
               AppIcon(
                 icon: trailingIcon,
                 iconPath: trailingIconPath,
-                color: labelColor,
+                size: 24,
+                iconIgnoresColor: iconIgnoresLabelColor,
+                color:  labelColor,
               ),
             ]
 

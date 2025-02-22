@@ -46,13 +46,12 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
                   isLoading:
                       ref.watch(authNotifierProviderIml).isLoading ||
                       ref.watch(userNotifierProviderImpl).isLoading,
-
-                  overrideIconColor: false,
+                iconIgnoresLabelColor: true,
                   buttonType: ButtonType.primary,
-                  iconPath: Assets.svg.google,
+                  iconPath: Assets.svg.googleLogoColor,
+                  label: "Continue",
                   onPressed: () async {
                     await authNotifier.singInWithGoogle();
-
                     if (ref.watch(authNotifierProviderIml).hasError) {
                       if (context.mounted) {
                         showCustomSnackBar(
@@ -107,7 +106,7 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
                       }
                     }
                   },
-                  label: "Continue",
+
                 )
                 .animate()
                 .fadeIn(duration: 300.ms)
