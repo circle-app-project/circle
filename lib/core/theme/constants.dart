@@ -143,18 +143,24 @@ class AppColours {
   static const Color orange99 = Color(0xFFFFFBFF);
 
   ///-----------Green---------///
-  static const Color greenSeed = Color(0xFF07DD83);
-  static const Color green10 = Color(0xFF00210F);
-  static const Color green20 = Color(0xFF00391D);
-  static const Color green30 = Color(0xFF00522D);
-  static const Color green40 = Color(0xFF006D3E);
-  static const Color green50 = Color(0xFF00894F);
-  static const Color green60 = Color(0xFF00A661);
-  static const Color green70 = Color(0xFF00C473);
-  static const Color green80 = Color(0xFF1CE288);
-  static const Color green90 = Color(0xFF90FFC2);
-  static const Color green95 = Color(0xFFD0FFDD);
-  static const Color green99 = Color(0xFFF5FFF4);
+  static const Color greenSeed = Color(0xFF17D074);
+  static const Color green0 = Color(0xFF000000);
+  static const Color green05 = Color(0xFF001507);
+  static const Color green10 = Color(0xFF00210D);
+  static const Color green15 = Color(0xFF002D14);
+  static const Color green20 = Color(0xFF00391B);
+  static const Color green25 = Color(0xFF004522);
+  static const Color green30 = Color(0xFF00522A);
+  static const Color green35 = Color(0xFF005F31);
+  static const Color green40 = Color(0xFF006D39);
+  static const Color green50 = Color(0xFF008949);
+  static const Color green60 = Color(0xFF00A65A);
+  static const Color green70 = Color(0xFF00C46C);
+  static const Color green80 = Color(0xFF39E283);
+  static const Color green90 = Color(0xFFABF3BC);
+  static const Color green95 = Color(0xFFC3FFCF);
+  static const Color green98 = Color(0xFFEAFFEA);
+  static const Color green99 = Color(0xFFF5FFF3);
 
   ///-----------Red---------///
   static const Color redSeed = Color(0xFFF5043E);
