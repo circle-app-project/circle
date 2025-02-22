@@ -67,7 +67,7 @@ flutter {
 dependencies {
     implementation("androidx.core:core-splashscreen:1.0.0")
     // Add objectbox-android-objectbrowser only for debug builds.
-    debugImplementation("io.objectbox:objectbox-android-objectbrowser:4.0.3")
+    debugImplementation("io.objectbox:objectbox-android-objectbrowser:4.1.0")
 }
 
 // Tell Gradle to exclude the objectbox-android dependency
