@@ -1,8 +1,6 @@
 import 'package:circle/core/routes/routes.dart';
 import 'package:circle/crashytics_service.dart';
 import 'package:circle/databse_service.dart';
-import 'package:circle/features/auth/screens/auth/auth_success.dart';
-import 'package:circle/features/auth/screens/onboarding/onboarding_base_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +18,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   //Initialize database with Admin
-  await LocalDatabaseService.instance.initialize(startAdmin: kDebugMode, adminPort: 8091);
+  await LocalDatabaseService.instance.initialize(
+    startAdmin: kDebugMode,
+    adminPort: 8091,
+  );
   database = LocalDatabaseService.instance;
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -58,7 +59,7 @@ class _MyAppState extends ConsumerState<MyApp> {
               : SystemUiOverlayStyle.light.copyWith(
                 statusBarColor: Colors.transparent,
               ),
-      child: MaterialApp(
+      child: MaterialApp.router(
         title: 'Circle',
         debugShowCheckedModeBanner: true,
         theme: AppThemeData.lightTheme,
@@ -68,8 +69,8 @@ class _MyAppState extends ConsumerState<MyApp> {
           curve: Spring.defaultIOS.toCurve,
           duration: const Duration(milliseconds: 300),
         ),
-       //  routerConfig: router,
-         home: const AuthSuccessScreen()
+        routerConfig: router,
+        // home: const AuthSuccessScreen()
       ),
     );
   }
