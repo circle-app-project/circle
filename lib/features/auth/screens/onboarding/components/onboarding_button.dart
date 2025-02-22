@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import '../../../../../core/core.dart';
 
@@ -21,11 +21,7 @@ class OnboardingButton extends StatelessWidget {
           fixedSize: const Size(84, 84),
           shape: const CircleBorder()),
       child: Center(
-        child: SvgPicture.asset(
-          "assets/svg/arrow-right.svg",
-          colorFilter:
-              ColorFilter.mode(colour ?? AppColours.white, BlendMode.srcIn),
-        ),
+        child: Icon(HugeIcons.strokeRoundedArrowRight02, color: colour ?? AppColours.white, size: 32,),
       ),
     );
   }

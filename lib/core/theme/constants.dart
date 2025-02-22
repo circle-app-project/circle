@@ -221,36 +221,36 @@ class AppTextStyles {
   ///---Display---//
 
   static TextStyle displayLarge = const TextStyle(
-    fontWeight: FontWeight.w300,
+    fontWeight: FontWeight.w800,
     fontSize: 57,
     height: 1,
   );
 
   static TextStyle displayMedium = const TextStyle(
-    fontWeight: FontWeight.w300,
+    fontWeight: FontWeight.w800,
     fontSize: 45,
     height: 1,
   );
 
   static TextStyle displaySmall = const TextStyle(
-    fontWeight: FontWeight.w300,
+    fontWeight: FontWeight.w800,
     fontSize: 36,
     height: 1,
   );
 
   ///---Headline---///
   static TextStyle headlineLarge = const TextStyle(
-    fontWeight: FontWeight.w300,
+    fontWeight: FontWeight.w800,
     fontSize: 32,
     //  height: 1,
   );
   static TextStyle headlineMedium = const TextStyle(
-    fontWeight: FontWeight.w300,
+    fontWeight: FontWeight.w800,
     fontSize: 28,
     //   height: 1,
   );
   static TextStyle headlineSmall = const TextStyle(
-    fontWeight: FontWeight.w300,
+    fontWeight: FontWeight.w800,
     fontSize: 24,
     //   height: 1,
   );
@@ -258,21 +258,21 @@ class AppTextStyles {
   ///---Title---///
 
   static TextStyle titleLarge = const TextStyle(
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w800,
     fontSize: 22,
-    //  height: 1,
+
   );
 
   static TextStyle titleMedium = const TextStyle(
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w800,
     fontSize: 16,
-    //  height: 1,
+
   );
 
   static TextStyle titleSmall = const TextStyle(
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w800,
     fontSize: 14,
-    //   height: 1,
+
   );
 
   ///---Body---///
@@ -280,18 +280,15 @@ class AppTextStyles {
   static TextStyle bodyLarge = const TextStyle(
     fontWeight: FontWeight.normal,
     fontSize: 16,
-    //  height: 1,
   );
 
   static TextStyle bodyMedium = const TextStyle(
     fontWeight: FontWeight.normal,
     fontSize: 14,
-    //  height: 1,
   );
 
   static TextStyle bodySmall = const TextStyle(
     fontWeight: FontWeight.normal,
     fontSize: 12,
-    //  height: 1,
   );
 }

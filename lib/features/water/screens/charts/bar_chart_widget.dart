@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:springster/springster.dart';
 import '../../../../core/core.dart';
 import 'line_chart_widget.dart';
 
@@ -110,7 +111,7 @@ class BarChartWidget extends StatelessWidget {
         break;
     }
     return BarChart(
-     curve: Curves.easeInOutQuart,
+     curve: Spring.defaultIOS.toCurve,
       BarChartData(
           barGroups: barGroups,
           minY: 0,

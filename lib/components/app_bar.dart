@@ -29,8 +29,7 @@ class CustomAppBar extends StatelessWidget {
         const Gap(48),
         Row(
           children: [
-
-            if(showBackButton!)
+            if (showBackButton!)
               IconButton(
                 padding: EdgeInsets.zero,
                 alignment: Alignment.centerLeft,
@@ -49,7 +48,13 @@ class CustomAppBar extends StatelessWidget {
           ],
         ),
         const Gap(kPadding32),
-        if (showTitle!) Text(pageTitle, style: theme.textTheme.headlineMedium),
+        if (showTitle!)
+          Text(
+            pageTitle,
+            style: theme.textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.w400,
+            ),
+          ),
 
         const Gap(32),
       ],

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:springster/springster.dart';
 
 import '../../../../core/core.dart';
 
@@ -158,7 +159,7 @@ class LineChartWidget extends StatelessWidget {
     }
 
     return LineChart(
-      curve: Curves.easeInOutQuart,
+      curve: Spring.defaultIOS.toCurve,
       LineChartData(
         gridData: const FlGridData(show: false),
         borderData: _getBorderData(isDarkMode),

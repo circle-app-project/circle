@@ -3,10 +3,13 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hugeicons/hugeicons.dart';
+import 'package:springster/springster.dart';
 
 import '../../../../components/bottom_nav_bar.dart';
 import '../../../../components/components.dart';
 import '../../../../core/core.dart';
+import '../../../../gen/assets.gen.dart';
 import '../../../profile/profile.dart';
 import '../../auth.dart';
 
@@ -43,32 +46,42 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
                   isLoading:
                       ref.watch(authNotifierProviderIml).isLoading ||
                       ref.watch(userNotifierProviderImpl).isLoading,
-                  color: theme.colorScheme.primary,
+
                   overrideIconColor: false,
-                  buttonType: ButtonType.secondary,
-                  iconPath: "assets/svg/google.svg",
+                  buttonType: ButtonType.primary,
+                  iconPath: Assets.svg.google,
                   onPressed: () async {
                     await authNotifier.singInWithGoogle();
-                    await userNotifier.getSelfUserData();
 
-                    ///Notify users when all operations are completed or fails
-                    if (context.mounted) {
-                      if (ref.watch(userNotifierProviderImpl).hasError) {
+                    if (ref.watch(authNotifierProviderIml).hasError) {
+                      if (context.mounted) {
                         showCustomSnackBar(
                           context: context,
-                          error: ref.watch(userNotifierProviderImpl).error!,
+                          error: ref.watch(authNotifierProviderIml).error,
                           mode: SnackBarMode.error,
                         );
-                      } else {
-                        // Assume Successful
-                        showCustomSnackBar(
-                          context: context,
-                          message: "Signed in successfully",
-                          mode: SnackBarMode.success,
-                        );
-                        user = ref.watch(userNotifierProviderImpl).value!;
-                        /// Update User
-                        if (context.mounted) {
+                      }
+                    } else {
+                      await userNotifier.getSelfUserData();
+
+                      ///Notify users when all operations are completed or fails
+                      if (context.mounted) {
+                        if (ref.watch(userNotifierProviderImpl).hasError) {
+                          showCustomSnackBar(
+                            context: context,
+                            error: ref.watch(userNotifierProviderImpl).error,
+                            mode: SnackBarMode.error,
+                          );
+                        } else {
+                          // Assume Successful
+                          showCustomSnackBar(
+                            context: context,
+                            message: "Signed in successfully",
+                            mode: SnackBarMode.success,
+                          );
+                          user = ref.watch(userNotifierProviderImpl).value!;
+
+                          /// Update User
                           if (userPreferences.isFirstTime) {
                             ///Set as is Not First Time
                             user = user.copyWith(
@@ -97,24 +110,33 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
                   label: "Continue",
                 )
                 .animate()
-                .fade(delay: 100.ms, duration: 300.ms)
+                .fadeIn(duration: 300.ms)
                 .moveY(
-                  delay: 100.ms,
-                  duration: 300.ms,
+                  delay: 200.ms,
+                  duration: 800.ms,
                   begin: 64,
                   end: 0,
-                  curve: Curves.easeInOutQuart,
+                  curve: Spring.defaultIOS.toCurve,
                 ),
             const Gap(kPadding16),
-            FittedBox(
-              child: AppButton(
-                buttonType: ButtonType.text,
-                onPressed: () {
-                  context.pushNamed(SignInScreen.id);
-                },
-                label: "Continue with Email",
-              ).animate().fade(delay: 300.ms, duration: 200.ms),
-            ),
+            AppButton(
+                  buttonType: ButtonType.outline,
+                  onPressed: () {
+                    context.pushNamed(SignInScreen.id);
+                  },
+                  color: theme.colorScheme.onSurface,
+                  icon: HugeIcons.strokeRoundedMail01,
+                  label: "Continue with Email",
+                )
+                .animate(delay: 300.ms)
+                .fadeIn(duration: 300.ms)
+                .moveY(
+                  duration: 800.ms,
+                  begin: 64,
+                  end: 0,
+                  curve: Spring.defaultIOS.toCurve,
+                ),
+
             const Gap(64),
           ],
         ),

@@ -1,12 +1,15 @@
 import 'package:circle/core/routes/routes.dart';
 import 'package:circle/crashytics_service.dart';
 import 'package:circle/databse_service.dart';
+import 'package:circle/features/auth/screens/auth/auth_success.dart';
+import 'package:circle/features/auth/screens/onboarding/onboarding_base_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:springster/springster.dart';
 
 import 'core/core.dart';
 import 'firebase_options.dart';
@@ -55,18 +58,18 @@ class _MyAppState extends ConsumerState<MyApp> {
               : SystemUiOverlayStyle.light.copyWith(
                 statusBarColor: Colors.transparent,
               ),
-      child: MaterialApp.router(
+      child: MaterialApp(
         title: 'Circle',
-        debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: true,
         theme: AppThemeData.lightTheme,
         darkTheme: AppThemeData.darkTheme,
         themeMode: ThemeMode.system,
         themeAnimationStyle: AnimationStyle(
-          curve: Curves.easeInOutQuart,
+          curve: Spring.defaultIOS.toCurve,
           duration: const Duration(milliseconds: 300),
         ),
-         routerConfig: router,
-         //home: const AddMedsScreen(),
+       //  routerConfig: router,
+         home: const AuthSuccessScreen()
       ),
     );
   }
