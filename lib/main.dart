@@ -4,7 +4,6 @@ import 'package:circle/databse_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:springster/springster.dart';
@@ -48,18 +47,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    bool isDarkMode = theme.brightness == Brightness.dark;
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value:
-          isDarkMode
-              ? SystemUiOverlayStyle.dark.copyWith(
-                statusBarColor: Colors.transparent,
-              )
-              : SystemUiOverlayStyle.light.copyWith(
-                statusBarColor: Colors.transparent,
-              ),
-      child: MaterialApp.router(
+    return MaterialApp.router(
         title: 'Circle',
         debugShowCheckedModeBanner: true,
         theme: AppThemeData.lightTheme,
@@ -71,7 +59,18 @@ class _MyAppState extends ConsumerState<MyApp> {
         ),
         routerConfig: router,
         // home: const AuthSuccessScreen()
-      ),
-    );
+      );
+      // child: MaterialApp(
+      //   title: 'Circle',
+      //   debugShowCheckedModeBanner: true,
+      //   theme: AppThemeData.lightTheme,
+      //   darkTheme: AppThemeData.darkTheme,
+      //   themeMode: ThemeMode.system,
+      //   themeAnimationStyle: AnimationStyle(
+      //     curve: Spring.defaultIOS.toCurve,
+      //     duration: const Duration(milliseconds: 300),
+      //   ),
+      //   home: const GoogleSignInScreen()
+      // ),
   }
 }
