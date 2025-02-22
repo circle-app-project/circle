@@ -1,13 +1,15 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
+
 import 'package:circle/core/core.dart';
 
 import '../../../components/components.dart';
 import '../emergency.dart';
-
+@RoutePage(name: EmergencyScreen.name)
 class EmergencyScreen extends StatelessWidget {
-  static const String id = "emergency";
+  static const String path = "/emergency";
+  static const String name = "EmergencyScreen";
   const EmergencyScreen({super.key});
 
   @override
@@ -62,7 +64,7 @@ class EmergencyScreen extends StatelessWidget {
                       const Gap(16),
                       ContactCard(
                         onPressed: () {
-                          context.goNamed(AddEmergencyContactScreen.id);
+                          context.router.pushNamed(AddEmergencyContactScreen.path);
                         },
                         showAddContactButton: true,
                       ),

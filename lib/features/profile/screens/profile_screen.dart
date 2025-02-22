@@ -1,17 +1,20 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:circle/features/auth/auth.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
+
 import '../../../components/components.dart';
 import '../../../core/core.dart';
 import '../../water/water.dart';
 import '../profile.dart';
 
+@RoutePage(name: ProfileScreen.name)
 class ProfileScreen extends ConsumerWidget {
-  static const String id = "profile";
+  static const String path = "/profile";
+  static const String name = "ProfileScreen";
   const ProfileScreen({super.key});
 
   @override
@@ -33,7 +36,7 @@ class ProfileScreen extends ConsumerWidget {
               const CustomAppBar(pageTitle: "Profile"),
               EditableAvatar(
                 onEditPressed: () {
-                  context.pushNamed(ProfileBasicInfoScreen.id);
+                  context.router.pushNamed(ProfileBasicInfoScreen.path);
                 },
                 imagePath: userProfile.photoUrl ?? "assets/images/memoji2.jpg",
               ),
@@ -113,7 +116,7 @@ class ProfileScreen extends ConsumerWidget {
                         const Spacer(),
                         IconButton(
                           onPressed: () {
-                            context.pushNamed(ProfileVitalsInfoScreen.id);
+                            context.router.pushNamed(ProfileVitalsInfoScreen.path);
                           },
                           icon: Icon(
                             FluentIcons.edit_24_regular,
@@ -128,7 +131,7 @@ class ProfileScreen extends ConsumerWidget {
                         Expanded(
                           child: VitalsItemCard(
                             onPressed: () {
-                              context.pushNamed(ProfileVitalsInfoScreen.id);
+                              context.router.pushNamed(ProfileVitalsInfoScreen.path);
                             },
                             label:
                                 "Height", //Todo:Create a store for height and weight logs.
@@ -160,7 +163,7 @@ class ProfileScreen extends ConsumerWidget {
                         Expanded(
                           child: VitalsItemCard(
                             onPressed: () {
-                              context.pushNamed(ProfileVitalsInfoScreen.id);
+                              context.router.pushNamed(ProfileVitalsInfoScreen.path);
                             },
                             label: "Weight",
                             value: userProfile.weight.toString(),
@@ -193,7 +196,7 @@ class ProfileScreen extends ConsumerWidget {
                         Expanded(
                           child: VitalsItemCard(
                             onPressed: () {
-                              context.pushNamed(WaterScreen.id);
+                              context.router.pushNamed(WaterScreen.path);
                             },
                             label: "Water",
                             value: "1200",

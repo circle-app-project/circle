@@ -1,10 +1,12 @@
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/components.dart';
 import 'components/crisis_history_monthly.dart';
-
+@RoutePage(name: CrisisLogsScreen.name)
 class CrisisLogsScreen extends StatelessWidget {
-  static const String id = "crisis_logs";
+  static const String path = "/crisis_logs";
+  static const String name = "CrisisLogsScreen";
   const CrisisLogsScreen({super.key});
 
   @override

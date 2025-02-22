@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:auto_route/annotations.dart';
 import 'package:circle/core/theme/constants.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,10 @@ import '../features/meds/meds.dart';
 import '../features/profile/profile.dart';
 import '../features/water/water.dart';
 
+@RoutePage(name: BottomNavBar.name)
 class BottomNavBar extends ConsumerStatefulWidget {
-  static const String id = "nav_bar";
+  static const String path = "/nav_bar";
+  static const String name = "BottomNavBar";
   const BottomNavBar({super.key});
 
   @override
@@ -28,19 +31,19 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
 
   final List<Widget> pages = [
     const HomeScreen(
-      key: PageStorageKey(HomeScreen.id),
+      key: PageStorageKey(HomeScreen .path),
     ),
     const WaterScreen(
-      key: PageStorageKey(WaterScreen.id),
+      key: PageStorageKey(WaterScreen .path),
     ),
     const EmergencyScreen(
-      key: PageStorageKey(EmergencyScreen.id),
+      key: PageStorageKey(EmergencyScreen .path),
     ),
     const MedsScreen(
-      key: PageStorageKey(MedsScreen.id),
+      key: PageStorageKey(MedsScreen .path),
     ),
     const ProfileScreen(
-      key: PageStorageKey(ProfileScreen.id),
+      key: PageStorageKey(ProfileScreen .path),
     ),
   ];
 

@@ -1,16 +1,19 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
+
 import '../../../components/bottom_nav_bar.dart';
 import '../../../components/components.dart';
 import '../../../core/core.dart';
 import '../../auth/auth.dart';
 import '../../water/water.dart';
 
+@RoutePage(name: ProfileMedicalInfoScreen.name)
 class ProfileMedicalInfoScreen extends ConsumerStatefulWidget {
-  static const String id = "medical_info";
+  static const String path = "/medical_info";
+  static const String name = "ProfileMedicalInfoScreen";
   final bool? isEditing;
   const ProfileMedicalInfoScreen({super.key, this.isEditing = false});
 
@@ -82,7 +85,7 @@ class _ProfileMedicalInfoScreenState
                 AppButton(
                   isChipButton: true,
                   onPressed: () {
-                    context.goNamed(BottomNavBar.id);
+                    context.router.pushNamed(BottomNavBar.path);
                   },
                   label: "Skip",
                   buttonType: ButtonType.text,
@@ -218,7 +221,7 @@ class _ProfileMedicalInfoScreenState
                       message: "Profile Updated",
                       mode: SnackBarMode.success,
                     );
-                    context.pushNamed(SuggestedWaterDailyGoalScreen.id);
+                    context.router.pushNamed(SuggestedWaterDailyGoalScreen.path);
                   }
                 }
               },

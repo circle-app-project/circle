@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,8 +16,10 @@ import 'charts/line_chart_widget.dart';
 import 'components/components.dart';
 import 'components/water_volume_selector.dart';
 
+@RoutePage(name: WaterScreen.name)
 class WaterScreen extends ConsumerStatefulWidget {
-  static const String id = "water";
+  static const String path = "/water";
+  static const String name = "WaterScreen";
   const WaterScreen({super.key});
 
   @override

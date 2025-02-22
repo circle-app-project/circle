@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:auto_route/annotations.dart';
 import 'package:circle/core/extensions/date_time_formatter.dart';
 import 'package:circle/features/meds/models/dose.dart';
 import 'package:circle/features/meds/screens/components/dose_bottomsheet.dart';
@@ -23,8 +24,11 @@ import '../models/medication.dart';
 import '../providers/med_notifier.dart';
 
 ///Todo: Animate things on and off the screen more elegantly
+
+@RoutePage(name: AddMedsScreen.name)
 class AddMedsScreen extends ConsumerStatefulWidget {
-  static const String id = "add_meds";
+  static const String path = "/add_meds";
+  static const String name = "AddMedsScreen";
   final bool isEditing;
   const AddMedsScreen({super.key, this.isEditing = false});
 

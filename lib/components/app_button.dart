@@ -88,7 +88,7 @@ class AppButton extends StatelessWidget {
         break;
 
       case ButtonType.outline:
-        labelColor = color ?? theme.colorScheme.primary;
+        labelColor = color ?? theme.colorScheme.onSurface;
 
         style = ElevatedButton.styleFrom(
           padding: EdgeInsets.symmetric(

@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -5,8 +6,10 @@ import 'package:gap/gap.dart';
 import '../../../components/components.dart';
 import '../profile.dart';
 
+@RoutePage(name: SettingsScreen.name)
 class SettingsScreen extends StatelessWidget {
-  static const String id = "settings";
+  static const String path = "/settings";
+  static const String name = "SettingsScreen";
   const SettingsScreen({super.key});
 
   @override

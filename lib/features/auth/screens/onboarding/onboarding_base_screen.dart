@@ -1,12 +1,14 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+
 import 'package:mesh_gradient/mesh_gradient.dart';
 
 import '../../auth.dart';
-
+@RoutePage(name: OnboardingBaseScreen.name)
 class OnboardingBaseScreen extends ConsumerStatefulWidget {
-  static const String id = "onboarding";
+  static const String path = "/onboarding";
+  static const String name = "OnboardingBaseScreen";
   const OnboardingBaseScreen({super.key});
 
   @override
@@ -157,7 +159,7 @@ class _OnboardingBaseScreenState extends ConsumerState<OnboardingBaseScreen> {
               }
               if (currentPageIndex == onboardingInfo.length - 1) {
                 //go to sign in
-                context.pushNamed(GoogleSignInScreen.id);
+                context.router.pushNamed(GoogleSignInScreen.path);
               }
             }),
           ),

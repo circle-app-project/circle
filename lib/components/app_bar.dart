@@ -1,9 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:circle/core/core.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
+
 
 class CustomAppBar extends StatelessWidget {
   final String pageTitle;
@@ -36,7 +37,7 @@ class CustomAppBar extends StatelessWidget {
                 onPressed: () {
                   HapticFeedback.mediumImpact();
                   Feedback.forTap(context);
-                  context.pop();
+                  context.router.back();
                 },
                 icon: const Icon(FluentIcons.arrow_left_24_regular),
               ),

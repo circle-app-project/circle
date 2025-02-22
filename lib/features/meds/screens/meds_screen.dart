@@ -1,15 +1,17 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
+
 import '../../../components/components.dart';
 import '../../../core/core.dart';
 import '../meds.dart';
 
-
+@RoutePage(name: MedsScreen.name)
 class MedsScreen extends StatelessWidget {
-  static const String id = "meds";
+  static const String path = "/meds";
+  static const String name = "MedsScreen";
   const MedsScreen({super.key});
 
   @override
@@ -48,7 +50,7 @@ class MedsScreen extends StatelessWidget {
                   AppButton(
                     icon: FluentIcons.add_24_regular,
                     onPressed: () {
-                      context.pushNamed(AddMedsScreen.id);
+                      context.router.pushNamed(AddMedsScreen.path);
                       // showAdaptiveDialog(
                       //   context: context,
                       //   builder: (context) => SicklerAlertDialog(
