@@ -1,14 +1,17 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
+
 import '../../../components/components.dart';
 import '../../../core/core.dart';
 import '../../auth/auth.dart';
 import '../profile.dart';
 
+@RoutePage(name: ProfileBasicInfoScreen.name)
 class ProfileBasicInfoScreen extends ConsumerStatefulWidget {
-  static const String id = "basic_info";
+  static const String path = "/basic_info";
+  static const String name = "ProfileBasicInfoScreen";
   final bool? isEditing;
 
   const ProfileBasicInfoScreen({super.key, this.isEditing = false});
@@ -226,7 +229,7 @@ class _ProfileBasicInfoScreenState
                               mode: SnackBarMode.error,
                             );
                           }else{
-                            context.pushNamed(ProfileVitalsInfoScreen.id);
+                            context.router.pushNamed(ProfileVitalsInfoScreen.path);
                           }
 
                         }

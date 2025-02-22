@@ -1,14 +1,17 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
+
 
 import '../../../components/components.dart';
 import '../meds.dart';
 
+@RoutePage(name: MedsDetailsScreen.name)
 class MedsDetailsScreen extends StatelessWidget {
-  static const String id = "meds_details";
+  static const String path = "/meds_details";
+  static const String name = "MedsDetailsScreen";
   const MedsDetailsScreen({super.key});
 
   ///Todo: Add more medication detail here, like the does, frequency, and stuff, reference Apple Health
@@ -74,7 +77,7 @@ class MedsDetailsScreen extends StatelessWidget {
             const Gap(24),
             AppButton(
               onPressed: () {
-                context.pushNamed(AddMedsScreen.id);
+                context.router.pushNamed(AddMedsScreen.path);
               },
               label: "Edit Medication",
               icon: FluentIcons.edit_24_regular,

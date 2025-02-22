@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -5,8 +6,10 @@ import 'package:circle/core/core.dart';
 
 import '../../../components/components.dart';
 
+@RoutePage(name: WaterEmptyScreen.name)
 class WaterEmptyScreen extends StatefulWidget {
-  static const String id = "water_goal_empty";
+  static const String path = "/water_goal_empty";
+  static const String name = "WaterEmptyScreen";
   const WaterEmptyScreen({super.key});
 
   @override

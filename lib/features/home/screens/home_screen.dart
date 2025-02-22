@@ -1,7 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
+
 import '../../../core/core.dart';
 import '../../auth/auth.dart';
 import '../../emergency/emergency.dart';
@@ -9,8 +10,10 @@ import '../../profile/profile.dart';
 import '../../water/water.dart';
 import '../home.dart';
 
+@RoutePage(name: HomeScreen.name)
 class HomeScreen extends ConsumerStatefulWidget {
-  static const String id = "home";
+  static const String path = "/home";
+  static const String name = "HomeScreen";
   const HomeScreen({super.key});
 
   @override
@@ -82,7 +85,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     splashFactory: InkSparkle.splashFactory,
                     borderRadius: BorderRadius.circular(kPadding64),
                     onTap: () {
-                      context.pushNamed(ProfileScreen.id);
+                      context.router.pushNamed(ProfileScreen.path);
                     },
                     child: CircleAvatar(
                       backgroundImage: user.photoUrl != null
@@ -103,7 +106,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   percentageCompleted: percentComplete,
                   totalToday: totalToday.toInt(),
                   onPressed: () {
-                    context.pushNamed(WaterScreen.id);
+                    context.router.pushNamed(WaterScreen.path);
                   },
                   unit: Units.millilitres.symbol),
               const Gap(kPadding32),
@@ -115,13 +118,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               // const Gap(kPadding16),
               // GestureDetector(
               //     onTap: () {
-              //       context.goNamed(MedsScreen.id);
+              //       context.goNamed(MedsScreen.path);
               //     },
               //     child: const MedsReminderCard()),
               const Gap(kPadding16),
               EmergencySharingCard(
                 onPressed: () {
-                  context.pushNamed(EmergencyScreen.id);
+                  context.router.pushNamed(EmergencyScreen.path);
                 },
               ),
               const SizedBox(

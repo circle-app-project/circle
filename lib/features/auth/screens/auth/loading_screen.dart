@@ -1,14 +1,16 @@
 import 'dart:developer';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import '../../../../components/bottom_nav_bar.dart';
-import '../../../profile/profile.dart';
 import '../../auth.dart';
+import 'package:circle/core/routes/routes.gr.dart' as route;
 
+
+@RoutePage(name: LoadingScreen.name)
 class LoadingScreen extends ConsumerStatefulWidget {
-  static const id = "loading_screen";
+  static const String name = "LoadingScreen";
+  static const String path = "/loading";
   const LoadingScreen({super.key});
 
   @override
@@ -51,20 +53,21 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen> {
     final bool isOnboardingComplete = userPreferences.isOnboarded;
     final bool isLoggedIn = user.isNotEmpty;
     if (context.mounted) {
+      //Todo: Add logs to this page
       if (isLoggedIn) {
         if (!isOnboardingComplete) {
           ///not onboarded
-          context.goNamed(ProfileBasicInfoScreen.id);
+          context.router.popAndPush(route.ProfileBasicInfoScreen());
         } else {
           ///Logged in and onboarded
-          context.goNamed(BottomNavBar.id);
+          context.router.popAndPush(const route.BottomNavBar());
         }
       } else {
         ///Is not Logged In
         if (isFirstTime) {
-          context.goNamed(OnboardingBaseScreen.id);
+          context.router.popAndPush(const route.OnboardingBaseScreen());
         } else {
-          context.goNamed(GoogleSignInScreen.id);
+          context.router.popAndPush(const route.GoogleSignInScreen());
         }
       }
     }

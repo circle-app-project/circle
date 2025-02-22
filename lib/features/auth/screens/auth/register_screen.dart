@@ -1,16 +1,18 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
+
 import '../../../../components/bottom_nav_bar.dart';
 import '../../../../components/components.dart';
 import '../../../../core/core.dart';
 import '../../../profile/profile.dart';
 import '../../auth.dart';
-
+@RoutePage(name: RegisterScreen.name)
 class RegisterScreen extends ConsumerStatefulWidget {
-  static const String id = "register";
+  static const String path = "/register";
+  static const String name = "RegisterScreen";
   const RegisterScreen({super.key});
 
   @override
@@ -213,14 +215,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                       updateRemote: true,
                                     );
                                     if (context.mounted) {
-                                      context.goNamed(AuthSuccessScreen.id);
+                                      context.router.pushNamed(AuthSuccessScreen.path);
                                     }
                                   } else {
                                     if (userPreferences.isOnboarded) {
-                                      context.goNamed(BottomNavBar.id);
+                                      context.router.pushNamed(BottomNavBar.path);
                                     } else {
-                                      context.goNamed(
-                                        ProfileBasicInfoScreen.id,
+                                      context.router.pushNamed(
+                                        ProfileBasicInfoScreen.path,
                                       );
                                     }
                                   }
@@ -248,9 +250,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             isChipButton: true,
                             buttonType: ButtonType.text,
                             onPressed: () {
-                              // context.pushReplacementNamed(SignInScreen.id);
+                              // context.pushReplacementNamed(SignInScreen.path);
 
-                              context.goNamed(SignInScreen.id);
+                              context.router.pushNamed(SignInScreen.path);
 
                               // Navigator.push(context, MaterialPageRoute(builder: (context)=> const SignInScreen()));
                             },

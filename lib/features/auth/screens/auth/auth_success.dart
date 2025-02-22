@@ -1,16 +1,18 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
+
 import 'package:springster/springster.dart';
 import '../../../../components/components.dart';
 import '../../../../core/core.dart';
 import '../../../profile/profile.dart';
 import '../../auth.dart';
-
+@RoutePage(name: AuthSuccessScreen.name)
 class AuthSuccessScreen extends ConsumerWidget {
-  static const id = "auth_success";
+  static const String path = "/auth_success";
+  static const String name = "AuthSuccessScreen";
   const AuthSuccessScreen({super.key});
 
   @override
@@ -103,7 +105,7 @@ class AuthSuccessScreen extends ConsumerWidget {
             const Spacer(),
             AppButton(
                   onPressed: () {
-                    context.goNamed(ProfileBasicInfoScreen.id);
+                    context.router.pushNamed(ProfileBasicInfoScreen.path);
                   },
                   label: "Continue",
                 )

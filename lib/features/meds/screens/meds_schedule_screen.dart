@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
@@ -7,8 +8,10 @@ import '../../../core/core.dart';
 import '../../profile/profile.dart';
 import '../meds.dart';
 
+@RoutePage(name: MedsScheduleScreen.name)
 class MedsScheduleScreen extends StatefulWidget {
-  static const String id = "meds_schedule";
+  static const String path = "/meds_schedule";
+  static const String name = "MedsScheduleScreen";
   const MedsScheduleScreen({super.key});
 
   @override

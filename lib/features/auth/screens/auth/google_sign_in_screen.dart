@@ -1,8 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
+
 import 'package:hugeicons/hugeicons.dart';
 import 'package:springster/springster.dart';
 
@@ -12,9 +13,10 @@ import '../../../../core/core.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../profile/profile.dart';
 import '../../auth.dart';
-
+@RoutePage(name: GoogleSignInScreen.name)
 class GoogleSignInScreen extends ConsumerStatefulWidget {
-  static const String id = "google_sign_in";
+  static const String path = "/google_sign_in";
+  static const String name = "GoogleSignInScreen";
   const GoogleSignInScreen({super.key});
 
   @override
@@ -93,13 +95,13 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
                               updateRemote: true,
                             );
                             if (context.mounted) {
-                              context.goNamed(AuthSuccessScreen.id);
+                              context.router.pushNamed(AuthSuccessScreen.path);
                             }
                           } else {
                             if (userPreferences.isOnboarded) {
-                              context.goNamed(BottomNavBar.id);
+                              context.router.pushNamed(BottomNavBar.path);
                             } else {
-                              context.goNamed(ProfileBasicInfoScreen.id);
+                              context.router.pushNamed(ProfileBasicInfoScreen.path);
                             }
                           }
                         }
@@ -121,7 +123,7 @@ class _SignInScreenState extends ConsumerState<GoogleSignInScreen> {
             AppButton(
                   buttonType: ButtonType.outline,
                   onPressed: () {
-                    context.pushNamed(SignInScreen.id);
+                    context.router.pushNamed(SignInScreen.path);
                   },
                   color: theme.colorScheme.onSurface,
                   icon: HugeIcons.strokeRoundedMail01,

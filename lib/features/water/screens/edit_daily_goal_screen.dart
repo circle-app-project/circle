@@ -1,11 +1,14 @@
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../../../components/components.dart';
 import '../../../core/core.dart';
 
+@RoutePage(name: EditDailyGoalScreen.name)
 class EditDailyGoalScreen extends StatefulWidget {
-  static const String id = "edit_daily_goal";
+  static const String path = "/edit_daily_goal";
+  static const String name = "EditDailyGoalScreen";
   const EditDailyGoalScreen({super.key});
 
   @override

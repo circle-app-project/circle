@@ -1,17 +1,21 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
+
 
 import '../../../components/components.dart';
 import '../../../core/core.dart';
 import '../../auth/auth.dart';
 import '../profile.dart';
 
+@RoutePage(name: ProfileVitalsInfoScreen.name)
 class ProfileVitalsInfoScreen extends ConsumerStatefulWidget {
-  static const String id = "vitals";
+  static const String path = "/vital_info";
+  static const String name = "ProfileVitalsInfoScreen";
+  
   final bool? isEditing;
   const ProfileVitalsInfoScreen({super.key, this.isEditing = false});
 
@@ -222,7 +226,7 @@ class _ProfileVitalsInfoScreenState
                                 mode: SnackBarMode.error,
                               );
                             } else {
-                              context.pushNamed(ProfileMedicalInfoScreen.id);
+                              context.router.pushNamed(ProfileMedicalInfoScreen.path);
                             }
                           }
                         }

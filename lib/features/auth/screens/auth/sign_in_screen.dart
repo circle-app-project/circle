@@ -1,16 +1,19 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
+
 import '../../../../components/bottom_nav_bar.dart';
 import '../../../../components/components.dart';
 import '../../../../core/core.dart';
 import '../../../profile/profile.dart';
 import '../../auth.dart';
 
+@RoutePage(name: SignInScreen.name)
 class SignInScreen extends ConsumerStatefulWidget {
-  static const String id = "sign_in";
+  static const String path = "/sign_in";
+  static const String name = "SignInScreen";
   const SignInScreen({super.key});
 
   @override
@@ -156,13 +159,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                 updateRemote: true,
                               );
                               if (context.mounted) {
-                                context.goNamed(AuthSuccessScreen.id);
+                                context.router.pushNamed(AuthSuccessScreen.path);
                               }
                             } else {
                               if (userPreferences.isOnboarded) {
-                                context.goNamed(BottomNavBar.id);
+                                context.router.pushNamed(BottomNavBar.path);
                               } else {
-                                context.goNamed(ProfileBasicInfoScreen.id);
+                                context.router.pushNamed(ProfileBasicInfoScreen.path);
                               }
                             }
                           }
@@ -188,7 +191,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                       isChipButton: true,
                       buttonType: ButtonType.text,
                       onPressed: () {
-                        context.goNamed(RegisterScreen.id);
+                        context.router.pushNamed(RegisterScreen.path);
                       },
                       label: "Create an Account",
                     ),

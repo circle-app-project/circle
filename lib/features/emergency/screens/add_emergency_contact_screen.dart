@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -5,8 +6,10 @@ import '../../../components/components.dart';
 import '../../../core/core.dart';
 import '../../meds/meds.dart';
 
+@RoutePage(name: AddEmergencyContactScreen.name)
 class AddEmergencyContactScreen extends StatefulWidget {
-  static const String id = "add_emergency_contact";
+  static const String path = "/add_emergency_contact";
+  static const String name = "AddEmergencyContactScreen";
   const AddEmergencyContactScreen({super.key});
 
   @override
