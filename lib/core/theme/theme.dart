@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:sprung/sprung.dart';
+import 'package:springster/springster.dart';
 
 import '../core.dart';
 
@@ -17,9 +17,9 @@ class AppThemeData {
     splashFactory: InkSparkle.splashFactory,
     expansionTileTheme: ExpansionTileThemeData(
       expansionAnimationStyle: AnimationStyle(
-        curve: Sprung.overDamped,
+        curve: Spring.defaultIOS.toCurve,
         duration: 500.ms,
-        reverseCurve: Sprung.overDamped,
+        reverseCurve: Spring.defaultIOS.toCurve,
         reverseDuration: 500.ms,
       ),
       shape: RoundedRectangleBorder(
@@ -33,13 +33,7 @@ class AppThemeData {
       childrenPadding: const EdgeInsets.only(
           left: kPadding16, right: kPadding16, bottom: kPadding8),
     ),
-    cardTheme: CardTheme(
-      color: AppColours.purple95,
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
-    ),
+
     fontFamily: 'Plus Jakarta Sans',
     textTheme: TextTheme(
       displayLarge:
@@ -166,9 +160,9 @@ class AppThemeData {
     expansionTileTheme: ExpansionTileThemeData(
 
         expansionAnimationStyle: AnimationStyle(
-          curve: Sprung.overDamped,
+          curve: Spring.defaultIOS.toCurve,
           duration: 500.ms,
-          reverseCurve: Sprung.overDamped,
+          reverseCurve: Spring.defaultIOS.toCurve,
           reverseDuration: 500.ms,
 
       ),
@@ -204,13 +198,7 @@ class AppThemeData {
       }),
       trackOutlineWidth: const WidgetStatePropertyAll<double>(0),
     ),
-    cardTheme: CardTheme(
-      color: AppColours.neutral10,
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
-    ),
+
     fontFamily: 'Plus Jakarta Sans',
     textTheme: TextTheme(
       displayLarge:
