@@ -207,6 +207,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/google.svg
   String get google => 'assets/svg/google.svg';
 
+  /// File path: assets/svg/google_logo_color.svg
+  String get googleLogoColor => 'assets/svg/google_logo_color.svg';
+
   /// File path: assets/svg/heart-filled.svg
   String get heartFilled => 'assets/svg/heart-filled.svg';
 
@@ -345,6 +348,7 @@ class $AssetsSvgGen {
         eye,
         filter,
         google,
+        googleLogoColor,
         heartFilled,
         heart,
         homeAltFilled,

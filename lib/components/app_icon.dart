@@ -11,28 +11,45 @@ class AppIcon extends StatelessWidget {
   final String? iconPath;
   final Color? color;
   final double? size;
-  const AppIcon({super.key, this.icon, this.iconPath, this.color, this.size = 24.0});
+  final bool? iconIgnoresColor;
+  const AppIcon({
+    super.key,
+    this.icon,
+    this.iconPath,
+    this.color,
+    this.size = 24.0,
+    this.iconIgnoresColor,
+  });
 
   @override
   Widget build(BuildContext context) {
     if (icon == null && iconPath == null) {
       throw ArgumentError(
-          "Must add either and `icon` or an `iconPath` property");
+        "Must add either and `icon` or an `iconPath` property",
+      );
     }
     if (icon != null && iconPath != null) {
       throw ArgumentError(
-          "Cannot set both an `icon` and an `iconPath` property simultaneously, consider removing one");
+        "Cannot set both an `icon` and an `iconPath` property simultaneously, consider removing one",
+      );
     }
     final ThemeData theme = Theme.of(context);
     return icon != null
         ? Icon(
-            icon,
-            color: color ?? theme.iconTheme.color,
-            size: size,
-          )
-        : SvgPicture.asset(iconPath ?? "",
-            width: size,
-            colorFilter: ColorFilter.mode(
-                color ?? theme.iconTheme.color!, BlendMode.srcIn));
+          icon,
+          color: (iconIgnoresColor!=null && iconIgnoresColor!) ? null : color ?? theme.colorScheme.onSurface,
+          size: size,
+        )
+        : SvgPicture.asset(
+          iconPath ?? "",
+          width: size,
+          colorFilter:
+          (iconIgnoresColor!=null && iconIgnoresColor!)
+                  ? null
+                  : ColorFilter.mode(
+                    color ?? theme.colorScheme.onSurface,
+                    BlendMode.srcIn,
+                  ),
+        );
   }
 }
