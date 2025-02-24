@@ -225,7 +225,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(8, 3148493177410260898),
       name: 'Medication',
-      lastPropertyId: const obx_int.IdUid(19, 3614142052002170477),
+      lastPropertyId: const obx_int.IdUid(20, 7010890984311908694),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -314,7 +314,7 @@ final _entities = <obx_int.ModelEntity>[
             type: 10,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(19, 3614142052002170477),
+            id: const obx_int.IdUid(20, 7010890984311908694),
             name: 'createdAt',
             type: 10,
             flags: 0)
@@ -548,7 +548,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
         3097083884408393914,
         3791689441908872094,
         7290586427487009004,
-        2133907886604377565
+        2133907886604377565,
+        3614142052002170477
       ],
       retiredRelationUids: const [3092819797569954146, 2539627836723066308],
       modelVersion: 5,
@@ -835,7 +836,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final dbStreakOffset = object.dbStreak == null
               ? null
               : fbb.writeString(object.dbStreak!);
-          fbb.startTable(20);
+          fbb.startTable(21);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, nameOffset);
           fbb.addOffset(2, descriptionOffset);
@@ -853,7 +854,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           fbb.addBool(15, object.isDeleted);
           fbb.addBool(16, object.isSynced);
           fbb.addInt64(17, object.updatedAt?.millisecondsSinceEpoch);
-          fbb.addInt64(18, object.createdAt?.millisecondsSinceEpoch);
+          fbb.addInt64(19, object.createdAt?.millisecondsSinceEpoch);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -867,7 +868,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final updatedAtValue =
               const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 38);
           final createdAtValue =
-              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 40);
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 42);
           final idParam =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           final nameParam = const fb.StringReader(asciiOptimization: true)

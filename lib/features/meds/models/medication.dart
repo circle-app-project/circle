@@ -62,7 +62,6 @@ class Medication extends Equatable {
   /// A warning message related to the medication (e.g., "Take with food").
   final String? warningMessage;
 
-
   /// The start date for taking the medication.
   @Property(type: PropertyType.date)
   final DateTime? startDate;
@@ -93,7 +92,6 @@ class Medication extends Equatable {
   final DateTime? updatedAt;
   @Property(type: PropertyType.date)
   final DateTime? createdAt;
-
 
   /// A to-many relationship to store streaks of medication adherence.
   final ToMany<MedActivityRecord> activityRecord = ToMany<MedActivityRecord>();
@@ -133,10 +131,8 @@ class Medication extends Equatable {
 
   /// Sets the `Frequency` from a JSON string.
   set dbStreak(String? value) {
-    streak =
-    value != null ? Streak.fromMap(jsonDecode(value)) : Streak.empty;
+    streak = value != null ? Streak.fromMap(jsonDecode(value)) : null;
   }
-
 
   Medication({
     this.id = 0,
@@ -178,6 +174,7 @@ class Medication extends Equatable {
 
     bool? isDeleted,
     bool? isSynced,
+
     DateTime? updatedAt,
   }) {
     final medication = Medication(
@@ -194,11 +191,12 @@ class Medication extends Equatable {
       shouldRemind: shouldRemind ?? this.shouldRemind,
       reminderMessage: reminderMessage ?? this.reminderMessage,
       warningMessage: warningMessage ?? this.warningMessage,
-
       isDeleted: isDeleted ?? this.isDeleted,
       isSynced: isSynced ?? this.isSynced,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updatedAt: updatedAt ?? DateTime.now(),
+      createdAt: createdAt,
     );
+
     medication.activityRecord.addAll(activityRecord ?? this.activityRecord);
     return medication;
   }
@@ -207,12 +205,17 @@ class Medication extends Equatable {
     /// Check if the streak already exists
 
     bool activityExists =
-        activityRecord.where((s) => s.date.isSameDate(newActivity.date)).isNotEmpty;
+        activityRecord
+            .where((s) => s.date.isSameDate(newActivity.date))
+            .isNotEmpty;
+
     /// If it does, update the existing streak
 
     /// If it doesn't, add the new streak
     if (activityExists) {
-      int index = activityRecord.indexWhere((s) => s.date.isSameDate(newActivity.date));
+      int index = activityRecord.indexWhere(
+        (s) => s.date.isSameDate(newActivity.date),
+      );
 
       /// Get the index of the existing streak
       /// Remove the existing streak
@@ -269,8 +272,10 @@ class Medication extends Equatable {
       streak: Streak.fromMap(map['streak']),
       isDeleted: map['isDeleted'],
       isSynced: map['isSynced'],
-      updatedAt: map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null,
-      createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
+      updatedAt:
+          map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null,
+      createdAt:
+          map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
     );
   }
 
