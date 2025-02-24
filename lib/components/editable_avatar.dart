@@ -1,5 +1,5 @@
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 class EditableAvatar extends StatelessWidget {
   final VoidCallback onEditPressed;
@@ -18,17 +18,20 @@ class EditableAvatar extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: radius ?? 64,
-          backgroundImage:  NetworkImage(imagePath), ///Todo: replace with cached network image eventually
+          backgroundImage:  NetworkImage(imagePath),///Todo: replace with cached network image eventually
+          backgroundColor: theme.colorScheme.surfaceContainerLow,
         ),
         Positioned(
           right: 0,
           bottom: 0,
           child: IconButton.filled(
-              color: theme.colorScheme.primary,
+              color: theme.colorScheme.onSurface,
               onPressed: onEditPressed,
-              icon: const Icon(
-                FluentIcons.edit_24_regular,
-                color: Colors.white,
+              style: IconButton.styleFrom(
+                backgroundColor: theme.colorScheme.onSurface),
+              icon:  Icon(
+                HugeIcons.strokeRoundedPencilEdit02,
+                color: theme.colorScheme.onSurface
               )),
         )
       ],

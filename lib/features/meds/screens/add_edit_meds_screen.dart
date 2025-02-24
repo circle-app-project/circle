@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:circle/core/extensions/date_time_formatter.dart';
 import 'package:circle/features/meds/models/dose.dart';
 import 'package:circle/features/meds/screens/components/dose_bottomsheet.dart';
@@ -30,7 +30,12 @@ class AddMedsScreen extends ConsumerStatefulWidget {
   static const String path = "/add_meds";
   static const String name = "AddMedsScreen";
   final bool isEditing;
-  const AddMedsScreen({super.key, this.isEditing = false});
+  final Medication? medicationToEdit;
+  const AddMedsScreen({
+    super.key,
+    this.isEditing = false,
+    this.medicationToEdit,
+  });
 
   @override
   ConsumerState<AddMedsScreen> createState() => _AddMedsScreenState();
@@ -55,9 +60,9 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
   /// Fields to be created by the medication
   bool isTakingMedsPermanently = false;
   bool shouldRemind = true;
-  MedicationType selectedMedicationType = MedicationType.tabletsPills;
+  MedicationType selectedMedicationType = MedicationType.tablet;
   Dose? selectedDose;
-  Frequency selectedFrequency = Frequency.empty;
+  // Frequency selectedFrequency = Frequency.empty;
   DateTime? selectedStartDate = DateTime.now();
   Duration? selectedDuration;
   bool showSelectedDuration = false;
@@ -69,14 +74,12 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
     warningMessageController.dispose();
     startDateController.dispose();
     reminderMessageController.dispose();
-
     super.dispose();
   }
 
   @override
   void initState() {
     startDateController.text = selectedStartDate!.formatDate(context);
-
     defaultDoses = List.generate(
       defaultDoseValues.length,
       (index) => Dose(
@@ -84,6 +87,38 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
         unit: Units.milligram,
       ),
     );
+
+    if (widget.isEditing && widget.medicationToEdit != null) {
+      selectedStartDate = widget.medicationToEdit?.startDate;
+      nameController.text = widget.medicationToEdit?.name ?? "";
+      descriptionController.text = widget.medicationToEdit?.description ?? "";
+      selectedMedicationType =
+          widget.medicationToEdit?.type ?? MedicationType.tablet;
+      selectedDose = widget.medicationToEdit?.dose;
+      selectedDuration = Duration(
+        days: widget.medicationToEdit?.durationDays ?? 0,
+      );
+      isTakingMedsPermanently = widget.medicationToEdit?.isPermanent ?? false;
+      selectedTimeToTakeMedication =
+          widget.medicationToEdit?.frequency?.times ?? [];
+      shouldRemind = widget.medicationToEdit?.shouldRemind ?? true;
+      warningMessageController.text =
+          widget.medicationToEdit?.warningMessage ?? "";
+      reminderMessageController.text =
+          widget.medicationToEdit?.reminderMessage ?? "";
+
+      /// Add the selected duration on dose to the list of default doses and durations, then make them sets
+      defaultDoses.insert(defaultDoseValues.length - 1, selectedDose!);
+      defaultDoses.toSet().toList(); /// Convert to set to remove duplicates then back to list
+
+      defaultDurationValues.insert(
+        defaultDurationValues.length - 1,
+        selectedDuration!.inDays,
+      );
+
+      defaultDurationValues.toSet().toList(); /// Convert to set to remove duplicates then back to list
+    }
+
     super.initState();
   }
 
@@ -152,508 +187,588 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: kPadding16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CustomAppBar(
-                pageTitle:
-                    widget.isEditing ? "Edit\nMedication" : "Add\nMedication",
-                actions: [
-                  AppButton(
-                    isChipButton: true,
-                    onPressed: () {
-                      //Todo: Skip Page
-                    },
-                    label: "Skip",
-                    buttonType: ButtonType.text,
-                  ),
-                ],
-              ),
-
-              const Gap(kPadding16),
-              Row(
-                children: [
-                  const AppIcon(
-                    icon: HugeIcons.strokeRoundedFile01,
-                  ), const Gap(kPadding8),
-                  Text("General Information", style: theme.textTheme.titleMedium),
-                ],
-              ),
-              const Gap(kPadding16),
-              Text("Name", style: theme.textTheme.bodyMedium),
-              const Gap(kPadding12),
-              TextFormField(
-                controller: nameController,
-                decoration: AppInputDecoration.inputDecoration(
-                  context,
-                ).copyWith(hintText: "Hydroxyl Urea"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please provide a medication name";
-                  } else {
-                    return null;
-                  }
-                },
-              ),
-              const Gap(kPadding16),
-              Text("Description", style: theme.textTheme.bodyMedium),
-              const Gap(kPadding12),
-              TextFormField(
-                maxLines: 3,
-                controller: descriptionController,
-                decoration: AppInputDecoration.inputDecoration(
-                  context,
-                ).copyWith(hintText: "Description"),
-              ),
-              const Gap(kPadding16),
-
-              Divider(color: theme.colorScheme.surfaceContainer,)
-              ,
-
-              const Gap(kPadding16),
-              Row(
-                children: [
-                  const AppIcon(
-                    icon: FluentIcons.pill_24_regular,
-                  ), const Gap(kPadding8),
-                  Text("Type", style: theme.textTheme.titleMedium),
-                ],
-              ),
-
-              const Gap(kPadding16),
-              const Text("What type of medication are you taking?"),
-              const Gap(kPadding16),
-
-              GenericSelector<MedicationType, SelectableCircularButton>(
-                initialSelection: const [MedicationType.tabletsPills],
-                onItemSelected: (selectedType) {
-                  log(
-                    "Selected medication type is $selectedType",
-                    name: "Add Medication Screen",
-                  );
-
-                  setState(() {
-                    selectedMedicationType = selectedType.first;
-                  });
-                },
-                items: MedicationType.values,
-                layout: SelectorLayout.grid,
-                childAspectRatio: .8,
-
-                selectableWidgetBuilder: (item, isSelected, onSelected) {
-                  String label = item.label;
-
-                  if (item == MedicationType.liquids ||
-                      item == MedicationType.droplets) {
-                    return SelectableCircularButton(
-                      onPressed: onSelected,
-                      isItemSelected: isSelected,
-                      label: label,
-                      // iconPath: item.iconPath,
-                      iconPath:
-                          isSelected ? item.iconPathFilled : item.iconPath,
-                    );
-                  } else {
-                    return SelectableCircularButton(
-                      onPressed: onSelected,
-                      isItemSelected: isSelected,
-                      label: label,
-                      icon: isSelected ? item.iconFilled : item.icon,
-                    );
-                  }
-                },
-              ),
-
-              const Gap(24),
-              const Text("What's the dose of your medication "),
-              const Gap(12),
-              GenericSelector<Dose, SelectableChip>(
-                wrapSpacing: 8,
-                wrapRunSpacing: 6,
-                layout: SelectorLayout.wrap,
-                isMultiSelectMode: false,
-                onItemSelected: (List<Dose> dosesSelected) {
-                  log(
-                    "Selected medication dose is ${dosesSelected.first.dose}",
-                    name: "Add Medication Screen",
-                  );
-                  selectedDose = dosesSelected.first;
-                  setState(() {});
-                },
-                initialSelection: [defaultDoses.first],
-                items: defaultDoses,
-
-                selectableWidgetBuilder: (item, isSelected, onSelected) {
-                  /// Will create an empty dose of 0 to represent the case of a custom dose
-                  /// Will check for that dose and properly launch the dose picker.
-
-                  return SelectableChip(
-                    icon: item.dose == 0 ? FluentIcons.add_24_regular : null,
-                    label:
-                        item.dose == 0
-                            ? "Custom"
-                            : item.dose.toStringAsFixed(0) + item.unit.symbol,
-                    onPressed: () async {
-                      if (item.dose == 0) {
-                        _selectDoses();
-                      }
-                      onSelected.call();
-                    },
-                    isItemSelected: isSelected,
-                  );
-                },
-              ),
-
-              const Gap(24),
-
-              const Gap(kPadding16),
-              Divider(color: theme.colorScheme.surfaceContainer),
-              /// ---------------------------------------------///
-              const Gap(kPadding16),
-              /// Timeline
-              Row(
-                children: [
-                  const AppIcon(
-                    icon: HugeIcons.strokeRoundedCalendar03,
-                  ), const Gap(kPadding8),
-                  Text("Timeline & Schedule", style: theme.textTheme.titleMedium),
-                ],
-              ),
-              const Gap(kPadding16),
-
-              Text("Start Date", style: theme.textTheme.bodyMedium),
-              const Gap(kPadding8),
-              TextFormField(
-                controller: startDateController,
-                onTap: () async {
-                  /// Show Cupertino Date Picker
-                  if (Platform.isIOS) {
-                    showCupertinoModalPopup(
-                      context: context,
-                      builder: (context) {
-                        return CupertinoDatePickerCustomized(
-                          onDateTimeChanged: (DateTime value) {
-                            setState(() {
-                              selectedStartDate = value;
-                              startDateController.text = selectedStartDate!
-                                  .formatDate(context);
-                            });
-                          },
-                        );
-                      },
-                    );
-                  } else {
-                    final DateTime? pickedDate = await showDatePicker(
-                      initialDatePickerMode: DatePickerMode.day,
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime(2100),
-                    );
-                    setState(() {
-                      selectedStartDate = pickedDate;
-                      startDateController.text =
-                          selectedStartDate != null
-                              ? selectedStartDate!.formatDate(context)
-                              : "";
-                    });
-                  }
-                },
-                decoration: AppInputDecoration.inputDecoration(
-                  context,
-                ).copyWith(
-                  hintText: "Select start date",
-                  suffixIcon: const Icon(HugeIcons.strokeRoundedCalendar03, size: 24),
-                ),
-              ),
-
-              const Gap(kPadding16),
-              if (!isTakingMedsPermanently) ...[
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("Duration"),
-                ),
-                const Gap(kPadding16),
-                SizedBox(
-                  width: double.infinity,
-                  child: GenericSelector<int, SelectableChip>(
-                    wrapSpacing: 8,
-                    wrapRunSpacing: 6,
-                    layout: SelectorLayout.wrap,
-                    onItemSelected: (List<int> duration) {
-                      selectedDuration = Duration(days: duration.first);
-                    },
-                    items: defaultDurationValues,
-
-                    selectableWidgetBuilder: (item, isSelected, onSelected) {
-                      String label = "$item days";
-                      if (item >= 14) {
-                        label = "${(item / 7).round().toInt()} weeks";
-                      }
-                      if (item > 30) {
-                        label = "${(item / 30).round().toInt()} months";
-                      }
-                      if (item == 0) {
-                        label = "Custom";
-                      }
-
-                      return SelectableChip(
-                        icon: item == 0 ? FluentIcons.add_24_regular : null,
-                        label: label,
-                        onPressed: () {
-                          if (item == 0) {
-                            _selectDuration();
-                          }
-                          onSelected.call();
-                        },
-                        isItemSelected: isSelected,
-                      );
-                    },
-                  ),
-                ),
-
-                if (selectedDuration != null && showSelectedDuration) ...[
-                  const Gap(kPadding16),
-                  EmphasizedContainer(
-                    label: "Selected Duration",
-                    value: "${selectedDuration?.inDays} days",
-                  ),
-                ],
-                const Gap(kPadding16),
-              ],
-              Row(
-                children: [
-                  const Text("I am taking this medication permanently"),
-                  const Spacer(),
-                  CupertinoSwitch(
-                    activeTrackColor: theme.colorScheme.primary,
-                    value: isTakingMedsPermanently,
-                    onChanged: (value) {
-                      setState(() {
-                        isTakingMedsPermanently = value;
-                        selectedDuration = null;
-                      });
-                    },
-                  ),
-                ],
-              ),
-
-              const Gap(kPadding16),
-
-              /// When do you take your medication
-              Row(
-                children: [
-                  const Text("When do you take your medication?"),
-                  const Spacer(),
-                  FittedBox(
-                    child: AppButton(
-                      buttonType: ButtonType.text,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomAppBar(
+                  pageTitle:
+                      widget.isEditing ? "Edit\nMedication" : "Add\nMedication",
+                  actions: [
+                    AppButton(
                       isChipButton: true,
+                      onPressed: () {
+                        //Todo: Skip Page
+                      },
+                      label: "Skip",
+                      buttonType: ButtonType.text,
+                    ),
+                  ],
+                ),
+
+                const Gap(kPadding16),
+                Row(
+                  children: [
+                    const AppIcon(icon: HugeIcons.strokeRoundedFile01),
+                    const Gap(kPadding8),
+                    Text(
+                      "General Information",
+                      style: theme.textTheme.titleMedium,
+                    ),
+                  ],
+                ),
+                const Gap(kPadding16),
+                Text("Name", style: theme.textTheme.bodyMedium),
+                const Gap(kPadding12),
+                TextFormField(
+                  controller: nameController,
+                  decoration: AppInputDecoration.inputDecoration(
+                    context,
+                  ).copyWith(hintText: "Hydroxyl Urea"),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please provide a medication name";
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+                const Gap(kPadding16),
+                Text("Description", style: theme.textTheme.bodyMedium),
+                const Gap(kPadding12),
+                TextFormField(
+                  maxLines: 3,
+                  controller: descriptionController,
+                  decoration: AppInputDecoration.inputDecoration(
+                    context,
+                  ).copyWith(hintText: "Description"),
+                ),
+                const Gap(kPadding16),
+
+                Divider(color: theme.colorScheme.surfaceContainer),
+
+                const Gap(kPadding16),
+                Row(
+                  children: [
+                    const AppIcon(icon: FluentIcons.pill_24_regular),
+                    const Gap(kPadding8),
+                    Text("Type", style: theme.textTheme.titleMedium),
+                  ],
+                ),
+
+                const Gap(kPadding16),
+                const Text("What type of medication are you taking?"),
+                const Gap(kPadding16),
+
+                GenericSelector<MedicationType, SelectableCircularButton>(
+                  initialSelection:
+                      widget.isEditing
+                          ? [
+                            widget.medicationToEdit?.type ??
+                                MedicationType.tablet,
+                          ]
+                          : const [MedicationType.tablet],
+                  onItemSelected: (selectedType) {
+                    log(
+                      "Selected medication type is $selectedType",
+                      name: "Add Medication Screen",
+                    );
+
+                    setState(() {
+                      selectedMedicationType = selectedType.first;
+                    });
+                  },
+                  items: MedicationType.values,
+                  layout: SelectorLayout.grid,
+                  childAspectRatio: .8,
+
+                  selectableWidgetBuilder: (item, isSelected, onSelected) {
+                    String label = item.label;
+
+                    if (item == MedicationType.liquid ||
+                        item == MedicationType.droplet) {
+                      return SelectableCircularButton(
+                        onPressed: onSelected,
+                        isItemSelected: isSelected,
+                        label: label,
+                        // iconPath: item.iconPath,
+                        iconPath:
+                            isSelected ? item.iconPathFilled : item.iconPath,
+                      );
+                    } else {
+                      return SelectableCircularButton(
+                        onPressed: onSelected,
+                        isItemSelected: isSelected,
+                        label: label,
+                        icon: isSelected ? item.iconFilled : item.icon,
+                      );
+                    }
+                  },
+                ),
+
+                const Gap(24),
+                const Text("What's the dose of your medication "),
+                const Gap(12),
+                GenericSelector<Dose, SelectableChip>(
+                  wrapSpacing: 8,
+                  wrapRunSpacing: 6,
+                  layout: SelectorLayout.wrap,
+                  isMultiSelectMode: false,
+                  onItemSelected: (List<Dose> dosesSelected) {
+                    log(
+                      "Selected medication dose is ${dosesSelected.first.dose}",
+                      name: "Add Medication Screen",
+                    );
+                    selectedDose = dosesSelected.first;
+                    setState(() {});
+                  },
+                  initialSelection:
+                      widget.isEditing
+                          ? [
+                            widget.medicationToEdit?.dose ?? defaultDoses.first,
+                          ]
+                          : [defaultDoses.first],
+                  items: defaultDoses,
+
+                  selectableWidgetBuilder: (item, isSelected, onSelected) {
+                    /// Will create an empty dose of 0 to represent the case of a custom dose
+                    /// Will check for that dose and properly launch the dose picker.
+
+                    return SelectableChip(
+                      icon: item.dose == 0 ? FluentIcons.add_24_regular : null,
+                      label:
+                          item.dose == 0
+                              ? "Custom"
+                              : item.dose.toStringAsFixed(0) + item.unit.symbol,
                       onPressed: () async {
-                        TimeOfDay? selectedTime;
-                        if (Platform.isIOS) {
-                          showCupertinoModalPopup(
-                            context: context,
-                            builder: (context) {
-                              return CupertinoDatePickerCustomized(
-                                onDateTimeChanged: (DateTime value) {
-                                  setState(() {
-                                    selectedTime = TimeOfDay.fromDateTime(
-                                      value,
-                                    );
-                                  });
-                                },
-                              );
+                        if (item.dose == 0) {
+                          _selectDoses();
+                        }
+                        onSelected.call();
+                      },
+                      isItemSelected: isSelected,
+                    );
+                  },
+                ),
+
+                const Gap(24),
+
+                const Gap(kPadding16),
+                Divider(color: theme.colorScheme.surfaceContainer),
+
+                /// ---------------------------------------------///
+                const Gap(kPadding16),
+
+                /// Timeline
+                Row(
+                  children: [
+                    const AppIcon(icon: HugeIcons.strokeRoundedCalendar03),
+                    const Gap(kPadding8),
+                    Text(
+                      "Timeline & Schedule",
+                      style: theme.textTheme.titleMedium,
+                    ),
+                  ],
+                ),
+                const Gap(kPadding16),
+
+                Text("Start Date", style: theme.textTheme.bodyMedium),
+                const Gap(kPadding8),
+                TextFormField(
+                  controller: startDateController,
+                  onTap: () async {
+                    /// Show Cupertino Date Picker
+                    if (Platform.isIOS) {
+                      showCupertinoModalPopup(
+                        context: context,
+                        builder: (context) {
+                          return CupertinoDatePickerCustomized(
+                            onDateTimeChanged: (DateTime value) {
+                              setState(() {
+                                selectedStartDate = value;
+                                startDateController.text = selectedStartDate!
+                                    .formatDate(context);
+                              });
                             },
                           );
-                        } else {
-                          selectedTime = await showTimePicker(
-                            context: context,
-                            initialTime: TimeOfDay.now(),
-                          );
-                        }
-
-                        if (selectedTime != null) {
-                          setState(() {
-                            selectedTimeToTakeMedication.add(selectedTime!);
-                          });
-                        }
-                      },
-                      label: "Select times",
+                        },
+                      );
+                    } else {
+                      final DateTime? pickedDate = await showDatePicker(
+                        initialDatePickerMode: DatePickerMode.day,
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(
+                          2000,
+                          01,
+                          01,
+                        ), // Set the initial date to 2000
+                        lastDate: DateTime(2100),
+                      );
+                      setState(() {
+                        selectedStartDate = pickedDate;
+                        startDateController.text =
+                            selectedStartDate != null
+                                ? selectedStartDate!.formatDate(context)
+                                : "";
+                      });
+                    }
+                  },
+                  decoration: AppInputDecoration.inputDecoration(
+                    context,
+                  ).copyWith(
+                    hintText: "Select start date",
+                    suffixIcon: const Icon(
+                      HugeIcons.strokeRoundedCalendar03,
+                      size: 24,
                     ),
                   ),
+                ),
+
+                const Gap(kPadding16),
+                if (!isTakingMedsPermanently) ...[
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Duration"),
+                  ),
+                  const Gap(kPadding16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: GenericSelector<int, SelectableChip>(
+                      wrapSpacing: 8,
+                      wrapRunSpacing: 6,
+                      layout: SelectorLayout.wrap,
+                      onItemSelected: (List<int> duration) {
+                        selectedDuration = Duration(days: duration.first);
+                      },
+                      items: defaultDurationValues,
+
+                      selectableWidgetBuilder: (item, isSelected, onSelected) {
+                        String label = "$item days";
+                        if (item >= 14) {
+                          label = "${(item / 7).round().toInt()} weeks";
+                        }
+                        if (item > 30) {
+                          label = "${(item / 30).round().toInt()} months";
+                        }
+                        if (item == 0) {
+                          label = "Custom";
+                        }
+
+                        return SelectableChip(
+                          icon: item == 0 ? FluentIcons.add_24_regular : null,
+                          label: label,
+                          onPressed: () {
+                            if (item == 0) {
+                              _selectDuration();
+                            }
+                            onSelected.call();
+                          },
+                          isItemSelected: isSelected,
+                        );
+                      },
+                    ),
+                  ),
+
+                  if (selectedDuration != null && showSelectedDuration) ...[
+                    const Gap(kPadding16),
+                    EmphasizedContainer(
+                      label: "Selected Duration",
+                      value: "${selectedDuration?.inDays} days",
+                    ),
+                  ],
+                  const Gap(kPadding16),
                 ],
-              ),
-              const Gap(kPadding8),
-              Wrap(
-                direction: Axis.horizontal,
-                spacing: 8,
-                runSpacing: 12,
-                children: [
-                  for (TimeOfDay time in selectedTimeToTakeMedication)
-                    AppChip(
-                      label: time.format(context),
-                      onDeleted: () {
+                Row(
+                  children: [
+                    const Text("I am taking this medication permanently"),
+                    const Spacer(),
+                    CupertinoSwitch(
+                      activeTrackColor: theme.colorScheme.primary,
+                      value: isTakingMedsPermanently,
+                      onChanged: (value) {
                         setState(() {
-                          selectedTimeToTakeMedication.remove(time);
+                          isTakingMedsPermanently = value;
+                          selectedDuration = null;
                         });
                       },
                     ),
-                ],
-              ),
-              const Gap(kPadding16),
-              // ExpansionTile(
-              //   initiallyExpanded: true,
-              //   title: Text("Timeline & Schedule", style: theme.textTheme.titleMedium),
-              //   leading: const AppIcon(icon: HugeIcons.strokeRoundedClock01),
-              //   children: [
-              //
-              //   ],
-              // ),
-              Divider(color: theme.colorScheme.surfaceContainer),
-              /// ---------------------------------------------///
-              const Gap(kPadding16),
-              Row(
-                children: [
-                  const AppIcon(
-                    icon: HugeIcons.strokeRoundedNotification03,
-                  ), const Gap(kPadding8),
-                  Text("Notifications", style: theme.textTheme.titleMedium),
-                ],
-              ),
-              const Gap(kPadding16),
-              Row(
-                children: [
-                  const Text("Set reminders for this medication?"),
-                  const Spacer(),
-                  CupertinoSwitch(
-                    activeTrackColor: theme.colorScheme.primary,
-                    value: shouldRemind,
-                    onChanged: (value) {
-                      setState(() {
-                        shouldRemind = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              if (shouldRemind)
-                ...[
-                      const Gap(kPadding12),
-                      Text(
-                        "Reminder message",
-                        style: theme.textTheme.bodyMedium,
+                  ],
+                ),
+
+                const Gap(kPadding16),
+
+                /// When do you take your medication
+                Row(
+                  children: [
+                    const Text("When do you take your medication?"),
+                    const Spacer(),
+                    FittedBox(
+                      child: AppButton(
+                        buttonType: ButtonType.text,
+                        isChipButton: true,
+                        onPressed: () async {
+                          TimeOfDay? selectedTime;
+                          if (Platform.isIOS) {
+                            showCupertinoModalPopup(
+                              context: context,
+                              builder: (context) {
+                                return CupertinoDatePickerCustomized(
+                                  onDateTimeChanged: (DateTime value) {
+                                    setState(() {
+                                      selectedTime = TimeOfDay.fromDateTime(
+                                        value,
+                                      );
+                                    });
+                                  },
+                                );
+                              },
+                            );
+                          } else {
+                            selectedTime = await showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                            );
+                          }
+
+                          if (selectedTime != null) {
+                            setState(() {
+                              selectedTimeToTakeMedication.add(selectedTime!);
+                            });
+                          }
+                        },
+                        label: "Select times",
                       ),
-                      const Gap(kPadding12),
-                      TextFormField(
-                        maxLines: 2,
-                        controller: reminderMessageController,
-                        decoration: AppInputDecoration.inputDecoration(
-                          context,
-                        ).copyWith(hintText: "Reminder message (optional)"),
+                    ),
+                  ],
+                ),
+                const Gap(kPadding8),
+                Wrap(
+                  direction: Axis.horizontal,
+                  spacing: 8,
+                  runSpacing: 12,
+                  children: [
+                    for (TimeOfDay time in selectedTimeToTakeMedication)
+                      AppChip(
+                        label: time.format(context),
+                        onDeleted: () {
+                          setState(() {
+                            selectedTimeToTakeMedication.remove(time);
+                          });
+                        },
                       ),
-                    ]
-                    .animate()
-                    .moveX(
-                      begin: -50,
-                      end: 0,
-                      duration: 500.ms,
-                      curve: Spring.defaultIOS.toCurve,
-                    )
-                    .fade(duration: 500.ms),
+                  ],
+                ),
+                const Gap(kPadding16),
+                // ExpansionTile(
+                //   initiallyExpanded: true,
+                //   title: Text("Timeline & Schedule", style: theme.textTheme.titleMedium),
+                //   leading: const AppIcon(icon: HugeIcons.strokeRoundedClock01),
+                //   children: [
+                //
+                //   ],
+                // ),
+                Divider(color: theme.colorScheme.surfaceContainer),
 
-              const Gap(kPadding16),
+                /// ---------------------------------------------///
+                const Gap(kPadding16),
+                Row(
+                  children: [
+                    const AppIcon(icon: HugeIcons.strokeRoundedNotification03),
+                    const Gap(kPadding8),
+                    Text("Notifications", style: theme.textTheme.titleMedium),
+                  ],
+                ),
+                const Gap(kPadding16),
+                Row(
+                  children: [
+                    const Text("Set reminders for this medication?"),
+                    const Spacer(),
+                    CupertinoSwitch(
+                      activeTrackColor: theme.colorScheme.primary,
+                      value: shouldRemind,
+                      onChanged: (value) {
+                        setState(() {
+                          shouldRemind = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                if (shouldRemind)
+                  ...[
+                        const Gap(kPadding12),
+                        Text(
+                          "Reminder message",
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                        const Gap(kPadding12),
+                        TextFormField(
+                          maxLines: 2,
+                          controller: reminderMessageController,
+                          decoration: AppInputDecoration.inputDecoration(
+                            context,
+                          ).copyWith(hintText: "Reminder message (optional)"),
+                        ),
+                      ]
+                      .animate()
+                      .moveX(
+                        begin: -50,
+                        end: 0,
+                        duration: 500.ms,
+                        curve: Spring.defaultIOS.toCurve,
+                      )
+                      .fade(duration: 500.ms),
 
-              // ///Todo: Refactor this such that the frequency is selected in one go
-              // const Text("How often do you take your medication in a day?"),
-              // const Gap(12),
-              //
-              // ElevatedButton(
-              //   onPressed: () {
-              //     showModalBottomSheet(
-              //       backgroundColor: Colors.transparent,
-              //       context: context,
-              //       isScrollControlled: true,
-              //       builder: (context) {
-              //         return FrequencyBottomSheet();
-              //       },
-              //     );
-              //   },
-              //   child: Text("Select button"),
-              // ),
-              const Gap(kPadding16),
-              Divider(color: theme.colorScheme.surfaceContainer),
+                const Gap(kPadding16),
 
-              const Gap(kPadding16),
-              Row(
-                children: [
-                  const AppIcon(
-                    icon: HugeIcons.strokeRoundedAlertCircle,
-                  ), const Gap(kPadding8),
-                  Text("Notes & Warnings", style: theme.textTheme.titleMedium),
-                ],
-              ),
-              const Gap(kPadding16),
-              Text("Things to note", style: theme.textTheme.bodyMedium),
-              const Gap(kPadding12),
-              TextFormField(
-                maxLines: 3,
-                controller: warningMessageController,
-                decoration: AppInputDecoration.inputDecoration(
-                  context,
-                ).copyWith(hintText: "Things to note"),
-              ),
+                // ///Todo: Refactor this such that the frequency is selected in one go
+                // const Text("How often do you take your medication in a day?"),
+                // const Gap(12),
+                //
+                // ElevatedButton(
+                //   onPressed: () {
+                //     showModalBottomSheet(
+                //       backgroundColor: Colors.transparent,
+                //       context: context,
+                //       isScrollControlled: true,
+                //       builder: (context) {
+                //         return FrequencyBottomSheet();
+                //       },
+                //     );
+                //   },
+                //   child: Text("Select button"),
+                // ),
+                const Gap(kPadding16),
+                Divider(color: theme.colorScheme.surfaceContainer),
 
+                const Gap(kPadding16),
+                Row(
+                  children: [
+                    const AppIcon(icon: HugeIcons.strokeRoundedAlertCircle),
+                    const Gap(kPadding8),
+                    Text(
+                      "Notes & Warnings",
+                      style: theme.textTheme.titleMedium,
+                    ),
+                  ],
+                ),
+                const Gap(kPadding16),
+                Text("Things to note", style: theme.textTheme.bodyMedium),
+                const Gap(kPadding12),
+                TextFormField(
+                  maxLines: 3,
+                  controller: warningMessageController,
+                  decoration: AppInputDecoration.inputDecoration(
+                    context,
+                  ).copyWith(hintText: "Things to note"),
+                ),
 
-              const Gap(kPadding48),
-              AppButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    final Medication medication = Medication(
-                      name: nameController.text.trim(),
-                      description: descriptionController.text.trim(),
-                      type: selectedMedicationType,
-                      dose: selectedDose,
-                      frequency: selectedFrequency,
-                      durationDays: selectedDuration?.inDays,
-                      isPermanent: isTakingMedsPermanently,
-                      startDate: selectedStartDate,
-                      warningMessage: warningMessageController.text.trim(),
-                      endDate:
-                          selectedDuration != null
-                              ? selectedStartDate?.add(selectedDuration!)
-                              : null,
-                      shouldRemind: shouldRemind,
-                      reminderMessage:
-                          reminderMessageController.text.trim().isNotEmpty
-                              ? reminderMessageController.text.trim()
-                              : "It's time to take ${nameController.text.trim()}",
+                const Gap(kPadding48),
+                AppButton(
+                  onPressed: () async {
+                    /// Construct a selected frequency object
+                    /// To keep things simple for now, we are assuming
+                    /// the medication will be taken daily.
+                    /// We believe this should cover 90+% of all cases.
+                    /// In the future, we will add a more comprehensive
+                    /// medication frequency selection.
+                    final Frequency constructedFrequency = Frequency.daily(
+                      times: selectedTimeToTakeMedication,
+                      timesPerDay: selectedTimeToTakeMedication.length,
                     );
 
-                    await ref
-                        .watch(medNotifierProviderImpl.notifier)
-                        .putMedication(medication: medication);
-                    if (ref.watch(medNotifierProviderImpl).hasError) {
-                      if (context.mounted) {
-                        showCustomSnackBar(
-                          context: context,
-                          message: "Unable to add medication",
-                          error:
-                              ref.watch(medNotifierProviderImpl).error
-                                  as Failure?,
+                    if (_formKey.currentState!.validate()) {
+                      final Medication medication;
+                      if (!widget.isEditing) {
+                        medication = Medication(
+                          name: nameController.text.trim(),
+                          description: descriptionController.text.trim(),
+                          type: selectedMedicationType,
+                          dose: selectedDose,
+                          frequency: constructedFrequency,
+                          durationDays: selectedDuration?.inDays,
+                          isPermanent: isTakingMedsPermanently,
+                          startDate: selectedStartDate,
+                          warningMessage: warningMessageController.text.trim(),
+                          endDate:
+                              selectedDuration != null
+                                  ? selectedStartDate?.add(selectedDuration!)
+                                  : null,
+                          shouldRemind: shouldRemind,
+                          reminderMessage:
+                              reminderMessageController.text.trim().isNotEmpty
+                                  ? reminderMessageController.text.trim()
+                                  : "It's time to take ${nameController.text.trim()}",
+                          updatedAt: DateTime.now(),
+                          createdAt: DateTime.now(),
+                        );
+                      } else {
+                        final Frequency constructedFrequency = Frequency.daily(
+                          times: selectedTimeToTakeMedication,
+                          timesPerDay: selectedTimeToTakeMedication.length,
+                        );
+
+                        ///Todo: Use copy With to add a edit the current medication
+                        medication = widget.medicationToEdit!.copyWith(
+                          name: nameController.text.trim(),
+                          description: descriptionController.text.trim(),
+                          type: selectedMedicationType,
+                          dose: selectedDose,
+                          frequency: constructedFrequency,
+                          durationDays: selectedDuration?.inDays,
+                          isPermanent: isTakingMedsPermanently,
+                          startDate: selectedStartDate,
+                          warningMessage: warningMessageController.text.trim(),
+                          endDate:
+                              selectedDuration != null
+                                  ? selectedStartDate?.add(selectedDuration!)
+                                  : null,
+                          shouldRemind: shouldRemind,
+                          reminderMessage:
+                              reminderMessageController.text.trim().isNotEmpty
+                                  ? reminderMessageController.text.trim()
+                                  : "It's time to take ${nameController.text.trim()}",
+                          updatedAt: DateTime.now(),
                         );
                       }
-                    } else {
-                      ///Navigate to where ever
+
+                      await ref
+                          .watch(medNotifierProviderImpl.notifier)
+                          .putMedication(medication: medication);
+                      if (ref.watch(medNotifierProviderImpl).hasError) {
+                        if (context.mounted) {
+                          showCustomSnackBar(
+                            context: context,
+                            message: "Unable to add medication",
+                            error:
+                                ref.watch(medNotifierProviderImpl).error
+                                    as Failure?,
+                          );
+                        }
+                      } else {
+                        if (context.mounted) {
+                          showCustomSnackBar(
+                            context: context,
+                            message: "Medication Added Successfully",
+                            mode: SnackBarMode.success,
+                          );
+                          context.back();
+                        }
+
+                        ///Navigate to where ever
+                      }
                     }
-                  }
-                },
-                label: widget.isEditing ? "Save Medication" : "Add Medication",
-                // icon: FluentIcons.checkmark_24_regular,
-              ),
-              const Gap(kPadding64),
-            ],
+                  },
+                  label:
+                      widget.isEditing ? "Save Medication" : "Add Medication",
+                  // icon: FluentIcons.checkmark_24_regular,
+                ),
+                const Gap(kPadding64),
+              ],
+            ),
           ),
         ),
       ),

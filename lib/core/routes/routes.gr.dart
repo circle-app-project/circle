@@ -24,6 +24,7 @@ import 'package:circle/features/emergency/screens/crisis_logs_screen.dart'
     as _i5;
 import 'package:circle/features/emergency/screens/emergency_screen.dart' as _i7;
 import 'package:circle/features/home/screens/home_screen.dart' as _i9;
+import 'package:circle/features/meds/models/medication.dart' as _i27;
 import 'package:circle/features/meds/screens/add_edit_meds_screen.dart' as _i2;
 import 'package:circle/features/meds/screens/meds_details_screen.dart' as _i11;
 import 'package:circle/features/meds/screens/meds_schedule_screen.dart' as _i12;
@@ -43,7 +44,7 @@ import 'package:circle/features/water/screens/suggested_water_daily_goal_screen.
 import 'package:circle/features/water/screens/water_empty_screen.dart' as _i23;
 import 'package:circle/features/water/screens/water_screen.dart' as _i24;
 import 'package:flutter/cupertino.dart' as _i26;
-import 'package:flutter/material.dart' as _i27;
+import 'package:flutter/material.dart' as _i28;
 
 /// generated route for
 /// [_i1.AddEmergencyContactScreen]
@@ -70,12 +71,14 @@ class AddMedsScreen extends _i25.PageRouteInfo<AddMedsScreenArgs> {
   AddMedsScreen({
     _i26.Key? key,
     bool isEditing = false,
+    _i27.Medication? medicationToEdit,
     List<_i25.PageRouteInfo>? children,
   }) : super(
           AddMedsScreen.name,
           args: AddMedsScreenArgs(
             key: key,
             isEditing: isEditing,
+            medicationToEdit: medicationToEdit,
           ),
           initialChildren: children,
         );
@@ -90,6 +93,7 @@ class AddMedsScreen extends _i25.PageRouteInfo<AddMedsScreenArgs> {
       return _i2.AddMedsScreen(
         key: args.key,
         isEditing: args.isEditing,
+        medicationToEdit: args.medicationToEdit,
       );
     },
   );
@@ -99,15 +103,18 @@ class AddMedsScreenArgs {
   const AddMedsScreenArgs({
     this.key,
     this.isEditing = false,
+    this.medicationToEdit,
   });
 
   final _i26.Key? key;
 
   final bool isEditing;
 
+  final _i27.Medication? medicationToEdit;
+
   @override
   String toString() {
-    return 'AddMedsScreenArgs{key: $key, isEditing: $isEditing}';
+    return 'AddMedsScreenArgs{key: $key, isEditing: $isEditing, medicationToEdit: $medicationToEdit}';
   }
 }
 
@@ -344,7 +351,7 @@ class OnboardingBaseScreen extends _i25.PageRouteInfo<void> {
 class ProfileBasicInfoScreen
     extends _i25.PageRouteInfo<ProfileBasicInfoScreenArgs> {
   ProfileBasicInfoScreen({
-    _i27.Key? key,
+    _i28.Key? key,
     bool? isEditing = false,
     List<_i25.PageRouteInfo>? children,
   }) : super(
@@ -377,7 +384,7 @@ class ProfileBasicInfoScreenArgs {
     this.isEditing = false,
   });
 
-  final _i27.Key? key;
+  final _i28.Key? key;
 
   final bool? isEditing;
 
@@ -392,7 +399,7 @@ class ProfileBasicInfoScreenArgs {
 class ProfileMedicalInfoScreen
     extends _i25.PageRouteInfo<ProfileMedicalInfoScreenArgs> {
   ProfileMedicalInfoScreen({
-    _i27.Key? key,
+    _i28.Key? key,
     bool? isEditing = false,
     List<_i25.PageRouteInfo>? children,
   }) : super(
@@ -425,7 +432,7 @@ class ProfileMedicalInfoScreenArgs {
     this.isEditing = false,
   });
 
-  final _i27.Key? key;
+  final _i28.Key? key;
 
   final bool? isEditing;
 
@@ -459,7 +466,7 @@ class ProfileScreen extends _i25.PageRouteInfo<void> {
 class ProfileVitalsInfoScreen
     extends _i25.PageRouteInfo<ProfileVitalsInfoScreenArgs> {
   ProfileVitalsInfoScreen({
-    _i27.Key? key,
+    _i28.Key? key,
     bool? isEditing = false,
     List<_i25.PageRouteInfo>? children,
   }) : super(
@@ -492,7 +499,7 @@ class ProfileVitalsInfoScreenArgs {
     this.isEditing = false,
   });
 
-  final _i27.Key? key;
+  final _i28.Key? key;
 
   final bool? isEditing;
 
