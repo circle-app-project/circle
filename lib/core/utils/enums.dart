@@ -20,45 +20,52 @@ enum Genotype { as, ss, aa, unknown }
 enum AppListWheelScrollViewPickerMode { integer, duration, time, decimal, text }
 
 enum MedicationType {
-  tabletsPills(
+  tablet(
     icon: FluentIcons.pill_24_regular,
     iconFilled: FluentIcons.pill_24_filled,
     iconPath: "assets/svg/tablet.svg",
-    label: 'Tablets/Pills',
+    label: 'Tablet',
   ),
-  capsules(
+  capsule(
     icon: FluentIcons.pill_24_regular,
     iconFilled: FluentIcons.pill_24_filled,
     label: "Capsules",
   ),
-  droplets(
+  chewable(
+    icon: FluentIcons.pill_24_regular,
+    iconFilled: FluentIcons.pill_24_filled,
+    iconPath: "assets/svg/tablet.svg",
+    label: 'Chewable',
+  ),
+  droplet(
     icon: FluentIcons.drop_16_regular,
     iconFilled: FluentIcons.drop_16_filled,
     iconPath: "assets/svg/droplet-alt.svg",
     iconPathFilled: "assets/svg/droplet-alt-filled.svg",
     label: "Droplets",
   ),
-  injections(
+
+  injection(
     icon: FluentIcons.syringe_24_regular,
     iconFilled: FluentIcons.syringe_24_filled,
-    label: "Injections",
+    label: "Injection",
   ),
-  liquids(
+  liquid(
     icon: FluentIcons.drop_16_regular,
     iconFilled: FluentIcons.drop_16_filled,
     iconPath: "assets/svg/droplet-alt.svg",
     iconPathFilled: "assets/svg/droplet-alt-filled.svg",
-    label: "Liquids",
+    label: "Liquid",
   ),
   inhaler(
     icon: FluentIcons.drink_bottle_20_regular,
     iconFilled: FluentIcons.drink_bottle_20_filled,
     label: "Inhaler",
   ),
-  creamsOrGels(
+ creamsAndOintment(
     icon: FluentIcons.stream_24_regular,
     iconFilled: FluentIcons.stream_24_filled,
-    label: "Creams/Gels",
+    label: "Creams & Ointments",
   ),
   unknown(
     icon: FluentIcons.pill_24_regular,
