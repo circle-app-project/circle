@@ -680,6 +680,26 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                       timesPerDay: selectedTimeToTakeMedication.length,
                     );
 
+                    // Enforce Adding required fields
+
+                    if(selectedTimeToTakeMedication.isEmpty){
+                      showCustomSnackBar(
+                        context: context,
+                        message: "Please select a time to take your medication",
+                        mode: SnackBarMode.error,
+                      );
+                      return;
+                    }
+
+                    if (selectedDose == null) {
+                      showCustomSnackBar(
+                        context: context,
+                        message: "Please select a time to take your medication",
+                        mode: SnackBarMode.error,
+                      );
+                      return;
+                    }
+
                     if (_formKey.currentState!.validate()) {
                       final Medication medication;
                       if (!widget.isEditing) {
