@@ -102,36 +102,51 @@ class Medication extends Equatable {
   String? get dbType => type?.name;
 
   /// Converts `Dose` to a JSON string for database storage.
-  String? get dbDose => jsonEncode(dose?.toMap());
+  String? get dbDose =>
+      dose?.toMap() != null ? jsonEncode(dose?.toMap()) : null;
 
   /// Converts `Frequency` to a JSON string for database storage.
-  String? get dbFrequency => jsonEncode(frequency?.toMap());
+  String? get dbFrequency =>
+      frequency?.toMap() != null ? jsonEncode(frequency?.toMap()) : null;
 
   /// Converts `Streak` to a JSON string for database storage.
-  String? get dbStreak => jsonEncode(streak?.toMap());
+  String? get dbStreak =>
+      streak?.toMap() != null ? jsonEncode(streak?.toMap()) : null;
 
   /// Sets the `MedicationType` from a database-friendly string.
   set dbType(String? value) {
-    type =
-        value != null
-            ? MedicationType.values.byName(value)
-            : MedicationType.unknown;
+    if (value != null) {
+      type = MedicationType.values.byName(value);
+    } else {
+      type = MedicationType.unknown;
+    }
   }
 
   /// Sets the `Dose` from a JSON string.
   set dbDose(String? value) {
-    dose = value != null ? Dose.fromMap(jsonDecode(value)) : Dose.empty;
+    if (value != null) {
+      dose = Dose.fromMap(jsonDecode(value));
+    } else {
+      dose = Dose.empty; // Or set this to null directly ???
+    }
   }
 
   /// Sets the `Frequency` from a JSON string.
   set dbFrequency(String? value) {
-    frequency =
-        value != null ? Frequency.fromMap(jsonDecode(value)) : Frequency.empty;
+    if (value != null) {
+      frequency = Frequency.fromMap(jsonDecode(value));
+    } else {
+      frequency = Frequency.empty;
+    }
   }
 
   /// Sets the `Frequency` from a JSON string.
   set dbStreak(String? value) {
-    streak = value != null ? Streak.fromMap(jsonDecode(value)) : null;
+    if (value != null && value.isNotEmpty) {
+      streak = Streak.fromMap(jsonDecode(value));
+    } else {
+      streak = null;
+    }
   }
 
   Medication({
