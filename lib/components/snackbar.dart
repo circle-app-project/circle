@@ -1,6 +1,7 @@
 import 'package:circle/core/error/exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:springster/springster.dart';
 
 import '../../../core/core.dart';
 
@@ -24,14 +25,12 @@ void showCustomSnackBar({
     } else {
       message = error.message;
     }
-
   } else if (error is AppException) {
     if (error.message.isEmpty && message == null) {
       message = "An error occurred";
     } else {
       message = error.message;
     }
-
   } else if (error is Exception) {
     message = error.toString();
   }
@@ -44,55 +43,50 @@ void showCustomSnackBar({
               ? Colors.white
               : AppColours.black;
     case SnackBarMode.success:
-      backgroundColor = AppColours.green60;
-    case SnackBarMode.error:
-      backgroundColor = Theme.of(context).colorScheme.error;
-    default:
-      backgroundColor = Theme.of(context).colorScheme.surfaceContainerHighest;
+      backgroundColor =
+          Theme.of(context).brightness == Brightness.dark
+              ? AppColours.green20
+              : AppColours.green95;
       labelColor =
           Theme.of(context).brightness == Brightness.dark
-              ? Colors.white
-              : AppColours.black;
+              ? AppColours.green90
+              : AppColours.green30;
+    case SnackBarMode.error:
+      backgroundColor = Theme.of(context).colorScheme.errorContainer;
+      labelColor = Theme.of(context).colorScheme.onErrorContainer;
+    default:
+      backgroundColor = Theme.of(context).colorScheme.surfaceContainerHighest;
+      labelColor = Theme.of(context).colorScheme.onSurface;
   }
 
   if (message == null && error == null) {
-    throw ErrorHint(
-      "Message cannot be null if Error is null",
-    );
+    throw ErrorHint("Message cannot be null if Error is null");
   }
 
   ScaffoldMessenger.of(context).showSnackBar(
+    snackBarAnimationStyle: AnimationStyle(
+      curve: Spring.bouncy.toCurve,
+      duration: const Duration(milliseconds: 500),
+      reverseCurve: Spring.defaultIOS.toCurve,
+    ),
     SnackBar(
       elevation: 10,
       //  dismissDirection: DismissDirection.up,
       backgroundColor: backgroundColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(48)),
       padding: const EdgeInsets.symmetric(
-        horizontal: kPadding16,
-        vertical: kPadding8,
+        horizontal: kPadding12,
+        vertical: 6,
       ),
       margin: const EdgeInsets.only(bottom: 32, left: 16, right: 16),
-      closeIconColor: labelColor,
       showCloseIcon: true,
+      closeIconColor: labelColor.withValues(alpha: .5),
       behavior: SnackBarBehavior.floating,
-      content: Row(
-        children: [
-          Visibility(
-            visible: mode == SnackBarMode.notification,
-            child: const CircularProgressIndicator(
-              // foregroundColor: Colors.white,
-            ),
-          ),
-          const Gap(kPadding16),
-          Expanded(
-            child: Text(
-              message ?? "An error occurred",
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium!.copyWith(color: labelColor),
-            ),
-          ),
-        ],
+      content: Text(
+        message ?? "An error occurred",
+        style: Theme.of(
+          context,
+        ).textTheme.bodyMedium!.copyWith(color: labelColor),
       ),
     ),
   );
