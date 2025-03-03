@@ -40,7 +40,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final waterLogNotifier = ref.watch(waterLogNotifierProviderIml.notifier);
 
-    List<WaterLog>? totalLogsToday = ref.watch(waterLogNotifierProviderIml).value!;
+    List<WaterLog>? totalLogsToday = ref.watch(waterLogNotifierProviderIml).value;
 
     //Todo: This calculation should be done somewhere in the water notifier and the value just returned.
     double totalToday =

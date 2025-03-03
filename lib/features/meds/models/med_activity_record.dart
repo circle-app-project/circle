@@ -51,7 +51,7 @@ class MedActivityRecord implements ActivityRecord {
   @override
   final String? note;
   @override
-  final String? skipReason ;
+  final String? skipReason;
 
 
   // ////////// Object Box Type Converters /////////// //

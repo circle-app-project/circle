@@ -1,5 +1,6 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 enum AppState { initial, submitting, success, error }
 
@@ -38,7 +39,7 @@ enum MedicationType {
     label: 'Chewable',
   ),
   droplet(
-    icon: FluentIcons.drop_16_regular,
+    icon: HugeIcons.strokeRoundedDroplet,
     iconFilled: FluentIcons.drop_16_filled,
     iconPath: "assets/svg/droplet-alt.svg",
     iconPathFilled: "assets/svg/droplet-alt-filled.svg",
@@ -51,8 +52,8 @@ enum MedicationType {
     label: "Injection",
   ),
   liquid(
-    icon: FluentIcons.drop_16_regular,
-    iconFilled: FluentIcons.drop_16_filled,
+    icon: HugeIcons.strokeRoundedDroplet,
+    iconFilled: HugeIcons.strokeRoundedDroplet,
     iconPath: "assets/svg/droplet-alt.svg",
     iconPathFilled: "assets/svg/droplet-alt-filled.svg",
     label: "Liquid",

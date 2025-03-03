@@ -46,7 +46,7 @@ class UserLocalService {
   /// Attempts to get a user with this uid, returns null if a user doesn't exits
   /// Throws an exception if the query fails for any other reason
   AppUser? getUserByUid(String uid) {
-    print("trying to get the firebase user of this user id from local db: $uid");
+    print("trying to get the local user with firebase user uid of: $uid from the local database");
     // Build the query to find the user with the specified UID
    late final Query<AppUser> query;
     try {
