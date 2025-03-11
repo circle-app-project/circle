@@ -1,3 +1,5 @@
+import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
+
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -36,6 +38,9 @@ class MedicationReminderCard extends StatefulWidget {
 class _MedicationReminderCardState extends State<MedicationReminderCard>
     with SingleTickerProviderStateMixin {
   late final AnimationController animationController;
+  final TextEditingController skipReasonController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  bool isSkipReasonFieldVisible = false;
 
   @override
   void initState() {
@@ -46,6 +51,7 @@ class _MedicationReminderCardState extends State<MedicationReminderCard>
   @override
   void dispose() {
     animationController.dispose();
+    skipReasonController.dispose();
     super.dispose();
   }
 
@@ -73,193 +79,217 @@ class _MedicationReminderCardState extends State<MedicationReminderCard>
           borderRadius: BorderRadius.circular(24),
           border: Border.all(color: theme.colorScheme.surfaceContainer),
         ),
+        ///Todo: Animate the visibilty of the skip field
         child: AnimatedContainer(
           width:
               (MediaQuery.sizeOf(context).width * widget.viewportWidthFraction),
           duration: 500.ms,
           curve: Spring.bouncy.toCurve,
           padding: const EdgeInsetsDirectional.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-            children: [
-              Text(
-                "Up Next",
-                style: theme.textTheme.bodyMedium!.copyWith(
-                  color:
-                  widget.isEmphasized
-                      ? Colors.white.withValues(alpha: .5)
-                      : theme.colorScheme.onSurface.withValues(alpha: .5),
+              children: [
+                Text(
+                  "Up Next",
+                  style: theme.textTheme.bodyMedium!.copyWith(
+                    color:
+                        widget.isEmphasized
+                            ? Colors.white.withValues(alpha: .5)
+                            : theme.colorScheme.onSurface.withValues(alpha: .5),
+                  ),
                 ),
-              ),
-              const Gap(kPadding8),
-              // Row(
-              //   children: [
-              //     Text(
-              //       "Up Next",
-              //       style: theme.textTheme.bodyMedium!.copyWith(
-              //         color:
-              //         widget.isEmphasized
-              //             ? Colors.white
-              //             : theme.colorScheme.secondary,
-              //       ),
-              //     ),
-              //
-              //     Spacer(),
-              //     Align(
-              //       alignment: Alignment.centerRight,
-              //       child: Container(
-              //         padding: const EdgeInsets.symmetric(
-              //           horizontal: kPadding12,
-              //           vertical: kPadding8,
-              //         ),
-              //         decoration: BoxDecoration(
-              //           color:
-              //               widget.isEmphasized
-              //                   ? Colors.white.withValues(alpha: .2)
-              //                   : theme.colorScheme.secondaryContainer,
-              //           borderRadius: BorderRadius.circular(kPadding12),
-              //         ),
-              //         child: Row(
-              //           mainAxisSize: MainAxisSize.min,
-              //           children: [
-              //             AppIcon(
-              //               icon: widget.medication.type!.iconFilled,
-              //               iconPath: widget.medication.type!.iconPath,
-              //               color:
-              //                   widget.isEmphasized
-              //                       ? Colors.white
-              //                       : theme.colorScheme.secondary,
-              //               size: 24,
-              //             ),
-              //             const Gap(8),
-              //             Text(
-              //               widget.medication.type!.label,
-              //               style: theme.textTheme.bodyMedium!.copyWith(
-              //                 color:
-              //                     widget.isEmphasized
-              //                         ? Colors.white
-              //                         : theme.colorScheme.secondary,
-              //               ),
-              //             ),
-              //           ],
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              RichText(
-                text: TextSpan(
+                const Gap(kPadding8),
+                // Row(
+                //   children: [
+                //     Text(
+                //       "Up Next",
+                //       style: theme.textTheme.bodyMedium!.copyWith(
+                //         color:
+                //         widget.isEmphasized
+                //             ? Colors.white
+                //             : theme.colorScheme.secondary,
+                //       ),
+                //     ),
+                //
+                //     Spacer(),
+                //     Align(
+                //       alignment: Alignment.centerRight,
+                //       child: Container(
+                //         padding: const EdgeInsets.symmetric(
+                //           horizontal: kPadding12,
+                //           vertical: kPadding8,
+                //         ),
+                //         decoration: BoxDecoration(
+                //           color:
+                //               widget.isEmphasized
+                //                   ? Colors.white.withValues(alpha: .2)
+                //                   : theme.colorScheme.secondaryContainer,
+                //           borderRadius: BorderRadius.circular(kPadding12),
+                //         ),
+                //         child: Row(
+                //           mainAxisSize: MainAxisSize.min,
+                //           children: [
+                //             AppIcon(
+                //               icon: widget.medication.type!.iconFilled,
+                //               iconPath: widget.medication.type!.iconPath,
+                //               color:
+                //                   widget.isEmphasized
+                //                       ? Colors.white
+                //                       : theme.colorScheme.secondary,
+                //               size: 24,
+                //             ),
+                //             const Gap(8),
+                //             Text(
+                //               widget.medication.type!.label,
+                //               style: theme.textTheme.bodyMedium!.copyWith(
+                //                 color:
+                //                     widget.isEmphasized
+                //                         ? Colors.white
+                //                         : theme.colorScheme.secondary,
+                //               ),
+                //             ),
+                //           ],
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "${med.name},",
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: widget.isEmphasized ? Colors.white : null,
+                        ),
+                      ),
+                      TextSpan(
+                        text:
+                            " ${widget.medication.dose?.dose.toStringAsFixed(0) ?? ""} ${widget.medication.dose?.unit.symbol ?? ""}",
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color:
+                              widget.isEmphasized
+                                  ? Colors.white.withValues(alpha: .5)
+                                  : theme.colorScheme.secondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Gap(kPadding16),
+                Row(
                   children: [
-                    TextSpan(
-                      text: "${med.name},",
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        color:
+                    Row(
+                      spacing: 8,
+                      children: [
+                        AppIcon(
+                          icon: HugeIcons.strokeRoundedAlertCircle,
+                          color: widget.isEmphasized ? Colors.white : null,
+                        ),
+                        Text(
+                          "1 pill",
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: widget.isEmphasized ? Colors.white : null,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const Gap(kPadding24),
+                    Row(
+                      spacing: 8,
+                      children: [
+                        AppIcon(
+                          icon: HugeIcons.strokeRoundedClock01,
+                          color: widget.isEmphasized ? Colors.white : null,
+                        ),
+                        Text(
+                          " At ${med.frequency?.times?.first.format(context)}", // Todo: Properly sort this to find the date of the next dose.
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: widget.isEmphasized ? Colors.white : null,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Gap(kPadding16),
+                if (isSkipReasonFieldVisible)
+           ...[  TextFormField(
+                  controller: skipReasonController,
+                  maxLines: 3,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSecondary
+                  ),
+                  decoration: AppInputDecoration.inputDecoration(
+                    context,
+                  ).copyWith(
+                    hintText: "Reason for Skipping",
+                    fillColor: theme.colorScheme.onSecondary.withValues(
+                      alpha: .2,
+                    ),
+                    hintStyle: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSecondary.withValues(
+                        alpha: .8,
+                      ),
+                    )
+                      , focusedBorder:  OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: theme.colorScheme.onSecondary,
+
+                  ),
+                    borderRadius: BorderRadius.circular(kPadding12),
+
+                  ),
+                ),),
+                const Gap(kPadding16)],
+                Row(
+                  spacing: kPadding16,
+                  children: [
+                    Expanded(
+                      child: AppButton(
+                        onPressed: () async {
+
+                          if(!isSkipReasonFieldVisible){
+                            setState(() {
+                              isSkipReasonFieldVisible = !isSkipReasonFieldVisible;
+                            });
+                          }
+
+                          if(isSkipReasonFieldVisible){
+                            widget.onMarkAsSkipped.call();
+                          }
+
+                        },
+                        icon: HugeIcons.strokeRoundedStepOver,
+                        color: widget.isEmphasized ? Colors.white : null,
+                        label: isSkipReasonFieldVisible? "Continue": "Skip",
+                        isChipButton: true,
+                        buttonType: ButtonType.secondary,
+                        backgroundColor:
                             widget.isEmphasized
-                                ? Colors.white
-                                : null,
+                                ? Colors.white.withValues(alpha: .3)
+                                : theme.colorScheme.secondaryContainer,
+
                       ),
                     ),
-                    TextSpan(
-                      text:
-                          " ${widget.medication.dose?.dose.toStringAsFixed(0) ?? ""} ${widget.medication.dose?.unit.symbol ?? ""}",
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        color:
-                            widget.isEmphasized
-                                ? Colors.white.withValues(
-                                  alpha: .5,
-                                )
-                                : theme.colorScheme.secondary,
+                    Expanded(
+                      child: AppButton(
+                        onPressed: widget.onMarkAsTaken,
+                        label: "Taken",
+                        backgroundColor: AppColours.black,
+                        color: AppColours.white,
+                        isChipButton: true,
                       ),
                     ),
                   ],
                 ),
-              ),
-              const Gap(kPadding16),
-              Row(
-                children: [
-                  Row(
-                    spacing: 8,
-                    children: [
-                      AppIcon(
-                        icon: HugeIcons.strokeRoundedAlertCircle,
-                        color:
-                            widget.isEmphasized
-                                ? Colors.white
-                                : null,
-                      ),
-                      Text(
-                        "1 pill",
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color:
-                              widget.isEmphasized
-                                  ? Colors.white
-                                  : null,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const Gap(kPadding24),
-                  Row(
-                    spacing: 8,
-                    children: [
-                      AppIcon(
-                        icon: HugeIcons.strokeRoundedClock01,
-                        color:
-                            widget.isEmphasized
-                                ? Colors.white
-                                : null,
-                      ),
-                      Text(
-                        " At ${med.frequency?.times?.first.format(context)}", // Todo: Properly sort this to find the date of the next dose.
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color:
-                              widget.isEmphasized
-                                  ? Colors.white
-                                  : null,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const Gap(kPadding24),
-              Row(
-                spacing: kPadding16,
-                children: [
-                  Expanded(
-                    child: AppButton(
-                      onPressed: widget.onMarkAsSkipped,
-                      icon: HugeIcons.strokeRoundedStepOver,
-                      color:
-                          widget.isEmphasized
-                              ? Colors.white
-                              : null,
-                      label: "Skip",
-                      isChipButton: true,
-                      buttonType: ButtonType.secondary,
-                      backgroundColor:
-                          widget.isEmphasized
-                              ? Colors.white.withValues(
-                                alpha: .3,
-                              )
-                              : theme.colorScheme.secondaryContainer,
-                    ),
-                  ),
-                  Expanded(
-                    child: AppButton(
-                      onPressed: widget.onMarkAsTaken,
-                      label: "Taken",
-                      backgroundColor: AppColours.black,
-                      color: AppColours.white,
-                      isChipButton: true,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
