@@ -6,6 +6,8 @@ enum ActivityType { medication, water }
 enum CompletionsStatus { pending, completed, missed, skipped }
 // ignore: must_be_immutable
 abstract class ActivityRecord extends Equatable {
+  @Id()
+  int id;
   final DateTime date;
   final String? note;
   final String? skipReason;
@@ -15,6 +17,7 @@ abstract class ActivityRecord extends Equatable {
   Map<String, dynamic>? activityDetails;
 
   ActivityRecord({
+    this.id = 0,
     required this.date,
     required this.status,
     required this.type,
