@@ -73,10 +73,7 @@ void showCustomSnackBar({
       //  dismissDirection: DismissDirection.up,
       backgroundColor: backgroundColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(48)),
-      padding: const EdgeInsets.symmetric(
-        horizontal: kPadding12,
-        vertical: 6,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: kPadding12, vertical: 6),
       margin: const EdgeInsets.only(bottom: 32, left: 16, right: 16),
       showCloseIcon: true,
       closeIconColor: labelColor.withValues(alpha: .5),

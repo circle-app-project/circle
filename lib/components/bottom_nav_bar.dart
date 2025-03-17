@@ -36,9 +36,9 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
     const WaterScreen(
       key: PageStorageKey(WaterScreen .path),
     ),
-    const EmergencyScreen(
-      key: PageStorageKey(EmergencyScreen .path),
-    ),
+    // const EmergencyScreen(
+    //   key: PageStorageKey(EmergencyScreen .path),
+    // ),
     const MedsScreen(
       key: PageStorageKey(MedsScreen .path),
     ),
@@ -53,13 +53,16 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
 
   Widget _bottomNavBar(
       {required int selectedIndex, required Color selectedItemColor}) {
+    final theme = Theme.of(context);
+    bool isDarkMode = theme.brightness == Brightness.dark;
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
         NavigationBar(
           indicatorColor: Platform.isIOS
               ? Theme.of(context).scaffoldBackgroundColor.withValues(alpha:0)
-              : Theme.of(context).colorScheme.primaryContainer,
+              : Theme.of(context).colorScheme.surfaceContainerLow,
+          // indicatorColor: Colors.transparent,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
           onDestinationSelected: (int index) {
@@ -74,8 +77,8 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
                 label: "Home",
                 icon: SvgPicture.asset(
                   "assets/svg/home-alt.svg",
-                  colorFilter: const ColorFilter.mode(
-                      AppColours.neutral50, BlendMode.srcIn),
+                  colorFilter:  ColorFilter.mode(
+                    isDarkMode? AppColours.neutral30 : AppColours.neutral70 , BlendMode.srcIn),
                 ),
                 selectedIcon: SvgPicture.asset(
                   "assets/svg/home-alt-filled.svg",
@@ -86,8 +89,8 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
               label: "Water",
               icon: SvgPicture.asset(
                 "assets/svg/droplet-alt.svg",
-                colorFilter: const ColorFilter.mode(
-                    AppColours.neutral50, BlendMode.srcIn),
+                colorFilter:  ColorFilter.mode(
+                    isDarkMode? AppColours.neutral30 : AppColours.neutral70, BlendMode.srcIn),
               ),
               selectedIcon: SvgPicture.asset(
                 "assets/svg/droplet-alt-filled.svg",
@@ -95,29 +98,29 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
                     Theme.of(context).iconTheme.color!, BlendMode.srcIn),
               ),
             ),
-            NavigationDestination(
-                label: "Emergency",
-                icon: SvgPicture.asset(
-                  "assets/svg/emergency-alt.svg",
-                  colorFilter: const ColorFilter.mode(
-                      AppColours.neutral50, BlendMode.srcIn),
-                ),
-                selectedIcon: SvgPicture.asset(
-                  "assets/svg/emergency-alt-filled.svg",
-                  colorFilter: ColorFilter.mode(
-                      Theme.of(context).iconTheme.color!, BlendMode.srcIn),
-                )),
+            // NavigationDestination(
+            //     label: "Emergency",
+            //     icon: SvgPicture.asset(
+            //       "assets/svg/emergency-alt.svg",
+            //       colorFilter: const ColorFilter.mode(
+            //           AppColours.neutral50, BlendMode.srcIn),
+            //     ),
+            //     selectedIcon: SvgPicture.asset(
+            //       "assets/svg/emergency-alt-filled.svg",
+            //       colorFilter: ColorFilter.mode(
+            //           Theme.of(context).iconTheme.color!, BlendMode.srcIn),
+            //     )),
             NavigationDestination(
               label: "Meds",
-              icon: const Icon(FluentIcons.pill_24_regular,
-                  color: AppColours.neutral50),
+              icon:  Icon(FluentIcons.pill_24_regular,
+                  color:   isDarkMode? AppColours.neutral30 : AppColours.neutral70),
               selectedIcon: Icon(FluentIcons.pill_24_filled,
                   color: Theme.of(context).iconTheme.color),
             ),
             NavigationDestination(
               label: "Profile",
-              icon: const Icon(FluentIcons.person_24_regular,
-                  color: AppColours.neutral50),
+              icon:  Icon(FluentIcons.person_24_regular,
+                  color:   isDarkMode? AppColours.neutral30 : AppColours.neutral70),
               selectedIcon: Icon(FluentIcons.person_24_filled,
                   color: Theme.of(context).iconTheme.color),
             ),

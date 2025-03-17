@@ -192,7 +192,7 @@ class AppUser extends Equatable {
       }
     }
 
-    return email;
+    return email.split("@").first;
   }
 
   //-------Sample User--------//
