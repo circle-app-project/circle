@@ -25,7 +25,7 @@ class MedicationReminderCard extends StatefulWidget {
   final double viewportWidthFraction;
   final bool isEmphasized;
   final VoidCallback onMarkAsTaken;
-  final VoidCallback onMarkAsSkipped;
+  final void Function(String? skipReason) onMarkAsSkipped;
 
   @override
   State<MedicationReminderCard> createState() => _MedicationReminderCardState();
@@ -75,7 +75,8 @@ class _MedicationReminderCardState extends State<MedicationReminderCard>
           borderRadius: BorderRadius.circular(24),
           border: Border.all(color: theme.colorScheme.surfaceContainer),
         ),
-        ///Todo: Animate the visibilty of the skip field
+
+        ///Todo: Animate the visibility of the skip field
         child: AnimatedContainer(
           width:
               (MediaQuery.sizeOf(context).width * widget.viewportWidthFraction),
@@ -214,63 +215,96 @@ class _MedicationReminderCardState extends State<MedicationReminderCard>
                   ],
                 ),
                 const Gap(kPadding16),
-                if (isSkipReasonFieldVisible)
-           ...[  TextFormField(
-                  controller: skipReasonController,
-                  maxLines: 3,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSecondary
-                  ),
-                  decoration: AppInputDecoration.inputDecoration(
-                    context,
-                  ).copyWith(
-                    hintText: "Reason for Skipping",
-                    fillColor: theme.colorScheme.onSecondary.withValues(
-                      alpha: .2,
-                    ),
-                    hintStyle: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSecondary.withValues(
-                        alpha: .8,
-                      ),
-                    )
-                      , focusedBorder:  OutlineInputBorder(
-                    borderSide: BorderSide(
+                if (isSkipReasonFieldVisible) ...[
+                  TextFormField(
+                    controller: skipReasonController,
+                    maxLines: 3,
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSecondary,
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please add a reason for skipping this dose";
+                      } else {
+                        return null;
+                      }
+                    },
+                    decoration: AppInputDecoration.inputDecoration(
+                      context,
+                    ).copyWith(
+                      hintText: "Reason for Skipping",
+                      fillColor: theme.colorScheme.onSecondary.withValues(
+                        alpha: .2,
+                      ),
+                      hintStyle: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSecondary.withValues(
+                          alpha: .8,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: theme.colorScheme.onSecondary.withValues(
+                            alpha: .5,
+                          ),
+                        ),
+                        borderRadius: BorderRadius.circular(kPadding12),
+                      ),
 
-                  ),
-                    borderRadius: BorderRadius.circular(kPadding12),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: theme.colorScheme.onSecondary.withValues(
+                            alpha: .5,
+                          ),
+                        ),
+                        borderRadius: BorderRadius.circular(kPadding12),
+                      ),
 
+                      errorStyle: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSecondary,
+                      ),
+                    ),
                   ),
-                ),),
-                const Gap(kPadding16)],
+                  const Gap(kPadding16),
+                ],
                 Row(
                   spacing: kPadding16,
                   children: [
                     Expanded(
                       child: AppButton(
-                        onPressed: () async {
-
-                          if(!isSkipReasonFieldVisible){
-                            setState(() {
-                              isSkipReasonFieldVisible = !isSkipReasonFieldVisible;
-                            });
-                          }
-
-                          if(isSkipReasonFieldVisible){
-                            widget.onMarkAsSkipped.call();
-                          }
-
-                        },
+                        onPressed:
+                            isSkipReasonFieldVisible
+                                ? () {
+                                  if (_formKey.currentState!.validate()) {
+                                    widget.onMarkAsSkipped.call(
+                                      skipReasonController.text.trim(),
+                                    );
+                                    Future.delayed(
+                                      Duration(milliseconds: 300),
+                                      () {
+                                        setState(() {
+                                          skipReasonController.text = "";
+                                          isSkipReasonFieldVisible = false;
+                                        });
+                                      },
+                                    );
+                                  }
+                                }
+                                : () {
+                                  /// Skip field is not visible, so make it visible
+                                  setState(() {
+                                    isSkipReasonFieldVisible =
+                                        !isSkipReasonFieldVisible;
+                                  });
+                                },
                         icon: HugeIcons.strokeRoundedStepOver,
                         color: widget.isEmphasized ? Colors.white : null,
-                        label: isSkipReasonFieldVisible? "Continue": "Skip",
+                        label: isSkipReasonFieldVisible ? "Continue" : "Skip",
                         isChipButton: true,
                         buttonType: ButtonType.secondary,
                         backgroundColor:
                             widget.isEmphasized
                                 ? Colors.white.withValues(alpha: .3)
                                 : theme.colorScheme.secondaryContainer,
-
                       ),
                     ),
                     Expanded(

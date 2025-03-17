@@ -159,6 +159,7 @@ class MedNotifier extends _$MedNotifier {
       status: CompletionsStatus.completed,
       note: note,
       completedAt: DateTime.now(),
+      parentId: medication.uid
     );
 
     /// Add streak to the medications
@@ -180,6 +181,7 @@ class MedNotifier extends _$MedNotifier {
       note: note,
       completedAt: DateTime.now(),
       skipReason: skipReason,
+      parentId: medication.uid
 
       ///Todo: Add a backlink to the medication this record is for
     );
@@ -197,12 +199,12 @@ class MedNotifier extends _$MedNotifier {
   }) async {
     final MedActivityRecord activityRecord = MedActivityRecord(
       date: DateTime.now(),
-
       /// Todo: this should be the date the dose was scheduled for
       status: CompletionsStatus.missed,
       note: note,
       completedAt: DateTime.now(),
       skipReason: skipReason,
+      parentId:  medication.uid
 
       ///Todo: Add a backlink to the medication this record is for
     );
@@ -226,7 +228,7 @@ class MedNotifier extends _$MedNotifier {
       note: note,
       completedAt: DateTime.now(),
       skipReason: skipReason,
-
+parentId: medication.uid
       ///Todo: Add a backlink to the medication this record is for
     );
 

@@ -39,10 +39,12 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
     List<Medication> medications =
         ref.watch(medNotifierProviderImpl).value ?? [];
 
-    if(medications.isEmpty){
+    if (medications.isEmpty) {
       print("No medications");
-    }else{
-      print("number of medication actity records for this medciation: ${medications.first.activityRecord.length}");
+    } else {
+      print(
+        "number of medication actity records for this medciation: ${medications.first.activityRecord.length}",
+      );
     }
 
     final ThemeData theme = Theme.of(context);
@@ -67,15 +69,24 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
                     MedicationReminderCard(
                       medication: medications.first,
                       isEmphasized: true,
-                      onMarkAsSkipped: () async {
+                      onMarkAsSkipped: (String? skipReason) async {
                         await medsNotifier.markDoseAsSkipped(
                           medication: medications.first,
+                          skipReason: skipReason,
                         );
-                        if (ref.watch(medNotifierProviderImpl).hasError) {
-                          showCustomSnackBar(
-                            context: context,
-                            error: ref.watch(medNotifierProviderImpl).error,
-                          );
+                        if (context.mounted) {
+                          if (ref.watch(medNotifierProviderImpl).hasError) {
+                            showCustomSnackBar(
+                              context: context,
+                              error: ref.watch(medNotifierProviderImpl).error,
+                            );
+                          } else {
+                            showCustomSnackBar(
+                              context: context,
+                              message: "Dose skipped",
+                              mode: SnackBarMode.notification,
+                            );
+                          }
                         }
                       },
                       onMarkAsTaken: () async {
@@ -97,7 +108,12 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
             const Gap(16),
             if (medications.isNotEmpty) const Gap(48),
             Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(kPadding16, 0,0,0),
+              padding: const EdgeInsetsDirectional.fromSTEB(
+                kPadding16,
+                0,
+                0,
+                0,
+              ),
               child: Text("My Medications", style: theme.textTheme.titleMedium),
             ),
             const Gap(kPadding16),
