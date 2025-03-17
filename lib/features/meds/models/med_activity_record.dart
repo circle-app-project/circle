@@ -54,6 +54,10 @@ class MedActivityRecord implements ActivityRecord {
   @override
   final String? skipReason;
 
+  /// An ID to the parent activity or object that creates this id
+  @override
+  final String parentId;
+
 
   // ////////// Object Box Type Converters /////////// //
   String get dbType => type.name;
@@ -72,6 +76,7 @@ class MedActivityRecord implements ActivityRecord {
   MedActivityRecord({
     this.id = 0,
     required this.date,
+    required this.parentId,
     this.status = CompletionsStatus.pending,
     this.note,
     this.skipReason,
@@ -90,6 +95,7 @@ class MedActivityRecord implements ActivityRecord {
   }) {
     return MedActivityRecord(
       id: id,
+      parentId: parentId,
       date: date ?? this.date,
       status: status ?? this.status,
       completedAt: completedAt ?? this.completedAt,
@@ -102,6 +108,7 @@ class MedActivityRecord implements ActivityRecord {
   Map<String, dynamic> toMap() {
     return {
       'date': date.toIso8601String(),
+      'parentId': parentId,
       'status': status.name,
       'note': note,
       'type': type.name,
@@ -114,6 +121,7 @@ class MedActivityRecord implements ActivityRecord {
   factory MedActivityRecord.fromMap(Map<String, dynamic> map) {
     ActivityType type = ActivityType.values.byName(map["type"]);
       return MedActivityRecord(
+        parentId: map['parentId'],
         date: DateTime.parse(map['date']),
         completedAt: DateTime.parse(map['completedAt']),
         status: CompletionsStatus.values.byName(map['status']),
@@ -139,6 +147,8 @@ class MedActivityRecord implements ActivityRecord {
     completedAt,
     activityDetails,
   ];
+
+
 
 }
 

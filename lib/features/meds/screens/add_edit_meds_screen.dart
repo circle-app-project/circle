@@ -15,6 +15,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:springster/springster.dart';
+import 'package:uuid/uuid.dart';
 import '../../../components/components.dart';
 import '../../../components/customized_cupertino_date_picker.dart';
 import '../../../core/core.dart';
@@ -704,6 +705,7 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                       final Medication medication;
                       if (!widget.isEditing) {
                         medication = Medication(
+                          uid: const Uuid().v4(),
                           name: nameController.text.trim(),
                           description: descriptionController.text.trim(),
                           type: selectedMedicationType,
