@@ -25,7 +25,6 @@ import '../models/medication.dart';
 import '../providers/med_notifier.dart';
 
 ///Todo: Animate things on and off the screen more elegantly
-
 @RoutePage(name: AddMedsScreen.name)
 class AddMedsScreen extends ConsumerStatefulWidget {
   static const String path = "/add_meds";
@@ -573,7 +572,7 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                 // ),
                 Divider(color: theme.colorScheme.surfaceContainer),
 
-                /// ---------------------------------------------///
+                /// --------------------------------------------- ///
                 const Gap(kPadding16),
                 Row(
                   children: [
@@ -733,7 +732,6 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                           timesPerDay: selectedTimeToTakeMedication.length,
                         );
 
-                        ///Todo: Use copy With to add a edit the current medication
                         medication = widget.medicationToEdit!.copyWith(
                           name: nameController.text.trim(),
                           description: descriptionController.text.trim(),
