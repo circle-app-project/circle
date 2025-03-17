@@ -51,9 +51,9 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kPadding16),
-              child: const CustomAppBar(pageTitle: "Medication"),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: kPadding16),
+              child: CustomAppBar(pageTitle: "Medication"),
             ),
 
             if (medications.isNotEmpty)

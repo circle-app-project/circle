@@ -1,6 +1,5 @@
 import 'package:circle/core/error/exceptions.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:springster/springster.dart';
 
 import '../../../core/core.dart';

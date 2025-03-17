@@ -30,6 +30,7 @@ import 'activity_record.dart';
 @Entity()
 // ignore: must_be_immutable
 class MedActivityRecord implements ActivityRecord {
+  @override
   @Id()
   int id;
 
