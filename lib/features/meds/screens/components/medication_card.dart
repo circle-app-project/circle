@@ -1,9 +1,7 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
-import 'package:hugeicons/hugeicons.dart';
 import 'package:springster/springster.dart';
 
 import '../../../../components/components.dart';
