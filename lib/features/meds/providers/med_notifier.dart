@@ -9,9 +9,8 @@ import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/error/failure.dart';
-import '../models/activity_record.dart';
 import '../models/medication.dart';
-import '../models/med_activity_record.dart';
+import '../models/med_schedule.dart';
 part 'med_notifier.g.dart';
 
 ///Todo: Consider adding a medication tags feature to easily filter
@@ -21,13 +20,13 @@ part 'med_notifier.g.dart';
 ///
 final MedService medService = MedService();
 final MedLocalService medLocalService = MedLocalService(store: database.store);
-final MedRepository _medRepository = MedRepositoryImpl(
+final MedRepository medRepository = MedRepositoryImpl(
   medService: medService,
   medLocalService: medLocalService,
 );
 
 final MedNotifierProvider medNotifierProviderImpl = MedNotifierProvider(
-  medRepository: _medRepository,
+  medRepository: medRepository,
 );
 
 @Riverpod(keepAlive: true)
@@ -35,13 +34,19 @@ class MedNotifier extends _$MedNotifier {
   late final MedRepository _medRepository;
   late final AppUser? selfUser;
 
+  List<MedSchedule> _upcomingDosesForToday = [];
+  List<MedSchedule> _allDosesForToday = [];
+  List<MedSchedule> _pastDosesForToday = [];
+  List<MedSchedule> get upcomingDosesForToday => _upcomingDosesForToday;
+  List<MedSchedule> get allDosesForToday => _allDosesForToday;
+  List<MedSchedule> get pastDosesForToday => _pastDosesForToday;
+
   @override
   FutureOr<List<Medication>> build({
     required MedRepository medRepository,
   }) async {
     _medRepository = medRepository;
     selfUser = ref.watch(userNotifierProviderImpl).value;
-
     return [];
   }
 
@@ -149,119 +154,6 @@ class MedNotifier extends _$MedNotifier {
     );
   }
 
-  Future<void> markDoseAsTaken({
-    bool forceRefresh = false,
-    required Medication medication,
-    String? note,
-  }) async {
-    final MedActivityRecord activityRecord = MedActivityRecord(
-      date: DateTime.now(),
-      status: CompletionsStatus.completed,
-      note: note,
-      completedAt: DateTime.now(),
-      parentId: medication.uid
-    );
-
-    /// Add streak to the medications
-    medication.putActivityRecord(activityRecord);
-    await putMedication(medication: medication, forceRefresh: forceRefresh);
-  }
-
-  Future<void> markDoseAsSkipped({
-    bool forceRefresh = false,
-    required Medication medication,
-    String? note,
-    String? skipReason,
-  }) async {
-    final MedActivityRecord activityRecord = MedActivityRecord(
-      date: DateTime.now(),
-
-      /// Todo: this should be the date the dose was scheduled for
-      status: CompletionsStatus.skipped,
-      note: note,
-      completedAt: DateTime.now(),
-      skipReason: skipReason,
-      parentId: medication.uid
-
-      ///Todo: Add a backlink to the medication this record is for
-    );
-
-    /// Add streak to the medications
-    medication.putActivityRecord(activityRecord);
-    await putMedication(medication: medication, forceRefresh: forceRefresh);
-  }
-
-  Future<void> markDoseAsMissed({
-    bool forceRefresh = false,
-    required Medication medication,
-    String? note,
-    String? skipReason,
-  }) async {
-    final MedActivityRecord activityRecord = MedActivityRecord(
-      date: DateTime.now(),
-      /// Todo: this should be the date the dose was scheduled for
-      status: CompletionsStatus.missed,
-      note: note,
-      completedAt: DateTime.now(),
-      skipReason: skipReason,
-      parentId:  medication.uid
-
-      ///Todo: Add a backlink to the medication this record is for
-    );
-
-    /// Add streak to the medications
-    medication.putActivityRecord(activityRecord);
-    await putMedication(medication: medication, forceRefresh: forceRefresh);
-  }
-
-  Future<void> markDoseAsPending({
-    bool forceRefresh = false,
-    required Medication medication,
-    String? note,
-    String? skipReason,
-  }) async {
-    final MedActivityRecord activityRecord = MedActivityRecord(
-      date: DateTime.now(),
-
-      /// Todo: this should be the date the dose was scheduled for
-      status: CompletionsStatus.missed,
-      note: note,
-      completedAt: DateTime.now(),
-      skipReason: skipReason,
-parentId: medication.uid
-      ///Todo: Add a backlink to the medication this record is for
-    );
-
-    /// Add streak to the medications
-    medication.putActivityRecord(activityRecord);
-    await putMedication(medication: medication, forceRefresh: forceRefresh);
-  }
-
-  Future<List<DateTime>> getUpcomingDoses({
-    bool forceRefresh = false,
-    required Medication medication,
-    String? note,
-    String? skipReason,
-  }) async {
-    List<DateTime> upcomingDoses = [];
-    if (medication.frequency?.times != null) {
-      upcomingDoses =
-          medication.frequency!.times!
-              .map(
-                (e) => DateTime.now().copyWith(hour: e.hour, minute: e.minute),
-              )
-              .toList();
-    }
-
-    /// Check if medication should be taken today;
-
-    /// If so, then get all the times of that day the medication should be taken for
-    ///
-    /// Optionally add doses to the list for that day and mark them as pending
-
-    return upcomingDoses;
-  }
-
   //// Todo: METHODS TO IMPLEMENT
 
   /// Todo: Marks as Completed ✅
@@ -271,14 +163,14 @@ parentId: medication.uid
   /// Todo: Get upcoming doses {
   /// this should create a list of upcoming doses for medications that are due, so it means a medication with 2 doses in a day should appear 2 times
   /// And a notification should be sent for each dose
-  /// }
+  /// } ✅
   /// Todo: schedule notifications for each medication at each dose
-  /// Todo: get next due medication dose
+  /// Todo: get next due medication dose ✅
   /// Todo: schedule medication doses notifications
   /// Todo: get adherenceRate within a start date
   ///
   /// ///I think this should be moved to a streak specific med provider
-  /// Which means a streak class that takes an activyrecord object with some methods
+  /// Which means a streak class that takes an activity record object with some methods
   /// Todo: Get current streak (counts the number of days) ✅
   /// Todo: is taken on Time (compare completion time with scheduled time +- some interval minutes)
   /// Todo: get streak stats ✅

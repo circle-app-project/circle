@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:circle/core/extensions/date_time_formatter.dart';
 import 'package:circle/core/utils/enums.dart';
@@ -67,6 +68,7 @@ class Medication extends Equatable {
   final String? warningMessage;
 
   /// The start date for taking the medication.
+  /// Should not be null
   @Property(type: PropertyType.date)
   final DateTime? startDate;
 
@@ -225,6 +227,7 @@ class Medication extends Equatable {
 
   void putActivityRecord(MedActivityRecord newActivity) {
     /// Check if the streak already exists
+    log("Putting Activity Record for medication with id: $uid and name: $name", name: "Medication");
 
     bool activityExists =
         activityRecord

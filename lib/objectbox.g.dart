@@ -17,6 +17,7 @@ import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 import 'features/auth/models/user/app_user.dart';
 import 'features/auth/models/user/user_profile.dart';
 import 'features/meds/models/med_activity_record.dart';
+import 'features/meds/models/med_schedule.dart';
 import 'features/meds/models/medication.dart';
 import 'features/water/models/water_log.dart';
 import 'features/water/models/water_preferences.dart';
@@ -457,6 +458,85 @@ final _entities = <obx_int.ModelEntity>[
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(13, 8773604070706490068),
+      name: 'MedSchedule',
+      lastPropertyId: const obx_int.IdUid(14, 6744692704282181672),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 6723772750807864963),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 4053016393902170366),
+            name: 'completedAt',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 6171521520006031931),
+            name: 'date',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 1072389071086573832),
+            name: 'note',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 8426648264857871979),
+            name: 'skipReason',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 7506353066611055334),
+            name: 'parentId',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(7, 8812915512390146915),
+            name: 'isDeleted',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(8, 6791044842289382902),
+            name: 'isSynced',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(9, 4487206203660110259),
+            name: 'updatedAt',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(10, 7593395598541999766),
+            name: 'createdAt',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(11, 348936209633946731),
+            name: 'dbType',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(12, 5028455532129656100),
+            name: 'dbStatus',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(13, 5741700252410311329),
+            name: 'dbActivityDetails',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(14, 6744692704282181672),
+            name: 'dbDose',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
 ];
 
@@ -495,7 +575,7 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(11, 6957825818410986359),
+      lastEntityId: const obx_int.IdUid(13, 8773604070706490068),
       lastIndexId: const obx_int.IdUid(10, 7451178347421563325),
       lastRelationId: const obx_int.IdUid(3, 7294710979211216290),
       lastSequenceId: const obx_int.IdUid(0, 0),
@@ -504,7 +584,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
         3501377542454085602,
         867207695587786430,
         9210468346883610997,
-        1910794932095842795
+        1910794932095842795,
+        1339963485057644468
       ],
       retiredIndexUids: const [
         8176574082609213585,
@@ -560,7 +641,17 @@ obx_int.ModelDefinition getObjectBoxModel() {
         3791689441908872094,
         7290586427487009004,
         2133907886604377565,
-        3614142052002170477
+        3614142052002170477,
+        9141182723067187527,
+        8424249390367698456,
+        1605055043486623585,
+        4170973310821413935,
+        5544854253602746622,
+        234129658498633719,
+        8681007331577343761,
+        905347763044908435,
+        962829797831035542,
+        4053460168341695725
       ],
       retiredRelationUids: const [3092819797569954146, 2539627836723066308],
       modelVersion: 5,
@@ -1091,6 +1182,98 @@ obx_int.ModelDefinition getObjectBoxModel() {
                 .vTableGet(buffer, rootOffset, 12, '');
 
           return object;
+        }),
+    MedSchedule: obx_int.EntityDefinition<MedSchedule>(
+        model: _entities[6],
+        toOneRelations: (MedSchedule object) => [],
+        toManyRelations: (MedSchedule object) => {},
+        getId: (MedSchedule object) => object.id,
+        setId: (MedSchedule object, int id) {
+          object.id = id;
+        },
+        objectToFB: (MedSchedule object, fb.Builder fbb) {
+          final noteOffset =
+              object.note == null ? null : fbb.writeString(object.note!);
+          final skipReasonOffset = object.skipReason == null
+              ? null
+              : fbb.writeString(object.skipReason!);
+          final parentIdOffset = fbb.writeString(object.parentId);
+          final dbTypeOffset = fbb.writeString(object.dbType);
+          final dbStatusOffset = fbb.writeString(object.dbStatus);
+          final dbActivityDetailsOffset =
+              fbb.writeString(object.dbActivityDetails);
+          final dbDoseOffset = fbb.writeString(object.dbDose);
+          fbb.startTable(15);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.completedAt?.millisecondsSinceEpoch);
+          fbb.addInt64(2, object.date.millisecondsSinceEpoch);
+          fbb.addOffset(3, noteOffset);
+          fbb.addOffset(4, skipReasonOffset);
+          fbb.addOffset(5, parentIdOffset);
+          fbb.addBool(6, object.isDeleted);
+          fbb.addBool(7, object.isSynced);
+          fbb.addInt64(8, object.updatedAt?.millisecondsSinceEpoch);
+          fbb.addInt64(9, object.createdAt?.millisecondsSinceEpoch);
+          fbb.addOffset(10, dbTypeOffset);
+          fbb.addOffset(11, dbStatusOffset);
+          fbb.addOffset(12, dbActivityDetailsOffset);
+          fbb.addOffset(13, dbDoseOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final completedAtValue =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 6);
+          final updatedAtValue =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 20);
+          final createdAtValue =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 22);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final dateParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0));
+          final parentIdParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 14, '');
+          final completedAtParam = completedAtValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(completedAtValue);
+          final noteParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 10);
+          final skipReasonParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 12);
+          final isDeletedParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 16, false);
+          final isSyncedParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 18, false);
+          final updatedAtParam = updatedAtValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(updatedAtValue);
+          final createdAtParam = createdAtValue == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(createdAtValue);
+          final object = MedSchedule(
+              id: idParam,
+              date: dateParam,
+              parentId: parentIdParam,
+              completedAt: completedAtParam,
+              note: noteParam,
+              skipReason: skipReasonParam,
+              isDeleted: isDeletedParam,
+              isSynced: isSyncedParam,
+              updatedAt: updatedAtParam,
+              createdAt: createdAtParam)
+            ..dbType = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 24, '')
+            ..dbStatus = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 26, '')
+            ..dbActivityDetails = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 28, '')
+            ..dbDose = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 30, '');
+
+          return object;
         })
   };
 
@@ -1414,4 +1597,63 @@ class MedActivityRecord_ {
   /// See [MedActivityRecord.parentId].
   static final parentId =
       obx.QueryStringProperty<MedActivityRecord>(_entities[5].properties[8]);
+}
+
+/// [MedSchedule] entity fields to define ObjectBox queries.
+class MedSchedule_ {
+  /// See [MedSchedule.id].
+  static final id =
+      obx.QueryIntegerProperty<MedSchedule>(_entities[6].properties[0]);
+
+  /// See [MedSchedule.completedAt].
+  static final completedAt =
+      obx.QueryDateProperty<MedSchedule>(_entities[6].properties[1]);
+
+  /// See [MedSchedule.date].
+  static final date =
+      obx.QueryDateProperty<MedSchedule>(_entities[6].properties[2]);
+
+  /// See [MedSchedule.note].
+  static final note =
+      obx.QueryStringProperty<MedSchedule>(_entities[6].properties[3]);
+
+  /// See [MedSchedule.skipReason].
+  static final skipReason =
+      obx.QueryStringProperty<MedSchedule>(_entities[6].properties[4]);
+
+  /// See [MedSchedule.parentId].
+  static final parentId =
+      obx.QueryStringProperty<MedSchedule>(_entities[6].properties[5]);
+
+  /// See [MedSchedule.isDeleted].
+  static final isDeleted =
+      obx.QueryBooleanProperty<MedSchedule>(_entities[6].properties[6]);
+
+  /// See [MedSchedule.isSynced].
+  static final isSynced =
+      obx.QueryBooleanProperty<MedSchedule>(_entities[6].properties[7]);
+
+  /// See [MedSchedule.updatedAt].
+  static final updatedAt =
+      obx.QueryDateProperty<MedSchedule>(_entities[6].properties[8]);
+
+  /// See [MedSchedule.createdAt].
+  static final createdAt =
+      obx.QueryDateProperty<MedSchedule>(_entities[6].properties[9]);
+
+  /// See [MedSchedule.dbType].
+  static final dbType =
+      obx.QueryStringProperty<MedSchedule>(_entities[6].properties[10]);
+
+  /// See [MedSchedule.dbStatus].
+  static final dbStatus =
+      obx.QueryStringProperty<MedSchedule>(_entities[6].properties[11]);
+
+  /// See [MedSchedule.dbActivityDetails].
+  static final dbActivityDetails =
+      obx.QueryStringProperty<MedSchedule>(_entities[6].properties[12]);
+
+  /// See [MedSchedule.dbDose].
+  static final dbDose =
+      obx.QueryStringProperty<MedSchedule>(_entities[6].properties[13]);
 }

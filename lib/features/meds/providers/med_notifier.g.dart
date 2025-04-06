@@ -6,7 +6,7 @@ part of 'med_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$medNotifierHash() => r'ec1b53867c5e6ec872881fee0f4c5397cb6afde1';
+String _$medNotifierHash() => r'3726e319514ca804474a2306ef9109fe821cd1e2';
 
 /// Copied from Dart SDK
 class _SystemHash {

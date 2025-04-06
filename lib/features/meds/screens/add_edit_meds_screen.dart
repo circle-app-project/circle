@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:circle/core/extensions/date_time_formatter.dart';
 import 'package:circle/features/meds/models/dose.dart';
+import 'package:circle/features/meds/models/med_schedule.dart';
+import 'package:circle/features/meds/providers/med_schedule_notifier.dart';
 import 'package:circle/features/meds/screens/components/dose_bottomsheet.dart';
 import 'package:circle/features/meds/screens/components/duration_bottomsheet.dart';
 import 'package:circle/features/meds/screens/components/emphasized_container.dart';
@@ -83,11 +85,15 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
     defaultDoses = List.generate(
       defaultDoseValues.length,
       (index) => Dose(
-        dose: defaultDoseValues[index].toDouble(),
+        amount: defaultDoseValues[index].toDouble(),
         unit: Units.milligram,
+        number: 1,
+
+        ///Todo: edit this to include the number of pills
       ),
     );
 
+    /// Automatically Prefill fields if in edit mode
     if (widget.isEditing && widget.medicationToEdit != null) {
       selectedStartDate = widget.medicationToEdit?.startDate;
       nameController.text = widget.medicationToEdit?.name ?? "";
@@ -109,14 +115,18 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
 
       /// Add the selected duration on dose to the list of default doses and durations, then make them sets
       defaultDoses.insert(defaultDoseValues.length - 1, selectedDose!);
-      defaultDoses.toSet().toList(); /// Convert to set to remove duplicates then back to list
+      defaultDoses.toSet().toList();
+
+      /// Convert to set to remove duplicates then back to list
 
       defaultDurationValues.insert(
         defaultDurationValues.length - 1,
         selectedDuration!.inDays,
       );
 
-      defaultDurationValues.toSet().toList(); /// Convert to set to remove duplicates then back to list
+      defaultDurationValues.toSet().toList();
+
+      /// Convert to set to remove duplicates then back to list
     }
 
     super.initState();
@@ -175,7 +185,9 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
       defaultDoses.insert(defaultDoseValues.length - 1, selectedDose!);
     }
 
-    log("Selected Dose is : ${selectedDose!.dose} ${selectedDose!.unit.name}");
+    log(
+      "Selected Dose is : ${selectedDose!.amount} ${selectedDose!.unit.name}",
+    );
 
     setState(() {});
   }
@@ -310,6 +322,8 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
 
                 const Gap(24),
                 const Text("What's the dose of your medication "),
+
+                ///Todo: Add an incrementing component for the number of pills for the dose or something.
                 const Gap(12),
                 GenericSelector<Dose, SelectableChip>(
                   wrapSpacing: 8,
@@ -318,7 +332,7 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                   isMultiSelectMode: false,
                   onItemSelected: (List<Dose> dosesSelected) {
                     log(
-                      "Selected medication dose is ${dosesSelected.first.dose}",
+                      "Selected medication dose is ${dosesSelected.first.amount}",
                       name: "Add Medication Screen",
                     );
                     selectedDose = dosesSelected.first;
@@ -337,13 +351,15 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                     /// Will check for that dose and properly launch the dose picker.
 
                     return SelectableChip(
-                      icon: item.dose == 0 ? FluentIcons.add_24_regular : null,
+                      icon:
+                          item.amount == 0 ? FluentIcons.add_24_regular : null,
                       label:
-                          item.dose == 0
+                          item.amount == 0
                               ? "Custom"
-                              : item.dose.toStringAsFixed(0) + item.unit.symbol,
+                              : item.amount.toStringAsFixed(0) +
+                                  item.unit.symbol,
                       onPressed: () async {
-                        if (item.dose == 0) {
+                        if (item.amount == 0) {
                           _selectDoses();
                         }
                         onSelected.call();
@@ -358,7 +374,7 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                 const Gap(kPadding16),
                 Divider(color: theme.colorScheme.surfaceContainer),
 
-                /// ---------------------------------------------///
+                /// -------------------------------------------- ///
                 const Gap(kPadding16),
 
                 /// Timeline
@@ -682,7 +698,7 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
 
                     // Enforce Adding required fields
 
-                    if(selectedTimeToTakeMedication.isEmpty){
+                    if (selectedTimeToTakeMedication.isEmpty) {
                       showCustomSnackBar(
                         context: context,
                         message: "Please select a time to take your medication",
@@ -769,6 +785,19 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                           );
                         }
                       } else {
+                        /// Compute doses for the medication
+                        List<MedSchedule> allScheduledDoses = medication
+                            .createUpcomingDoseSchedule(
+                              from: medication.startDate!,
+                              until:
+                                  medication.endDate ??
+                                  DateTime.now().add(Duration(days: 365)),
+                            );
+                        ref
+                            .watch(medScheduleNotifierProviderImpl.notifier)
+                            .putMedicationSchedules(
+                              schedules: allScheduledDoses,
+                            );
                         if (context.mounted) {
                           showCustomSnackBar(
                             context: context,
@@ -777,7 +806,6 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                           );
                           context.back();
                         }
-
                         ///Navigate to where ever
                       }
                     }

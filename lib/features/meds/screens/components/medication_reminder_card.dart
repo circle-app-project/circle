@@ -1,5 +1,7 @@
+import 'package:circle/features/meds/models/med_schedule.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:springster/springster.dart';
@@ -8,39 +10,40 @@ import '../../../../components/components.dart';
 import '../../../../../core/core.dart';
 import '../../meds.dart';
 import '../../models/medication.dart';
+import '../../providers/med_schedule_notifier.dart';
 
-class MedicationReminderCard extends StatefulWidget {
+class MedicationReminderCard extends ConsumerStatefulWidget {
   const MedicationReminderCard({
-    required this.medication,
+    required this.medSchedule,
     super.key,
     this.viewportWidthFraction = 1,
     this.isEmphasized = false,
-    required this.onMarkAsSkipped,
-    required this.onMarkAsTaken,
   }) : assert(viewportWidthFraction >= 0 && viewportWidthFraction <= 1);
 
-  final Medication medication;
+  final MedSchedule medSchedule;
 
   /// The fraction of the horizontal viewport width this widget should take, should be between 0.0 & 1.0
   final double viewportWidthFraction;
   final bool isEmphasized;
-  final VoidCallback onMarkAsTaken;
-  final void Function(String? skipReason) onMarkAsSkipped;
 
   @override
-  State<MedicationReminderCard> createState() => _MedicationReminderCardState();
+  ConsumerState<MedicationReminderCard> createState() => _MedicationReminderCardState();
 }
 
-class _MedicationReminderCardState extends State<MedicationReminderCard>
+class _MedicationReminderCardState extends ConsumerState<MedicationReminderCard>
     with SingleTickerProviderStateMixin {
   late final AnimationController animationController;
   final TextEditingController skipReasonController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool isSkipReasonFieldVisible = false;
+  late final Medication medication;
+
 
   @override
   void initState() {
+
     animationController = AnimationController(vsync: this);
+    medication = widget.medSchedule.medication!;
     super.initState();
   }
 
@@ -51,10 +54,12 @@ class _MedicationReminderCardState extends State<MedicationReminderCard>
     super.dispose();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    Medication med = widget.medication;
+    MedScheduleNotifier medScheduleNotifier = ref.watch(medScheduleNotifierProviderImpl.notifier);
     return InkWell(
       borderRadius: BorderRadius.circular(24),
       splashFactory: InkSparkle.splashFactory,
@@ -72,7 +77,7 @@ class _MedicationReminderCardState extends State<MedicationReminderCard>
               widget.isEmphasized
                   ? theme.colorScheme.secondary
                   : theme.scaffoldBackgroundColor,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(widget.isEmphasized ? 24 : 16),
           border: Border.all(color: theme.colorScheme.surfaceContainer),
         ),
 
@@ -90,16 +95,20 @@ class _MedicationReminderCardState extends State<MedicationReminderCard>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
               children: [
-                Text(
-                  "Up Next",
-                  style: theme.textTheme.bodyMedium!.copyWith(
-                    color:
-                        widget.isEmphasized
-                            ? Colors.white.withValues(alpha: .5)
-                            : theme.colorScheme.onSurface.withValues(alpha: .5),
+                if (widget.isEmphasized) ...[
+                  Text(
+                    "Up Next",
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                      color:
+                          widget.isEmphasized
+                              ? Colors.white.withValues(alpha: .5)
+                              : theme.colorScheme.onSurface.withValues(
+                                alpha: .5,
+                              ),
+                    ),
                   ),
-                ),
-                const Gap(kPadding8),
+                  const Gap(kPadding8),
+                ],
                 // Row(
                 //   children: [
                 //     Text(
@@ -159,15 +168,17 @@ class _MedicationReminderCardState extends State<MedicationReminderCard>
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: "${med.name},",
+                        text: "${medication.name},",
                         style: theme.textTheme.titleLarge?.copyWith(
+                          fontSize: widget.isEmphasized ? 22 : 18,
                           color: widget.isEmphasized ? Colors.white : null,
                         ),
                       ),
                       TextSpan(
                         text:
-                            " ${widget.medication.dose?.dose.toStringAsFixed(0) ?? ""} ${widget.medication.dose?.unit.symbol ?? ""}",
+                            " ${widget.medSchedule.dose.amount.toStringAsFixed(0)} ${widget.medSchedule.dose.unit.symbol}",
                         style: theme.textTheme.titleLarge?.copyWith(
+                          fontSize: widget.isEmphasized ? 22 : 18,
                           color:
                               widget.isEmphasized
                                   ? Colors.white.withValues(alpha: .5)
@@ -178,6 +189,8 @@ class _MedicationReminderCardState extends State<MedicationReminderCard>
                   ),
                 ),
                 const Gap(kPadding16),
+
+                /// Dose and Time
                 Row(
                   children: [
                     Row(
@@ -185,12 +198,22 @@ class _MedicationReminderCardState extends State<MedicationReminderCard>
                       children: [
                         AppIcon(
                           icon: HugeIcons.strokeRoundedAlertCircle,
-                          color: widget.isEmphasized ? Colors.white : null,
+                          color:
+                              widget.isEmphasized
+                                  ? Colors.white
+                                  : theme.colorScheme.onSurface.withValues(
+                                    alpha: .4,
+                                  ),
                         ),
                         Text(
-                          "1 pill",
+                          "${widget.medSchedule.dose.number.toStringAsFixed(0)} ${medication.type?.label}",
                           style: theme.textTheme.bodyLarge?.copyWith(
-                            color: widget.isEmphasized ? Colors.white : null,
+                            color:
+                                widget.isEmphasized
+                                    ? Colors.white
+                                    : theme.colorScheme.onSurface.withValues(
+                                      alpha: .4,
+                                    ),
                           ),
                         ),
                       ],
@@ -202,20 +225,32 @@ class _MedicationReminderCardState extends State<MedicationReminderCard>
                       children: [
                         AppIcon(
                           icon: HugeIcons.strokeRoundedClock01,
-                          color: widget.isEmphasized ? Colors.white : null,
+                          color:
+                              widget.isEmphasized
+                                  ? Colors.white
+                                  : theme.colorScheme.onSurface.withValues(
+                                    alpha: .4,
+                                  ),
                         ),
                         Text(
-                          " At ${med.frequency?.times?.first.format(context)}", // Todo: Properly sort this to find the date of the next dose.
+                          " At ${TimeOfDay.fromDateTime(widget.medSchedule.date).format(context)}",
                           style: theme.textTheme.bodyLarge?.copyWith(
-                            color: widget.isEmphasized ? Colors.white : null,
+                            color:
+                                widget.isEmphasized
+                                    ? Colors.white
+                                    : theme.colorScheme.onSurface.withValues(
+                                      alpha: .4,
+                                    ),
                           ),
                         ),
                       ],
                     ),
                   ],
                 ),
-                const Gap(kPadding16),
+
+                /// Skip reason text form field
                 if (isSkipReasonFieldVisible) ...[
+                  const Gap(kPadding16),
                   TextFormField(
                     controller: skipReasonController,
                     maxLines: 3,
@@ -266,58 +301,93 @@ class _MedicationReminderCardState extends State<MedicationReminderCard>
                   ),
                   const Gap(kPadding16),
                 ],
-                Row(
-                  spacing: kPadding16,
-                  children: [
-                    Expanded(
-                      child: AppButton(
-                        onPressed:
-                            isSkipReasonFieldVisible
-                                ? () {
-                                  if (_formKey.currentState!.validate()) {
-                                    widget.onMarkAsSkipped.call(
-                                      skipReasonController.text.trim(),
-                                    );
-                                    Future.delayed(
-                                      Duration(milliseconds: 300),
-                                      () {
-                                        setState(() {
-                                          skipReasonController.text = "";
-                                          isSkipReasonFieldVisible = false;
-                                        });
-                                      },
-                                    );
+
+                /// Buttons
+                if (widget.isEmphasized) ...[
+                  const Gap(kPadding16),
+                  Row(
+                    spacing: kPadding16,
+                    children: [
+                      Expanded(
+                        child: AppButton(
+                          onPressed:
+                              isSkipReasonFieldVisible
+                                  ? () async {
+                                    if (_formKey.currentState!.validate()) {
+
+                                      await medScheduleNotifier.markDoseAsSkipped(
+                                        medSchedule: widget.medSchedule,
+                                        skipReason: skipReasonController.text.trim(),
+                                      );
+
+                                      Future.delayed(
+                                        const Duration(milliseconds: 300),
+                                        () {
+                                          setState(() {
+                                            skipReasonController.text = "";
+                                            isSkipReasonFieldVisible = false;
+                                          });
+                                        },
+                                      );
+
+                                      if (context.mounted) {
+                                        if (ref.watch(medScheduleNotifierProviderImpl).hasError) {
+                                          showCustomSnackBar(
+                                            context: context,
+                                            error: ref.watch(medScheduleNotifierProviderImpl).error,
+                                          );
+                                        } else {
+                                          showCustomSnackBar(
+                                            context: context,
+                                            message: "Dose skipped",
+                                            mode: SnackBarMode.notification,
+                                          );
+                                        }
+                                      }
+                                    }
                                   }
-                                }
-                                : () {
-                                  /// Skip field is not visible, so make it visible
-                                  setState(() {
-                                    isSkipReasonFieldVisible =
-                                        !isSkipReasonFieldVisible;
-                                  });
-                                },
-                        icon: HugeIcons.strokeRoundedStepOver,
-                        color: widget.isEmphasized ? Colors.white : null,
-                        label: isSkipReasonFieldVisible ? "Continue" : "Skip",
-                        isChipButton: true,
-                        buttonType: ButtonType.secondary,
-                        backgroundColor:
-                            widget.isEmphasized
-                                ? Colors.white.withValues(alpha: .3)
-                                : theme.colorScheme.secondaryContainer,
+                                  : () {
+                                    /// Skip field is not visible, so make it visible
+                                    setState(() {
+                                      isSkipReasonFieldVisible =
+                                          !isSkipReasonFieldVisible;
+                                    });
+                                  },
+                          icon: HugeIcons.strokeRoundedStepOver,
+                          color: widget.isEmphasized ? Colors.white : null,
+                          label: isSkipReasonFieldVisible ? "Continue" : "Skip",
+                          isChipButton: true,
+                          buttonType: ButtonType.secondary,
+                          backgroundColor:
+                              widget.isEmphasized
+                                  ? Colors.white.withValues(alpha: .3)
+                                  : theme.colorScheme.secondaryContainer,
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: AppButton(
-                        onPressed: widget.onMarkAsTaken,
-                        label: "Taken",
-                        backgroundColor: AppColours.black,
-                        color: AppColours.white,
-                        isChipButton: true,
+                      Expanded(
+                        child: AppButton(
+                          onPressed: () async {
+                            await medScheduleNotifier.markDoseAsCompleted(
+                              medSchedule: widget.medSchedule,
+                            );
+                            if (ref.watch(medScheduleNotifierProviderImpl).hasError) {
+                              if(context.mounted){
+                                showCustomSnackBar(
+                                  context: context,
+                                  error: ref.watch(medScheduleNotifierProviderImpl).error,
+                                );
+                              }
+                            }
+                          },
+                          label: "Taken",
+                          backgroundColor: AppColours.black,
+                          color: AppColours.white,
+                          isChipButton: true,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),

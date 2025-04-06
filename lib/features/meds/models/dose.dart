@@ -9,29 +9,34 @@ import '../../../core/core.dart';
 ///
 /// Example usage:
 /// ```dart
-/// Dose dose = Dose(dose: 500, unit: Units.milligram);
+/// Dose dose = Dose(amount: 500, number:1, unit: Units.milligram);
 /// ```
 class Dose extends Equatable {
-  /// The amount of the substance.
-  final double dose;
+  /// The amount of the substance per serving (per pill)
+  final double amount;
+
+  /// The number of servings to take.
+  final double number;
 
   /// The unit of measurement for the dose.
   final Units unit;
 
   /// Creates a new `Dose` instance.
   ///
-  /// - [dose] specifies the amount of the substance.
+  /// - [amount] specifies the amount of the substance.
+  /// - [number] specifies the number of servings of the substance.
   /// - [unit] specifies the unit of measurement.
-  const Dose({required this.dose, required this.unit});
+  const Dose({required this.amount, required this.unit, required this.number});
 
   /// Creates a copy of the current `Dose` instance with updated values.
   ///
-  /// - [dose] overrides the existing dose if provided.
+  /// - [amount] overrides the existing dose if provided.
   /// - [unit] overrides the existing unit if provided.
-  Dose copyWith({double? dose, Units? unit}) {
+  Dose copyWith({double? amount, Units? unit,  double? number}) {
     return Dose(
-      dose: dose ?? this.dose,
+      amount: amount ?? this.amount,
       unit: unit ?? this.unit,
+      number: number ?? this.number
     );
   }
 
@@ -42,8 +47,10 @@ class Dose extends Equatable {
   /// - `unit`: The name of the unit (as a string).
   Map<String, dynamic> toMap() {
     return {
-      'dose': dose,
+      'amount': amount,
       'unit': unit.name,
+      'number': number
+
     };
   }
 
@@ -54,13 +61,14 @@ class Dose extends Equatable {
   ///   - `unit`: A string representing the unit (must match a valid `Units` enum value).
   factory Dose.fromMap(Map<String, dynamic> map) {
     return Dose(
-      dose: map['dose'],
+      amount: map['amount'],
       unit: Units.values.byName(map['unit']),
+      number: map['number']
     );
   }
 
   /// A predefined empty `Dose` instance, useful for default values.
-  static const Dose empty = Dose(dose: 0, unit: Units.milligram);
+  static const Dose empty = Dose(amount: 0, unit: Units.milligram, number: 0);
 
   /// Checks if the current `Dose` instance is empty.
   bool get isEmpty => this == Dose.empty;
@@ -87,8 +95,8 @@ class Dose extends Equatable {
 
   /// Defines the properties used for equality checks.
   ///
-  /// Two `Dose` instances are considered equal if their `dose` and `unit`
+  /// Two `Dose` instances are considered equal if their `amount`,`number`, and `unit`
   /// properties match.
   @override
-  List<Object?> get props => [dose, unit];
+  List<Object?> get props => [amount, unit, number];
 }
