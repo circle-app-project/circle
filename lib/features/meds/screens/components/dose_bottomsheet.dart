@@ -13,7 +13,8 @@ class DoseBottomSheet extends StatefulWidget {
 }
 
 class _DoseBottomSheetState extends State<DoseBottomSheet> {
-  TextEditingController textController = TextEditingController();
+  TextEditingController amountController = TextEditingController();
+  TextEditingController numberController = TextEditingController(text: "1");
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Dose? dose;
@@ -32,7 +33,7 @@ class _DoseBottomSheetState extends State<DoseBottomSheet> {
 
   @override
   void dispose() {
-    textController.dispose();
+    amountController.dispose();
     super.dispose();
   }
 
@@ -40,7 +41,6 @@ class _DoseBottomSheetState extends State<DoseBottomSheet> {
   void initState() {
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -50,21 +50,24 @@ class _DoseBottomSheetState extends State<DoseBottomSheet> {
       title: "Select Dose",
       bottomPadding: 48,
       onPressed: () {
-
-        if(selectedUnit== null){
-          showCustomSnackBar(context: context, message: "Please select a unit", mode: SnackBarMode.error);
-        }else{
-          if(_formKey.currentState!.validate()){
+        if (selectedUnit == null) {
+          showCustomSnackBar(
+            context: context,
+            message: "Please select a unit",
+            mode: SnackBarMode.error,
+          );
+        } else {
+          if (_formKey.currentState!.validate()) {
             setState(() {
-              dose = Dose(dose: double.parse(textController.text.trim()), unit: selectedUnit!);
+              dose = Dose(
+                amount: double.parse(amountController.text.trim()),
+                unit: selectedUnit!,
+                number: double.tryParse(numberController.text.trim()) ?? 1 // Defaults to 1 pill
+              );
             });
             Navigator.pop(context, dose);
           }
         }
-
-
-
-
       },
       buttonLabel: "Save",
       child: Form(
@@ -72,7 +75,7 @@ class _DoseBottomSheetState extends State<DoseBottomSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-         // spacing: kPadding16,
+          // spacing: kPadding16,
           children: [
             Row(
               spacing: 2,
@@ -80,26 +83,39 @@ class _DoseBottomSheetState extends State<DoseBottomSheet> {
                 Expanded(
                   flex: 3,
                   child: TextFormField(
-                  //  autofocus: true,
-                    controller: textController,
+                    //  autofocus: true,
+                    controller: amountController,
                     keyboardType: TextInputType.number,
                     decoration: AppInputDecoration.inputDecoration(
                       context,
-                    ).copyWith(
-                      hintText: "e.g 100mg",
-                    ),
-                    inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly
-                    ],
-                    validator: (value){
-                      if(value == null || value.isEmpty){
+                    ).copyWith(hintText: "e.g 100mg"),
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
                         return "Please input a value";
                       }
                       return null;
                     },
                   ),
                 ),
-
+                Expanded(
+                  flex: 1,
+                  child: TextFormField(
+                    //  autofocus: true,
+                    controller: numberController,
+                    keyboardType: TextInputType.number,
+                    decoration: AppInputDecoration.inputDecoration(
+                      context,
+                    ).copyWith(hintText: "e.g 1 tablet"),
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please input a value";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
               ],
             ),
             const Gap(kPadding16),
@@ -111,11 +127,10 @@ class _DoseBottomSheetState extends State<DoseBottomSheet> {
                 wrapSpacing: 8,
                 wrapRunSpacing: 6,
                 layout: SelectorLayout.wrap,
-              //  initialSelection: [Units.milligram],
+                //  initialSelection: [Units.milligram],
                 onItemSelected: (List<Units> unitSelected) {
                   selectedUnit = unitSelected.first;
-                  setState(() {
-                  });
+                  setState(() {});
                 },
                 items: dropDownMenuItems,
 
