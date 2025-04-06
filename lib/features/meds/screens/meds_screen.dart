@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:circle/features/meds/models/med_schedule.dart';
+import 'package:circle/features/meds/providers/med_schedule_notifier.dart';
 import 'package:circle/features/meds/screens/components/medication_reminder_card.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:hugeicons/hugeicons.dart';
 
@@ -24,26 +24,41 @@ class MedsScreen extends ConsumerStatefulWidget {
 }
 
 class _MedsScreenState extends ConsumerState<MedsScreen> {
+  List<MedSchedule> upcomingDosesForToday = [];
+  List<MedSchedule> allDosesForToday = [];
+  List<MedSchedule> pastDosesForToday = [];
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(medNotifierProviderImpl.notifier).getMedications();
+      await ref.read(medScheduleNotifierProviderImpl.notifier).getMedicationsSchedules();
+      upcomingDosesForToday =
+          ref.watch(medNotifierProviderImpl.notifier).upcomingDosesForToday;
+      pastDosesForToday =
+          ref.watch(medNotifierProviderImpl.notifier).pastDosesForToday;
+      allDosesForToday =
+          ref.watch(medNotifierProviderImpl.notifier).allDosesForToday;
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    MedNotifier medsNotifier = ref.watch(medNotifierProviderImpl.notifier);
-
     List<Medication> medications =
         ref.watch(medNotifierProviderImpl).value ?? [];
+    List<MedSchedule> medicationSchedule =
+        ref.watch(medScheduleNotifierProviderImpl).value ?? [];
 
     if (medications.isEmpty) {
       print("No medications");
     } else {
       print(
-        "number of medication actity records for this medciation: ${medications.first.activityRecord.length}",
+        "number of medication activity records for this medication: ${medications.first.activityRecord.length}",
+      );
+
+      print(
+        "LIST OF DOSES FOR TODAY FOR THIS MEDICATION IS : $upcomingDosesForToday",
       );
     }
 
@@ -67,39 +82,8 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
                   children: [
                     Text("Next Dose", style: theme.textTheme.titleMedium),
                     MedicationReminderCard(
-                      medication: medications.first,
+                      medSchedule: upcomingDosesForToday.first,
                       isEmphasized: true,
-                      onMarkAsSkipped: (String? skipReason) async {
-                        await medsNotifier.markDoseAsSkipped(
-                          medication: medications.first,
-                          skipReason: skipReason,
-                        );
-                        if (context.mounted) {
-                          if (ref.watch(medNotifierProviderImpl).hasError) {
-                            showCustomSnackBar(
-                              context: context,
-                              error: ref.watch(medNotifierProviderImpl).error,
-                            );
-                          } else {
-                            showCustomSnackBar(
-                              context: context,
-                              message: "Dose skipped",
-                              mode: SnackBarMode.notification,
-                            );
-                          }
-                        }
-                      },
-                      onMarkAsTaken: () async {
-                        await medsNotifier.markDoseAsTaken(
-                          medication: medications.first,
-                        );
-                        if (ref.watch(medNotifierProviderImpl).hasError) {
-                          showCustomSnackBar(
-                            context: context,
-                            error: ref.watch(medNotifierProviderImpl).error,
-                          );
-                        }
-                      },
                     ),
                   ],
                 ),
@@ -157,75 +141,82 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
             ),
 
             const SizedBox(height: 32),
-            AppButton(
-              icon: FluentIcons.add_24_regular,
-              onPressed: () {
-                context.router.pushNamed(AddMedsScreen.path);
-                // showAdaptiveDialog(
-                //   context: context,
-                //   builder: (context) => SicklerAlertDialog(
-                //     child: Column(
-                //       mainAxisSize: MainAxisSize.min,
-                //       crossAxisAlignment: CrossAxisAlignment.center,
-                //       children: [
-                //         Text(
-                //           "Are you sure you want to delete this log?",
-                //           textAlign: TextAlign.center,
-                //         ),
-                //         Gap(24),
-                //         Row(
-                //           mainAxisAlignment: MainAxisAlignment.end,
-                //           children: [
-                //             SicklerButton(
-                //                 isChipButton: true,
-                //                 icon: FluentIcons.dismiss_20_regular,
-                //                 buttonType: ButtonType.text,
-                //                 onPressed: () {
-                //                   context.pop();
-                //                 },
-                //                 label: "Cancel"),
-                //             Gap(12),
-                //             SicklerButton(
-                //                 isChipButton: true,
-                //                 icon: FluentIcons.delete_20_regular,
-                //                 color: theme.colorScheme.error,
-                //                 buttonType: ButtonType.text,
-                //                 onPressed: () {},
-                //                 label: "Delete")
-                //           ],
-                //         )
-                //       ],
-                //     ),
-                //     title: "Delete Log?",
-                //   ),
-                // );
-              },
-              label: "Add Medication",
-              buttonType: ButtonType.secondary,
+
+            /// Upcoming Doses
+
+            ///Todo: subtract the first does from this list because its already in the emphasized next dose seciont at the top
+            /// then prolly show some nice illustration saying you;re all done for the day or smth
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kPadding16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+
+                children: [
+                  Text("Upcoming Doses", style: theme.textTheme.titleMedium),
+                  const Gap(kPadding8),
+                  ListView.separated(
+                    itemCount: upcomingDosesForToday.length,
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    separatorBuilder: (context, index) => const Gap(kPadding8),
+                    itemBuilder: (context, index) {
+                      return MedicationReminderCard(
+                        medSchedule: upcomingDosesForToday[index],
+                        isEmphasized: false,
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 48),
-            Row(
-              children: [
-                Text("Today's History", style: theme.textTheme.titleLarge),
-                const Spacer(),
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {},
-                  icon: SvgPicture.asset("assets/svg/filter.svg"),
-                ),
-              ],
+
+            const SizedBox(height: 32),
+
+            /// Past Doses
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kPadding16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+
+                children: [
+                  Text("Past Doses", style: theme.textTheme.titleMedium),
+                  const Gap(kPadding8),
+                  ListView.separated(
+                    itemCount: pastDosesForToday.length,
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    separatorBuilder: (context, index) => const Gap(kPadding8),
+                    itemBuilder: (context, index) {
+                      return MedicationReminderCard(
+                        medSchedule: pastDosesForToday[index],
+                        isEmphasized: false,
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 12),
-            DateSwitcher(
-              onNextPressed: () {},
-              onPreviousPressed: () {},
-              label: "Today",
-            ),
-            const Gap(12),
-            const MedsHistoryItem(mode: MedsHistoryMode.weekly),
-            const MedsHistoryItem(),
-            const MedsHistoryItem(),
-            const SizedBox(height: 64),
+            //
+            // Row(
+            //   children: [
+            //     Text("Today's History", style: theme.textTheme.titleLarge),
+            //     const Spacer(),
+            //     IconButton(
+            //       padding: EdgeInsets.zero,
+            //       onPressed: () {},
+            //       icon: SvgPicture.asset("assets/svg/filter.svg"),
+            //     ),
+            //   ],
+            // ),
+            // const SizedBox(height: 12),
+            // DateSwitcher(
+            //   onNextPressed: () {},
+            //   onPreviousPressed: () {},
+            //   label: "Today",
+            // ),
+            // const Gap(12),
+            // const MedsHistoryItem(mode: MedsHistoryMode.weekly),
+            const Gap( 64),
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:objectbox/objectbox.dart';
+
 import 'activity_record.dart';
 
 
@@ -129,7 +130,6 @@ class MedActivityRecord implements ActivityRecord {
         note: map['note'] as String?,
         type: type,
       );
-
   }
 
   @override
@@ -147,9 +147,5 @@ class MedActivityRecord implements ActivityRecord {
     completedAt,
     activityDetails,
   ];
-
-
-
 }
-
 
