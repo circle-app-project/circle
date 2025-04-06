@@ -120,7 +120,7 @@ class _MedicationCardState extends State<MedicationCard>
                     ),
                     TextSpan(
                       text:
-                          " ${widget.medication.dose?.dose.toStringAsFixed(0) ?? ""} ${widget.medication.dose?.unit.symbol ?? ""}",
+                          " ${widget.medication.dose?.amount.toStringAsFixed(0) ?? ""} ${widget.medication.dose?.unit.symbol ?? ""}",
                       style: theme.textTheme.titleLarge?.copyWith(
                         color: theme.colorScheme.secondary,
                       ),
@@ -173,7 +173,7 @@ class _MedicationCardState extends State<MedicationCard>
                   // ),
                   AppChip(
                     label:
-                        "${med.dose?.dose.toInt() ?? ""} ${med.dose?.unit.symbol ?? ""}/pill",
+                        "${med.dose?.amount.toInt() ?? ""} ${med.dose?.unit.symbol ?? ""}/pill",
                     icon: FluentIcons.pill_16_regular,
                     color: theme.colorScheme.onSecondaryContainer,
                     backgroundColor: theme.colorScheme.surfaceContainerLow,
