@@ -43,7 +43,7 @@ class MedActivityRecord implements ActivityRecord {
   CompletionsStatus status;
   @override
   @Transient()
-  ActivityType type;
+  ActivityType activityType;
   @override
   @Property(type: PropertyType.date)
   final DateTime? completedAt;
@@ -61,10 +61,10 @@ class MedActivityRecord implements ActivityRecord {
 
 
   // ////////// Object Box Type Converters /////////// //
-  String get dbType => type.name;
+  String get dbType => activityType.name;
   String get dbStatus => status.name;
   String get dbActivityDetails => jsonEncode(activityDetails);
-  set dbType(String value) => type = ActivityType.values.byName(value);
+  set dbType(String value) => activityType = ActivityType.values.byName(value);
   set dbStatus(String value) => status = CompletionsStatus.values.byName(value);
   set dbActivityDetails(String? value) {
     if (value != null) {
@@ -83,7 +83,7 @@ class MedActivityRecord implements ActivityRecord {
     this.skipReason,
     this.completedAt,
     this.activityDetails,
-    this.type = ActivityType.medication,
+    this.activityType = ActivityType.medication,
   });
 
   @override
@@ -112,7 +112,7 @@ class MedActivityRecord implements ActivityRecord {
       'parentId': parentId,
       'status': status.name,
       'note': note,
-      'type': type.name,
+      'type': activityType.name,
       'skipReason': skipReason,
       'completedAt': completedAt?.toIso8601String(),
     };
@@ -128,7 +128,7 @@ class MedActivityRecord implements ActivityRecord {
         status: CompletionsStatus.values.byName(map['status']),
         skipReason: map['skipReason'] as String?,
         note: map['note'] as String?,
-        type: type,
+        activityType: type,
       );
   }
 
@@ -143,7 +143,7 @@ class MedActivityRecord implements ActivityRecord {
     status,
     note,
     skipReason,
-    type,
+    activityType,
     completedAt,
     activityDetails,
   ];

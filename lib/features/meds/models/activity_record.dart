@@ -11,7 +11,7 @@ abstract class ActivityRecord extends Equatable {
   final DateTime date;
   final String? note;
   final String? skipReason;
-  ActivityType type;
+  ActivityType activityType;
   CompletionsStatus status;
   final DateTime? completedAt;
   final String? parentId;
@@ -21,7 +21,7 @@ abstract class ActivityRecord extends Equatable {
     this.id = 0,
     required this.date,
     required this.status,
-    required this.type,
+    required this.activityType,
     this.parentId,
     this.note,
     this.skipReason,
@@ -38,7 +38,7 @@ abstract class ActivityRecord extends Equatable {
     status,
     note,
     skipReason,
-    type,
+    activityType,
     completedAt,
     parentId,
     activityDetails,

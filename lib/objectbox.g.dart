@@ -462,7 +462,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(13, 8773604070706490068),
       name: 'MedSchedule',
-      lastPropertyId: const obx_int.IdUid(14, 6744692704282181672),
+      lastPropertyId: const obx_int.IdUid(15, 271172681437230255),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -516,11 +516,6 @@ final _entities = <obx_int.ModelEntity>[
             type: 10,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(11, 348936209633946731),
-            name: 'dbType',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
             id: const obx_int.IdUid(12, 5028455532129656100),
             name: 'dbStatus',
             type: 9,
@@ -533,6 +528,11 @@ final _entities = <obx_int.ModelEntity>[
         obx_int.ModelProperty(
             id: const obx_int.IdUid(14, 6744692704282181672),
             name: 'dbDose',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(15, 271172681437230255),
+            name: 'dbActivityType',
             type: 9,
             flags: 0)
       ],
@@ -651,7 +651,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
         8681007331577343761,
         905347763044908435,
         962829797831035542,
-        4053460168341695725
+        4053460168341695725,
+        348936209633946731
       ],
       retiredRelationUids: const [3092819797569954146, 2539627836723066308],
       modelVersion: 5,
@@ -1198,12 +1199,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
               ? null
               : fbb.writeString(object.skipReason!);
           final parentIdOffset = fbb.writeString(object.parentId);
-          final dbTypeOffset = fbb.writeString(object.dbType);
           final dbStatusOffset = fbb.writeString(object.dbStatus);
           final dbActivityDetailsOffset =
               fbb.writeString(object.dbActivityDetails);
           final dbDoseOffset = fbb.writeString(object.dbDose);
-          fbb.startTable(15);
+          final dbActivityTypeOffset = fbb.writeString(object.dbActivityType);
+          fbb.startTable(16);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.completedAt?.millisecondsSinceEpoch);
           fbb.addInt64(2, object.date.millisecondsSinceEpoch);
@@ -1214,10 +1215,10 @@ obx_int.ModelDefinition getObjectBoxModel() {
           fbb.addBool(7, object.isSynced);
           fbb.addInt64(8, object.updatedAt?.millisecondsSinceEpoch);
           fbb.addInt64(9, object.createdAt?.millisecondsSinceEpoch);
-          fbb.addOffset(10, dbTypeOffset);
           fbb.addOffset(11, dbStatusOffset);
           fbb.addOffset(12, dbActivityDetailsOffset);
           fbb.addOffset(13, dbDoseOffset);
+          fbb.addOffset(14, dbActivityTypeOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1264,14 +1265,14 @@ obx_int.ModelDefinition getObjectBoxModel() {
               isSynced: isSyncedParam,
               updatedAt: updatedAtParam,
               createdAt: createdAtParam)
-            ..dbType = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 24, '')
             ..dbStatus = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 26, '')
             ..dbActivityDetails = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 28, '')
             ..dbDose = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 30, '');
+                .vTableGet(buffer, rootOffset, 30, '')
+            ..dbActivityType = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 32, '');
 
           return object;
         })
@@ -1641,19 +1642,19 @@ class MedSchedule_ {
   static final createdAt =
       obx.QueryDateProperty<MedSchedule>(_entities[6].properties[9]);
 
-  /// See [MedSchedule.dbType].
-  static final dbType =
-      obx.QueryStringProperty<MedSchedule>(_entities[6].properties[10]);
-
   /// See [MedSchedule.dbStatus].
   static final dbStatus =
-      obx.QueryStringProperty<MedSchedule>(_entities[6].properties[11]);
+      obx.QueryStringProperty<MedSchedule>(_entities[6].properties[10]);
 
   /// See [MedSchedule.dbActivityDetails].
   static final dbActivityDetails =
-      obx.QueryStringProperty<MedSchedule>(_entities[6].properties[12]);
+      obx.QueryStringProperty<MedSchedule>(_entities[6].properties[11]);
 
   /// See [MedSchedule.dbDose].
   static final dbDose =
+      obx.QueryStringProperty<MedSchedule>(_entities[6].properties[12]);
+
+  /// See [MedSchedule.dbActivityType].
+  static final dbActivityType =
       obx.QueryStringProperty<MedSchedule>(_entities[6].properties[13]);
 }
