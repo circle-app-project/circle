@@ -73,7 +73,7 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
               child: CustomAppBar(pageTitle: "Medication"),
             ),
 
-            if (medications.isNotEmpty)
+            if (upcomingDosesForToday.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: kPadding16),
                 child: Column(

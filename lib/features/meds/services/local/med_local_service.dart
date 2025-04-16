@@ -172,13 +172,10 @@ class MedLocalService {
 
   /// Medication Schedule
   /// R E A D
-  List<MedSchedule> getMedicationSchedules({
-    DateTime? from,
-    DateTime? until,
-  }) {
-    late final Query query;
+  List<MedSchedule> getMedicationSchedules({DateTime? from, DateTime? until}) {
+    late Query query;
     try {
-
+      query = _medScheduleBox.query().build();
       if (from != null && until != null) {
         query =
             _medScheduleBox
@@ -191,7 +188,7 @@ class MedLocalService {
       if (from != null && until == null) {
         query =
             _medScheduleBox
-                .query(MedSchedule_.date.betweenDate(from, DateTime.now()))
+                .query(MedSchedule_.date.betweenDate(from, DateTime.now().copyWith(hour: 23, minute: 59)))
                 .build();
         List<MedSchedule> schedules = query.find() as List<MedSchedule>;
         return schedules;
@@ -229,7 +226,8 @@ class MedLocalService {
       query.close();
     }
   }
- /// C R E A T E  &  R E A D
+
+  /// C R E A T E  &  R E A D
   Future<List<MedSchedule>> putAndGetMedicationSchedules({
     required List<MedSchedule> schedules,
   }) async {
@@ -281,11 +279,9 @@ class MedLocalService {
   }
 
   /// D E L E T E
-  void deleteMedicationSchedules({
-    required List<MedSchedule> schedules,
-  })  {
+  void deleteMedicationSchedules({required List<MedSchedule> schedules}) {
     try {
-     _medScheduleBox.removeMany( schedules.map((e)=> e.id).toList());
+      _medScheduleBox.removeMany(schedules.map((e) => e.id).toList());
     } catch (e, stack) {
       // Throws app exception
       log(
@@ -302,5 +298,4 @@ class MedLocalService {
       );
     }
   }
-
 }

@@ -1,12 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'med_notifier.dart';
+part of 'med_schedule_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$medNotifierHash() => r'74450da43ed91c29afe385b78a396c4ba8a917ff';
+String _$medScheduleNotifierHash() =>
+    r'ae998a2e39da0dd495e481a0881aa05120896f1a';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,35 +30,36 @@ class _SystemHash {
   }
 }
 
-abstract class _$MedNotifier extends BuildlessAsyncNotifier<List<Medication>> {
+abstract class _$MedScheduleNotifier
+    extends BuildlessAsyncNotifier<List<MedSchedule>> {
   late final MedRepository medRepository;
 
-  FutureOr<List<Medication>> build({
+  FutureOr<List<MedSchedule>> build({
     required MedRepository medRepository,
   });
 }
 
-/// See also [MedNotifier].
-@ProviderFor(MedNotifier)
-const medNotifierProvider = MedNotifierFamily();
+/// See also [MedScheduleNotifier].
+@ProviderFor(MedScheduleNotifier)
+const medScheduleNotifierProvider = MedScheduleNotifierFamily();
 
-/// See also [MedNotifier].
-class MedNotifierFamily extends Family<AsyncValue<List<Medication>>> {
-  /// See also [MedNotifier].
-  const MedNotifierFamily();
+/// See also [MedScheduleNotifier].
+class MedScheduleNotifierFamily extends Family<AsyncValue<List<MedSchedule>>> {
+  /// See also [MedScheduleNotifier].
+  const MedScheduleNotifierFamily();
 
-  /// See also [MedNotifier].
-  MedNotifierProvider call({
+  /// See also [MedScheduleNotifier].
+  MedScheduleNotifierProvider call({
     required MedRepository medRepository,
   }) {
-    return MedNotifierProvider(
+    return MedScheduleNotifierProvider(
       medRepository: medRepository,
     );
   }
 
   @override
-  MedNotifierProvider getProviderOverride(
-    covariant MedNotifierProvider provider,
+  MedScheduleNotifierProvider getProviderOverride(
+    covariant MedScheduleNotifierProvider provider,
   ) {
     return call(
       medRepository: provider.medRepository,
@@ -76,30 +78,30 @@ class MedNotifierFamily extends Family<AsyncValue<List<Medication>>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'medNotifierProvider';
+  String? get name => r'medScheduleNotifierProvider';
 }
 
-/// See also [MedNotifier].
-class MedNotifierProvider
-    extends AsyncNotifierProviderImpl<MedNotifier, List<Medication>> {
-  /// See also [MedNotifier].
-  MedNotifierProvider({
+/// See also [MedScheduleNotifier].
+class MedScheduleNotifierProvider
+    extends AsyncNotifierProviderImpl<MedScheduleNotifier, List<MedSchedule>> {
+  /// See also [MedScheduleNotifier].
+  MedScheduleNotifierProvider({
     required MedRepository medRepository,
   }) : this._internal(
-          () => MedNotifier()..medRepository = medRepository,
-          from: medNotifierProvider,
-          name: r'medNotifierProvider',
+          () => MedScheduleNotifier()..medRepository = medRepository,
+          from: medScheduleNotifierProvider,
+          name: r'medScheduleNotifierProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$medNotifierHash,
-          dependencies: MedNotifierFamily._dependencies,
+                  : _$medScheduleNotifierHash,
+          dependencies: MedScheduleNotifierFamily._dependencies,
           allTransitiveDependencies:
-              MedNotifierFamily._allTransitiveDependencies,
+              MedScheduleNotifierFamily._allTransitiveDependencies,
           medRepository: medRepository,
         );
 
-  MedNotifierProvider._internal(
+  MedScheduleNotifierProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -112,8 +114,8 @@ class MedNotifierProvider
   final MedRepository medRepository;
 
   @override
-  FutureOr<List<Medication>> runNotifierBuild(
-    covariant MedNotifier notifier,
+  FutureOr<List<MedSchedule>> runNotifierBuild(
+    covariant MedScheduleNotifier notifier,
   ) {
     return notifier.build(
       medRepository: medRepository,
@@ -121,10 +123,10 @@ class MedNotifierProvider
   }
 
   @override
-  Override overrideWith(MedNotifier Function() create) {
+  Override overrideWith(MedScheduleNotifier Function() create) {
     return ProviderOverride(
       origin: this,
-      override: MedNotifierProvider._internal(
+      override: MedScheduleNotifierProvider._internal(
         () => create()..medRepository = medRepository,
         from: from,
         name: null,
@@ -137,13 +139,15 @@ class MedNotifierProvider
   }
 
   @override
-  AsyncNotifierProviderElement<MedNotifier, List<Medication>> createElement() {
-    return _MedNotifierProviderElement(this);
+  AsyncNotifierProviderElement<MedScheduleNotifier, List<MedSchedule>>
+      createElement() {
+    return _MedScheduleNotifierProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is MedNotifierProvider && other.medRepository == medRepository;
+    return other is MedScheduleNotifierProvider &&
+        other.medRepository == medRepository;
   }
 
   @override
@@ -157,19 +161,19 @@ class MedNotifierProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin MedNotifierRef on AsyncNotifierProviderRef<List<Medication>> {
+mixin MedScheduleNotifierRef on AsyncNotifierProviderRef<List<MedSchedule>> {
   /// The parameter `medRepository` of this provider.
   MedRepository get medRepository;
 }
 
-class _MedNotifierProviderElement
-    extends AsyncNotifierProviderElement<MedNotifier, List<Medication>>
-    with MedNotifierRef {
-  _MedNotifierProviderElement(super.provider);
+class _MedScheduleNotifierProviderElement
+    extends AsyncNotifierProviderElement<MedScheduleNotifier, List<MedSchedule>>
+    with MedScheduleNotifierRef {
+  _MedScheduleNotifierProviderElement(super.provider);
 
   @override
   MedRepository get medRepository =>
-      (origin as MedNotifierProvider).medRepository;
+      (origin as MedScheduleNotifierProvider).medRepository;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

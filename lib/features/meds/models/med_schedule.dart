@@ -16,7 +16,6 @@ import 'medication.dart';
 @Entity()
 //ignore: must_be_immutable
 class MedSchedule extends Equatable implements ActivityRecord {
-
   @Id()
   @override
   int id;
@@ -31,7 +30,7 @@ class MedSchedule extends Equatable implements ActivityRecord {
 
   @Transient()
   @override
-  ActivityType type;
+  ActivityType activityType;
 
   @Property(type: PropertyType.date)
   @override
@@ -69,12 +68,12 @@ class MedSchedule extends Equatable implements ActivityRecord {
   final DateTime? createdAt;
 
   // ////////// Object Box Type Converters /////////// //
-  String get dbType => type.name;
+  String get dbActivityType => activityType.name;
   String get dbStatus => status.name;
   String get dbActivityDetails => jsonEncode(activityDetails);
   String get dbDose => jsonEncode(dose.toMap());
 
-  set dbType(String value) => type = ActivityType.values.byName(value);
+  set dbActivityType(String value) => activityType = ActivityType.values.byName(value);
   set dbStatus(String value) => status = CompletionsStatus.values.byName(value);
   set dbActivityDetails(String? value) {
     if (value != null) {
@@ -83,10 +82,11 @@ class MedSchedule extends Equatable implements ActivityRecord {
       activityDetails = {};
     }
   }
+
   set dbDose(String? value) {
-    if (value !=null){
+    if (value != null) {
       dose = Dose.fromMap(jsonDecode(value));
-    }else {
+    } else {
       dose = Dose.empty;
     }
   }
@@ -102,12 +102,11 @@ class MedSchedule extends Equatable implements ActivityRecord {
     this.skipReason,
     this.activityDetails,
     this.status = CompletionsStatus.pending,
-    this.type = ActivityType.medication,
+    this.activityType = ActivityType.medication,
     this.isDeleted = false,
     this.isSynced = false,
     this.updatedAt,
     this.createdAt,
-
   });
 
   @override
@@ -127,23 +126,22 @@ class MedSchedule extends Equatable implements ActivityRecord {
     DateTime? updatedAt,
   }) {
     return MedSchedule(
-        id: id,
-        date: date ?? this.date,
-        activityDetails: activityDetails ?? this.activityDetails,
-        completedAt: completedAt ?? this.completedAt,
-        skipReason: skipReason ?? this.skipReason,
-        note: note ?? this.note,
-        dose: dose ?? this.dose,
-        medication: medication ?? this.medication,
-        status: status ?? this.status,
-        parentId: parentId ?? this.parentId,
-        isDeleted: isDeleted ?? this.isDeleted,
-        isSynced: isSynced ?? this.isSynced,
+      id: id,
+      date: date ?? this.date,
+      activityDetails: activityDetails ?? this.activityDetails,
+      completedAt: completedAt ?? this.completedAt,
+      skipReason: skipReason ?? this.skipReason,
+      note: note ?? this.note,
+      dose: dose ?? this.dose,
+      medication: medication ?? this.medication,
+      status: status ?? this.status,
+      parentId: parentId ?? this.parentId,
+      isDeleted: isDeleted ?? this.isDeleted,
+      isSynced: isSynced ?? this.isSynced,
       updatedAt: updatedAt ?? this.updatedAt,
-      createdAt: createdAt
+      createdAt: createdAt,
     );
   }
-
 
   @override
   Map<String, dynamic> toMap() {
@@ -158,7 +156,7 @@ class MedSchedule extends Equatable implements ActivityRecord {
       'dose': dose.toMap(),
       'medication': medication?.toMap(),
       'status': status.name,
-      'type': type.name,
+      'activityType': activityType.name,
       'isDeleted': isDeleted,
       'isSynced': isSynced,
       'updatedAt': updatedAt?.toUtc().toIso8601String(),
@@ -167,7 +165,7 @@ class MedSchedule extends Equatable implements ActivityRecord {
   }
 
   factory MedSchedule.fromMap(Map<String, dynamic> map) {
-    ActivityType type = ActivityType.values.byName(map["type"]);
+    ActivityType activityType = ActivityType.values.byName(map["activityType"]);
     return MedSchedule(
       dose: Dose.fromMap(map['dose']),
       parentId: map['parentId'],
@@ -176,13 +174,13 @@ class MedSchedule extends Equatable implements ActivityRecord {
       status: CompletionsStatus.values.byName(map['status']),
       skipReason: map['skipReason'] as String?,
       note: map['note'] as String?,
-      type: type,
+      activityType: activityType,
       isDeleted: map['isDeleted'],
       isSynced: map['isSynced'],
       updatedAt:
-      map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null,
+          map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null,
       createdAt:
-      map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
+          map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
     );
   }
 
@@ -192,23 +190,22 @@ class MedSchedule extends Equatable implements ActivityRecord {
 
   @override
   @Transient()
-  List<Object?> get props =>
-      [
-        dose,
-        date,
-        medication,
-        status,
-        completedAt,
-        note,
-        skipReason,
-        parentId,
-        activityDetails,
-        isDeleted,
-        isSynced,
-        updatedAt,
-        createdAt,
-      ];
-
+  List<Object?> get props => [
+    dose,
+    date,
+    medication,
+    status,
+    completedAt,
+    note,
+    activityType,
+    skipReason,
+    parentId,
+    activityDetails,
+    isDeleted,
+    isSynced,
+    updatedAt,
+    createdAt,
+  ];
 }
 
 /// Extension methods for calculating upcoming doses for a medication.
@@ -276,7 +273,15 @@ extension MedicationSchedule on Medication {
 
         if (doseTime.isAfter(from) && doseTime.isBefore(until)) {
           upcomingDoses.add(
-            MedSchedule(date: doseTime, dose: dose!, medication: this, parentId: uid, status: CompletionsStatus.pending),
+            MedSchedule(
+              date: doseTime,
+              dose: dose!,
+              medication: this,
+              parentId: uid,
+              status: CompletionsStatus.pending,
+              createdAt: DateTime.now(),
+              completedAt: null,
+            ),
           );
         }
       }
@@ -318,7 +323,15 @@ extension MedicationSchedule on Medication {
 
           if (doseTime.isAfter(from) && doseTime.isBefore(until)) {
             upcomingDoses.add(
-              MedSchedule(date: doseTime, dose: dose!, medication: this, parentId: uid, status: CompletionsStatus.pending),
+              MedSchedule(
+                date: doseTime,
+                dose: dose!,
+                medication: this,
+                parentId: uid,
+                status: CompletionsStatus.pending,
+                createdAt: DateTime.now(),
+                completedAt: null,
+              ),
             );
           }
         }
@@ -355,7 +368,15 @@ extension MedicationSchedule on Medication {
 
           if (doseTime.isAfter(from) && doseTime.isBefore(until)) {
             upcomingDoses.add(
-              MedSchedule(date: doseTime, dose: dose!, medication: this, parentId: uid, status: CompletionsStatus.pending),
+              MedSchedule(
+                date: doseTime,
+                dose: dose!,
+                medication: this,
+                parentId: uid,
+                status: CompletionsStatus.pending,
+                createdAt: DateTime.now(),
+                completedAt: null,
+              ),
             );
           }
         }
