@@ -78,7 +78,7 @@ class Streak {
     List<ActivityRecord> records,
     ActivityType type,
   ) {
-    return records.where((record) => record.type == type).toList();
+    return records.where((record) => record.activityType == type).toList();
   }
 
   // void _calculateMetrics() {
