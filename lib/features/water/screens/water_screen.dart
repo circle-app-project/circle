@@ -75,8 +75,7 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
       logsThisMonth: const [],
       dailyGoal: 2000,
     );
-    WaterPreferences waterPreferences =
-        ref.watch(waterPrefsNotifierProviderImpl).value!;
+
     List<WaterLog>? todayLogs = waterStats.logsToday;
     List<WaterLog>? thisWeekLogs = waterStats.logsThisWeek;
     List<WaterLog>? thisMonthLogs = waterStats.logsThisMonth;

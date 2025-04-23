@@ -34,11 +34,11 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
       await ref.read(medNotifierProviderImpl.notifier).getMedications();
       await ref.read(medScheduleNotifierProviderImpl.notifier).getMedicationsSchedules();
       upcomingDosesForToday =
-          ref.watch(medNotifierProviderImpl.notifier).upcomingDosesForToday;
+          ref.watch(medScheduleNotifierProviderImpl.notifier).upcomingDosesForToday;
       pastDosesForToday =
-          ref.watch(medNotifierProviderImpl.notifier).pastDosesForToday;
+          ref.watch(medScheduleNotifierProviderImpl.notifier).pastDosesForToday;
       allDosesForToday =
-          ref.watch(medNotifierProviderImpl.notifier).allDosesForToday;
+          ref.watch(medScheduleNotifierProviderImpl.notifier).allDosesForToday;
     });
     super.initState();
   }
@@ -196,26 +196,6 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
                 ],
               ),
             ),
-            //
-            // Row(
-            //   children: [
-            //     Text("Today's History", style: theme.textTheme.titleLarge),
-            //     const Spacer(),
-            //     IconButton(
-            //       padding: EdgeInsets.zero,
-            //       onPressed: () {},
-            //       icon: SvgPicture.asset("assets/svg/filter.svg"),
-            //     ),
-            //   ],
-            // ),
-            // const SizedBox(height: 12),
-            // DateSwitcher(
-            //   onNextPressed: () {},
-            //   onPreviousPressed: () {},
-            //   label: "Today",
-            // ),
-            // const Gap(12),
-            // const MedsHistoryItem(mode: MedsHistoryMode.weekly),
             const Gap( 64),
           ],
         ),

@@ -10,5 +10,4 @@ export 'custom_circular_percent_indicator.dart';
 export 'date_switcher.dart';
 export 'editable_avatar.dart';
 export 'app_list_wheel_scroll_view_picker.dart';
-export 'selector_item.dart';
 export 'snackbar.dart';

@@ -10,7 +10,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/error/failure.dart';
 import '../models/medication.dart';
-import '../models/med_schedule.dart';
 part 'med_notifier.g.dart';
 
 ///Todo: Consider adding a medication tags feature to easily filter
@@ -33,13 +32,6 @@ final MedNotifierProvider medNotifierProviderImpl = MedNotifierProvider(
 class MedNotifier extends _$MedNotifier {
   late final MedRepository _medRepository;
   late final AppUser? selfUser;
-
-  List<MedSchedule> _upcomingDosesForToday = [];
-  List<MedSchedule> _allDosesForToday = [];
-  List<MedSchedule> _pastDosesForToday = [];
-  List<MedSchedule> get upcomingDosesForToday => _upcomingDosesForToday;
-  List<MedSchedule> get allDosesForToday => _allDosesForToday;
-  List<MedSchedule> get pastDosesForToday => _pastDosesForToday;
 
   @override
   FutureOr<List<Medication>> build({
