@@ -791,7 +791,7 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                               from: medication.startDate!,
                               until:
                                   medication.endDate ??
-                                  DateTime.now().add(Duration(days: 365)),
+                                  DateTime.now().add(const Duration(days: 365)),
                             );
                         ref
                             .watch(medScheduleNotifierProviderImpl.notifier)

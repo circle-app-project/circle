@@ -53,7 +53,6 @@ class UserLocalService {
       // Find the first user matching the query
       query = _userBox.query(AppUser_.uid.equals(uid)).build();
       final List<AppUser> results = query.find();
-      print("count of returned users ${results.length}");
       return results.isNotEmpty ? results.first : null;
     } catch (e, stackTrace) {
       // Throws app exception
