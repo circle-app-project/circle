@@ -7,32 +7,32 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/error/failure.dart';
 import '../models/activity_record.dart';
-import '../models/med_schedule.dart';
+import '../models/scheduled_doses.dart';
 import 'med_notifier.dart';
 part 'med_schedule_notifier.g.dart';
 
-final MedScheduleNotifierProvider medScheduleNotifierProviderImpl =
-    MedScheduleNotifierProvider(medRepository: medRepository);
+final MedScheduledDosesNotifierProvider medScheduleNotifierProviderImpl =
+    MedScheduledDosesNotifierProvider(medRepository: medRepository);
 
 @Riverpod(keepAlive: true)
-class MedScheduleNotifier extends _$MedScheduleNotifier {
+class MedScheduledDosesNotifier extends _$MedScheduleNotifier {
   late final MedRepository _medRepository;
   late final AppUser? selfUser;
 
-  List<MedSchedule> _allDoses = [];
-  List<MedSchedule> _upcomingDosesForToday = [];
-  List<MedSchedule> _allDosesForToday = [];
-  List<MedSchedule> _pastDosesForToday = [];
+  List<ScheduledDose> _allDoses = [];
+  List<ScheduledDose> _upcomingDosesForToday = [];
+  List<ScheduledDose> _allDosesForToday = [];
+  List<ScheduledDose> _pastDosesForToday = [];
 
-  List<MedSchedule> get upcomingDosesForToday => _upcomingDosesForToday;
+  List<ScheduledDose> get upcomingDosesForToday => _upcomingDosesForToday;
 
-  List<MedSchedule> get allDosesForToday => _allDosesForToday;
+  List<ScheduledDose> get allDosesForToday => _allDosesForToday;
 
-  List<MedSchedule> get pastDosesForToday => _pastDosesForToday;
-  List<MedSchedule> get allDoses => _allDoses;
+  List<ScheduledDose> get pastDosesForToday => _pastDosesForToday;
+  List<ScheduledDose> get allDoses => _allDoses;
 
   @override
-  FutureOr<List<MedSchedule>> build({
+  FutureOr<List<ScheduledDose>> build({
     required MedRepository medRepository,
   }) async {
     _medRepository = medRepository;
@@ -42,15 +42,17 @@ class MedScheduleNotifier extends _$MedScheduleNotifier {
   }
 
   // /////// C R U D  O P E R A T I O N S ///////
-  Future<List<MedSchedule>> getMedicationsSchedules({
+  Future<List<ScheduledDose>> getMedScheduledDoses({
     bool forceRefresh = false,
     DateTime? from,
     DateTime? until,
   }) async {
     log("Getting All Medication Schedules", name: "Med Schedule Notifier");
     state = const AsyncValue.loading();
-    final Either<Failure, List<MedSchedule>> response = await _medRepository
-        .getMedicationSchedules(from: from, until: until);
+    final Either<Failure, List<ScheduledDose>> response = await _medRepository
+        .getMedScheduledDoses(from: from, until: until);
+
+    List<ScheduledDose> gottenDoses = [];
     response.fold(
       (failure) {
         state = AsyncValue.error(failure, failure.stackTrace!);
@@ -60,26 +62,24 @@ class MedScheduleNotifier extends _$MedScheduleNotifier {
           stackTrace: failure.stackTrace,
         );
       },
-      (schedules) {
-        state = AsyncValue.data(schedules);
-        _allDoses = schedules;
+      (doses) {
+        state = AsyncValue.data(doses);
+        _allDoses = doses;
+        gottenDoses = doses;
         log("Success ${state.value}", name: "Med Schedule Notifier");
-        return schedules;
       },
     );
-    return [];
+    return gottenDoses;
   }
 
-
-
-  Future<void> putMedicationSchedules({
+  Future<void> putMedScheduledDoses({
     bool forceRefresh = false,
-    required List<MedSchedule> schedules,
+    required List<ScheduledDose> schedules,
   }) async {
     log("Putting or Updating Medication", name: "Med Schedule Notifier");
     state = const AsyncValue.loading();
-    final Either<Failure, List<MedSchedule>> response = await _medRepository
-        .putAndGetMedicationSchedules(schedules: schedules);
+    final Either<Failure, List<ScheduledDose>> response = await _medRepository
+        .putAndGetMedScheduledDoses(schedules: schedules);
     response.fold(
       (failure) {
         state = AsyncValue.error(failure, failure.stackTrace!);
@@ -89,21 +89,21 @@ class MedScheduleNotifier extends _$MedScheduleNotifier {
           stackTrace: failure.stackTrace,
         );
       },
-      (medication) async {
+      (doses) async {
         log("Success ${state.value}", name: "Med Schedule Notifier");
-        await getMedicationsSchedules();
+        await getMedScheduledDoses();
       },
     );
   }
 
-  Future<void> deleteMedicationSchedules({
+  Future<void> deleteMedScheduledDoses({
     bool forceRefresh = false,
-    required List<MedSchedule> schedules,
+    required List<ScheduledDose> schedules,
   }) async {
     log("Putting or Updating Medication", name: "Med Schedule Notifier");
     state = const AsyncValue.loading();
     final Either<Failure, void> response = await _medRepository
-        .deleteMedicationSchedules(schedules: schedules);
+        .deleteMedScheduledDoses(schedules: schedules);
     response.fold(
       (failure) {
         state = AsyncValue.error(failure, failure.stackTrace!);
@@ -113,30 +113,32 @@ class MedScheduleNotifier extends _$MedScheduleNotifier {
           stackTrace: failure.stackTrace,
         );
       },
-      (medication) async {
+      (empty) async {
         log("Success ${state.value}", name: "Med Schedule Notifier");
-        await getMedicationsSchedules();
+        await getMedScheduledDoses();
       },
     );
   }
 
-  Future<MedSchedule?> markDoseAsSkipped({
+  Future<ScheduledDose?> markDoseAsSkipped({
     bool forceRefresh = false,
-    required MedSchedule medSchedule,
+    required ScheduledDose dose,
     String? note,
     String? skipReason,
   }) async {
-    medSchedule = medSchedule.copyWith(
+    dose = dose.copyWith(
       status: CompletionsStatus.skipped,
       note: note,
       skipReason: skipReason,
       updatedAt: DateTime.now(),
     );
 
+    ScheduledDose? scheduleDose;
+
     log("Marking dose as Skipped", name: "Med Schedule Notifier");
     state = const AsyncValue.loading();
-    final Either<Failure, MedSchedule> response = await _medRepository
-        .putAndGetMedicationSchedule(schedule: medSchedule);
+    final Either<Failure, ScheduledDose> response = await _medRepository
+        .putAndGetMedScheduledDose(schedule: dose);
     response.fold(
       (failure) {
         state = AsyncValue.error(failure, failure.stackTrace!);
@@ -146,30 +148,32 @@ class MedScheduleNotifier extends _$MedScheduleNotifier {
           stackTrace: failure.stackTrace,
         );
       },
-      (schedule) async {
+      (dose) async {
         log("Success ${state.value}", name: "Med Schedule Notifier");
-        await getMedicationsSchedules();
-        return schedule;
+        await getMedScheduledDoses();
+        scheduleDose = dose;
       },
     );
-    return null;
+    return scheduleDose;
   }
 
-  Future<MedSchedule?> markDoseAsCompleted({
+  Future<ScheduledDose?> markDoseAsCompleted({
     bool forceRefresh = false,
-    required MedSchedule medSchedule,
+    required ScheduledDose dose,
     String? note,
   }) async {
-    medSchedule = medSchedule.copyWith(
+    dose = dose.copyWith(
       status: CompletionsStatus.completed,
       note: note,
       updatedAt: DateTime.now(),
     );
 
+    ScheduledDose? scheduleDose;
+
     log("Marking dose as completed", name: "Med Schedule Notifier");
     state = const AsyncValue.loading();
-    final Either<Failure, MedSchedule> response = await _medRepository
-        .putAndGetMedicationSchedule(schedule: medSchedule);
+    final Either<Failure, ScheduledDose> response = await _medRepository
+        .putAndGetMedScheduledDose(schedule: dose);
     response.fold(
       (failure) {
         state = AsyncValue.error(failure, failure.stackTrace!);
@@ -179,21 +183,21 @@ class MedScheduleNotifier extends _$MedScheduleNotifier {
           stackTrace: failure.stackTrace,
         );
       },
-      (schedule) async {
+      (medSchedule) async {
         log("Success ${state.value}", name: "Med Schedule Notifier");
-        await getMedicationsSchedules();
-        return schedule;
+        scheduleDose = medSchedule;
+        await getMedScheduledDoses();
       },
     );
-    return null;
+    return scheduleDose;
   }
 
-  Future<MedSchedule?> markDoseAsMissed({
+  Future<ScheduledDose?> markDoseAsMissed({
     bool forceRefresh = false,
-    required MedSchedule medSchedule,
+    required ScheduledDose dose,
     String? note,
   }) async {
-    medSchedule = medSchedule.copyWith(
+    dose = dose.copyWith(
       status: CompletionsStatus.missed,
       note: note,
       updatedAt: DateTime.now(),
@@ -201,8 +205,12 @@ class MedScheduleNotifier extends _$MedScheduleNotifier {
 
     log("Marking dose as missed", name: "Med Schedule Notifier");
     state = const AsyncValue.loading();
-    final Either<Failure, MedSchedule> response = await _medRepository
-        .putAndGetMedicationSchedule(schedule: medSchedule);
+    final Either<Failure, ScheduledDose> response = await _medRepository
+        .putAndGetMedScheduledDose(schedule: dose);
+
+    ScheduledDose? schedule;
+
+
     response.fold(
       (failure) {
         state = AsyncValue.error(failure, failure.stackTrace!);
@@ -212,16 +220,16 @@ class MedScheduleNotifier extends _$MedScheduleNotifier {
           stackTrace: failure.stackTrace,
         );
       },
-      (schedule) async {
+      (medSched) async {
         log("Success ${state.value}", name: "Med Schedule Notifier");
-        await getMedicationsSchedules();
-        return schedule;
+        schedule = medSched;
+        await getMedScheduledDoses();
       },
     );
-    return null;
+    return schedule;
   }
 
-  Future<List<MedSchedule>> calculateDosesForToday() async {
+  Future<List<ScheduledDose>> calculateDosesForToday() async {
     log(
       "Getting all medication doses for the day",
       name: "Med Schedule Notifier",
@@ -231,10 +239,12 @@ class MedScheduleNotifier extends _$MedScheduleNotifier {
     final DateTime today = now.copyWith(hour: 0, minute: 0);
     final DateTime tomorrow = today.add(const Duration(days: 1));
 
-    _allDosesForToday = await getMedicationsSchedulesForTimePeriod(
+    _allDosesForToday = await getMedScheduledDosesForTimePeriod(
       from: today,
       until: tomorrow,
     );
+
+    print("All doses for today direclty from db: $_allDosesForToday ");
 
     /// Get the medications that should be taken today
     if (_allDosesForToday.isNotEmpty) {
@@ -249,34 +259,44 @@ class MedScheduleNotifier extends _$MedScheduleNotifier {
     _upcomingDosesForToday.sort((a, b) => a.date.compareTo(b.date));
     _allDosesForToday.sort((a, b) => a.date.compareTo(b.date));
     _pastDosesForToday.sort((a, b) => a.date.compareTo(b.date));
+
+    print("all doses for today: ${_allDosesForToday.length}");
+    print("Upcoming doses for today: ${_upcomingDosesForToday.length}");
+    print("past doses for today: ${_allDosesForToday.length}");
+
+    state = AsyncValue.data(state.value ?? []);
     return _allDosesForToday;
   }
 
-  Future<List<MedSchedule>> getMedicationsSchedulesForTimePeriod({
+  Future<List<ScheduledDose>> getMedScheduledDosesForTimePeriod({
     required DateTime from,
     required DateTime until,
   }) async {
-    log("Getting Medication Schedules for time period", name: "Med Schedule Notifier");
+    log(
+      "Getting Medication Schedules for time period",
+      name: "Med Schedule Notifier",
+    );
     state = const AsyncValue.loading();
-    final Either<Failure, List<MedSchedule>> response = await _medRepository
-        .getMedicationSchedules(from: from, until: until);
+    final Either<Failure, List<ScheduledDose>> response = await _medRepository
+        .getMedScheduledDoses(from: from, until: until);
+
+    List<ScheduledDose> doses = [];
     response.fold(
-          (failure) {
+      (failure) {
         state = AsyncValue.error(failure, failure.stackTrace!);
         log(
           "Failed: $failure, Message:${failure.message}, Code: ${failure.code}",
           name: "Med Schedule Notifier",
           stackTrace: failure.stackTrace,
         );
-        return [];
       },
-          (schedules) {
+      (medSchedules) {
         state = AsyncValue.data(state.value ?? []);
-        log("Success ${state.value}", name: "Med Schedule Notifier");
-        return schedules;
+        doses = medSchedules;
+        log("Success", name: "Med Schedule Notifier");
       },
     );
-    return [];
-  }
 
+    return doses;
+  }
 }
