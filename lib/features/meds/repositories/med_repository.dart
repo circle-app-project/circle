@@ -1,5 +1,5 @@
 import 'package:circle/core/core.dart';
-import 'package:circle/features/meds/models/med_schedule.dart';
+import 'package:circle/features/meds/models/scheduled_doses.dart';
 import 'package:circle/features/meds/models/medication.dart';
 import 'package:circle/features/meds/services/local/med_local_service.dart';
 import 'package:circle/features/meds/services/remote/med_service.dart';
@@ -31,19 +31,19 @@ abstract class MedRepository {
   });
 
   /// Medication schedules part
-  FutureEither<List<MedSchedule>> getMedicationSchedules({
+  FutureEither<List<ScheduledDose>> getMedScheduledDoses({
     DateTime? from,
     DateTime? until,
   });
 
-  FutureEither<List<MedSchedule>> putAndGetMedicationSchedules({
-    required List<MedSchedule> schedules,
+  FutureEither<List<ScheduledDose>> putAndGetMedScheduledDoses({
+    required List<ScheduledDose> schedules,
   });
-  FutureEither<MedSchedule> putAndGetMedicationSchedule({
-  required  MedSchedule schedule,
+  FutureEither<ScheduledDose> putAndGetMedScheduledDose({
+  required  ScheduledDose schedule,
   });
-  FutureEither<void> deleteMedicationSchedules({
-   required List<MedSchedule> schedules,
+  FutureEither<void> deleteMedScheduledDoses({
+   required List<ScheduledDose> schedules,
   });
 }
 
@@ -144,19 +144,19 @@ class MedRepositoryImpl implements MedRepository {
   // MED SCHEDULES
   // TODO: Add remote service to this
   @override
-  FutureEither<void> deleteMedicationSchedules({required List<MedSchedule> schedules}) {
+  FutureEither<void> deleteMedScheduledDoses({required List<ScheduledDose> schedules}) {
     return futureHandler(() async {
-      return _medLocalService.deleteMedicationSchedules(
-    schedules: schedules
+      return _medLocalService.deleteMedicationScheduledDoses(
+    doses: schedules
       );
     });
   }
 
 
   @override
-  FutureEither<List<MedSchedule>> getMedicationSchedules({DateTime? from, DateTime? until}) {
+  FutureEither<List<ScheduledDose>> getMedScheduledDoses({DateTime? from, DateTime? until}) {
     return futureHandler(() async {
-      return _medLocalService.getMedicationSchedules(
+      return _medLocalService.getMedicationScheduledDoses(
         from: from,
         until: until,
       );
@@ -164,19 +164,19 @@ class MedRepositoryImpl implements MedRepository {
   }
 
   @override
-  FutureEither<MedSchedule> putAndGetMedicationSchedule({required MedSchedule schedule}) {
+  FutureEither<ScheduledDose> putAndGetMedScheduledDose({required ScheduledDose schedule}) {
     return futureHandler(() async {
-      return _medLocalService.putAndGetMedicationSchedule(
+      return _medLocalService.putAndGetMedicationScheduledDose(
         schedule: schedule,
       );
     });
   }
 
   @override
-  FutureEither<List<MedSchedule>> putAndGetMedicationSchedules({required List<MedSchedule> schedules}) {
+  FutureEither<List<ScheduledDose>> putAndGetMedScheduledDoses({required List<ScheduledDose> schedules}) {
     return futureHandler(() async {
-      return _medLocalService.putAndGetMedicationSchedules(
-        schedules: schedules,
+      return _medLocalService.putAndGetMedicationScheduledDoses(
+        doses: schedules,
       );
     });
   }

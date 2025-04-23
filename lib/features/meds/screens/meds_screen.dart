@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:circle/features/meds/models/med_schedule.dart';
+import 'package:circle/features/meds/models/scheduled_doses.dart';
 import 'package:circle/features/meds/providers/med_schedule_notifier.dart';
 import 'package:circle/features/meds/screens/components/medication_reminder_card.dart';
 import 'package:flutter/material.dart';
@@ -24,15 +24,17 @@ class MedsScreen extends ConsumerStatefulWidget {
 }
 
 class _MedsScreenState extends ConsumerState<MedsScreen> {
-  List<MedSchedule> upcomingDosesForToday = [];
-  List<MedSchedule> allDosesForToday = [];
-  List<MedSchedule> pastDosesForToday = [];
+  List<ScheduledDose> upcomingDosesForToday = [];
+  List<ScheduledDose> allDosesForToday = [];
+  List<ScheduledDose> pastDosesForToday = [];
+
+
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(medNotifierProviderImpl.notifier).getMedications();
-      await ref.read(medScheduleNotifierProviderImpl.notifier).getMedicationsSchedules();
+      await ref.read(medScheduleNotifierProviderImpl.notifier).calculateDosesForToday();
       upcomingDosesForToday =
           ref.watch(medScheduleNotifierProviderImpl.notifier).upcomingDosesForToday;
       pastDosesForToday =
@@ -47,7 +49,7 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
   Widget build(BuildContext context) {
     List<Medication> medications =
         ref.watch(medNotifierProviderImpl).value ?? [];
-    List<MedSchedule> medicationSchedule =
+    List<ScheduledDose> medicationSchedule =
         ref.watch(medScheduleNotifierProviderImpl).value ?? [];
 
     if (medications.isEmpty) {

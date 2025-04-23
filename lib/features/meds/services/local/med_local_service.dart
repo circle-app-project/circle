@@ -4,16 +4,16 @@ import 'package:circle/features/meds/models/medication.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../objectbox.g.dart';
 import '../../models/med_activity_record.dart';
-import '../../models/med_schedule.dart';
+import '../../models/scheduled_doses.dart';
 
 class MedLocalService {
   late final Box<Medication> _medBox;
   late final Box<MedActivityRecord> _medActivityBox;
-  late final Box<MedSchedule> _medScheduleBox;
+  late final Box<ScheduledDose> _scheduledDosesBox;
   MedLocalService({required Store store})
     : _medBox = store.box<Medication>(),
       _medActivityBox = store.box<MedActivityRecord>(),
-      _medScheduleBox = store.box<MedSchedule>();
+      _scheduledDosesBox = store.box<ScheduledDose>();
 
   Stream<List<Medication>> listenMedication() async* {
     yield* _medBox
@@ -172,52 +172,52 @@ class MedLocalService {
 
   /// Medication Schedule
   /// R E A D
-  List<MedSchedule> getMedicationSchedules({DateTime? from, DateTime? until}) {
+  List<ScheduledDose> getMedicationScheduledDoses({DateTime? from, DateTime? until}) {
     late Query query;
     try {
-      query = _medScheduleBox.query().build();
+      query = _scheduledDosesBox.query().build();
       if (from != null && until != null) {
         query =
-            _medScheduleBox
-                .query(MedSchedule_.date.betweenDate(from, until))
+            _scheduledDosesBox
+                .query(ScheduledDose_.date.betweenDate(from, until))
                 .build();
-        List<MedSchedule> schedules = query.find() as List<MedSchedule>;
-        return schedules;
+        List<ScheduledDose> scheduledDoses = query.find() as List<ScheduledDose>;
+        return scheduledDoses;
       }
 
       if (from != null && until == null) {
         query =
-            _medScheduleBox
-                .query(MedSchedule_.date.betweenDate(from, DateTime.now().copyWith(hour: 23, minute: 59)))
+            _scheduledDosesBox
+                .query(ScheduledDose_.date.betweenDate(from, DateTime.now().copyWith(hour: 23, minute: 59)))
                 .build();
-        List<MedSchedule> schedules = query.find() as List<MedSchedule>;
-        return schedules;
+        List<ScheduledDose> scheduledDoses = query.find() as List<ScheduledDose>;
+        return scheduledDoses;
       }
 
       if (from == null && until != null) {
-        List<MedSchedule> scheduleList = _medScheduleBox.getAll();
+        List<ScheduledDose> scheduleDosesList = _scheduledDosesBox.getAll();
         query =
-            _medScheduleBox
+            _scheduledDosesBox
                 .query(
-                  MedSchedule_.date.betweenDate(scheduleList.first.date, until),
+              ScheduledDose_.date.betweenDate(scheduleDosesList.first.date, until),
                 )
                 .build();
-        List<MedSchedule> schedules = query.find() as List<MedSchedule>;
-        return schedules;
+        List<ScheduledDose> scheduledDose = query.find() as List<ScheduledDose>;
+        return scheduledDose;
       }
 
-      List<MedSchedule> schedules = _medScheduleBox.getAll();
-      return schedules;
+      List<ScheduledDose> doses = _scheduledDosesBox.getAll();
+      return doses;
     } catch (e, stack) {
       // Throws app exception
       log(
-        "Failed to get medication schedule",
+        "Failed to get scheduled doses",
         error: e,
         stackTrace: stack,
         name: "Medication Local Service",
       );
       throw AppException(
-        message: "Failed to get all medication schedule",
+        message: "Failed to get all scheduled doses",
         debugMessage: e.toString(),
         stackTrace: stack,
         type: ExceptionType.localStorage,
@@ -228,23 +228,23 @@ class MedLocalService {
   }
 
   /// C R E A T E  &  R E A D
-  Future<List<MedSchedule>> putAndGetMedicationSchedules({
-    required List<MedSchedule> schedules,
+  Future<List<ScheduledDose>> putAndGetMedicationScheduledDoses({
+    required List<ScheduledDose> doses,
   }) async {
     try {
-      List<MedSchedule> gottenSchedules = await _medScheduleBox
-          .putAndGetManyAsync(schedules);
+      List<ScheduledDose> gottenSchedules = await _scheduledDosesBox
+          .putAndGetManyAsync(doses);
       return gottenSchedules;
     } catch (e, stack) {
       // Throws app exception
       log(
-        "Failed to put and get medication schedules",
+        "Failed to put and get scheduled doses",
         error: e,
         stackTrace: stack,
         name: "Medication Local Service",
       );
       throw AppException(
-        message: "Failed to put and get medication schedules",
+        message: "Failed to put and get scheduled doses",
         debugMessage: e.toString(),
         stackTrace: stack,
         type: ExceptionType.localStorage,
@@ -252,11 +252,11 @@ class MedLocalService {
     }
   }
 
-  Future<MedSchedule> putAndGetMedicationSchedule({
-    required MedSchedule schedule,
+  Future<ScheduledDose> putAndGetMedicationScheduledDose({
+    required ScheduledDose schedule,
   }) async {
     try {
-      MedSchedule gottenSchedule = await _medScheduleBox.putAndGetAsync(
+      ScheduledDose gottenSchedule = await _scheduledDosesBox.putAndGetAsync(
         schedule,
         mode: schedule.id == 0 ? PutMode.put : PutMode.update,
       );
@@ -264,13 +264,13 @@ class MedLocalService {
     } catch (e, stack) {
       // Throws app exception
       log(
-        "Failed to put and get medication schedule",
+        "Failed to put and get scheduled dose",
         error: e,
         stackTrace: stack,
         name: "Medication Local Service",
       );
       throw AppException(
-        message: "Failed to put and get medication schedules",
+        message: "Failed to put and get scheduled dose",
         debugMessage: e.toString(),
         stackTrace: stack,
         type: ExceptionType.localStorage,
@@ -279,19 +279,19 @@ class MedLocalService {
   }
 
   /// D E L E T E
-  void deleteMedicationSchedules({required List<MedSchedule> schedules}) {
+  void deleteMedicationScheduledDoses({required List<ScheduledDose> doses}) {
     try {
-      _medScheduleBox.removeMany(schedules.map((e) => e.id).toList());
+      _scheduledDosesBox.removeMany(doses.map((e) => e.id).toList());
     } catch (e, stack) {
       // Throws app exception
       log(
-        "Failed to delete medication schedules",
+        "Failed to delete scheduled doses",
         error: e,
         stackTrace: stack,
         name: "Medication Local Service",
       );
       throw AppException(
-        message: "Failed to delete medication schedules",
+        message: "Failed to delete scheduled doses",
         debugMessage: e.toString(),
         stackTrace: stack,
         type: ExceptionType.localStorage,

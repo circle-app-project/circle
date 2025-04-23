@@ -1,4 +1,4 @@
-import 'package:circle/features/meds/models/med_schedule.dart';
+import 'package:circle/features/meds/models/scheduled_doses.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,7 +20,7 @@ class MedicationReminderCard extends ConsumerStatefulWidget {
     this.isEmphasized = false,
   }) : assert(viewportWidthFraction >= 0 && viewportWidthFraction <= 1);
 
-  final MedSchedule medSchedule;
+  final ScheduledDose medSchedule;
 
   /// The fraction of the horizontal viewport width this widget should take, should be between 0.0 & 1.0
   final double viewportWidthFraction;
@@ -59,7 +59,7 @@ class _MedicationReminderCardState extends ConsumerState<MedicationReminderCard>
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    MedScheduleNotifier medScheduleNotifier = ref.watch(medScheduleNotifierProviderImpl.notifier);
+    MedScheduledDosesNotifier medScheduleNotifier = ref.watch(medScheduleNotifierProviderImpl.notifier);
     return InkWell(
       borderRadius: BorderRadius.circular(24),
       splashFactory: InkSparkle.splashFactory,
@@ -316,7 +316,7 @@ class _MedicationReminderCardState extends ConsumerState<MedicationReminderCard>
                                     if (_formKey.currentState!.validate()) {
 
                                       await medScheduleNotifier.markDoseAsSkipped(
-                                        medSchedule: widget.medSchedule,
+                                        dose: widget.medSchedule,
                                         skipReason: skipReasonController.text.trim(),
                                       );
 
@@ -368,7 +368,7 @@ class _MedicationReminderCardState extends ConsumerState<MedicationReminderCard>
                         child: AppButton(
                           onPressed: () async {
                             await medScheduleNotifier.markDoseAsCompleted(
-                              medSchedule: widget.medSchedule,
+                              dose: widget.medSchedule,
                             );
                             if (ref.watch(medScheduleNotifierProviderImpl).hasError) {
                               if(context.mounted){

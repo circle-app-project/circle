@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:circle/core/extensions/date_time_formatter.dart';
 import 'package:circle/features/meds/models/dose.dart';
-import 'package:circle/features/meds/models/med_schedule.dart';
+import 'package:circle/features/meds/models/scheduled_doses.dart';
 import 'package:circle/features/meds/providers/med_schedule_notifier.dart';
 import 'package:circle/features/meds/screens/components/dose_bottomsheet.dart';
 import 'package:circle/features/meds/screens/components/duration_bottomsheet.dart';
@@ -786,7 +786,7 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                         }
                       } else {
                         /// Compute doses for the medication
-                        List<MedSchedule> allScheduledDoses = medication
+                        List<ScheduledDose> allScheduledDoses = medication
                             .createUpcomingDoseSchedule(
                               from: medication.startDate!,
                               until:
@@ -795,7 +795,7 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                             );
                         ref
                             .watch(medScheduleNotifierProviderImpl.notifier)
-                            .putMedicationSchedules(
+                            .putMedScheduledDoses(
                               schedules: allScheduledDoses,
                             );
                         if (context.mounted) {
