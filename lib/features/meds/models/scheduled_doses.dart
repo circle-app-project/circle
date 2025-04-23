@@ -15,7 +15,7 @@ import 'medication.dart';
 
 @Entity()
 //ignore: must_be_immutable
-class MedSchedule extends Equatable implements ActivityRecord {
+class ScheduledDose extends Equatable implements ActivityRecord {
   @Id()
   @override
   int id;
@@ -73,8 +73,22 @@ class MedSchedule extends Equatable implements ActivityRecord {
   String get dbActivityDetails => jsonEncode(activityDetails);
   String get dbDose => jsonEncode(dose.toMap());
 
-  set dbActivityType(String value) => activityType = ActivityType.values.byName(value);
-  set dbStatus(String value) => status = CompletionsStatus.values.byName(value);
+  set dbActivityType(String value) {
+    if (value.isNotEmpty) {
+      activityType = ActivityType.values.byName(value);
+    } else {
+      activityType = ActivityType.medication;
+    }
+  }
+
+  set dbStatus(String value) {
+    if (value.isNotEmpty) {
+      status = CompletionsStatus.values.byName(value);
+    } else {
+      status = CompletionsStatus.pending;
+    }
+  }
+
   set dbActivityDetails(String? value) {
     if (value != null) {
       activityDetails = jsonDecode(value);
@@ -91,7 +105,7 @@ class MedSchedule extends Equatable implements ActivityRecord {
     }
   }
 
-  MedSchedule({
+  ScheduledDose({
     this.id = 0,
     this.dose = Dose.empty,
     this.medication,
@@ -110,7 +124,7 @@ class MedSchedule extends Equatable implements ActivityRecord {
   });
 
   @override
-  MedSchedule copyWith({
+  ScheduledDose copyWith({
     DateTime? date,
     Dose? dose,
     Medication? medication,
@@ -125,7 +139,7 @@ class MedSchedule extends Equatable implements ActivityRecord {
     bool? isSynced,
     DateTime? updatedAt,
   }) {
-    return MedSchedule(
+    return ScheduledDose(
       id: id,
       date: date ?? this.date,
       activityDetails: activityDetails ?? this.activityDetails,
@@ -164,9 +178,9 @@ class MedSchedule extends Equatable implements ActivityRecord {
     };
   }
 
-  factory MedSchedule.fromMap(Map<String, dynamic> map) {
+  factory ScheduledDose.fromMap(Map<String, dynamic> map) {
     ActivityType activityType = ActivityType.values.byName(map["activityType"]);
-    return MedSchedule(
+    return ScheduledDose(
       dose: Dose.fromMap(map['dose']),
       parentId: map['parentId'],
       date: DateTime.parse(map['date']),
@@ -216,13 +230,13 @@ extension MedicationSchedule on Medication {
   /// [until] - The end date/time to calculate doses until.
   ///
   /// Returns an empty list if the medication has no frequency or dose information.
-  List<MedSchedule> createUpcomingDoseSchedule({
+  List<ScheduledDose> createUpcomingDoseSchedule({
     required DateTime from,
     required DateTime until,
   }) {
     if (frequency == null || dose == null) return [];
 
-    List<MedSchedule> upcomingDoses = [];
+    List<ScheduledDose> upcomingDoses = [];
 
     // Logic to generate dose time based on frequency type
     switch (frequency!.type) {
@@ -250,7 +264,7 @@ extension MedicationSchedule on Medication {
   void _generateDailyDoses(
     DateTime from,
     DateTime until,
-    List<MedSchedule> upcomingDoses,
+    List<ScheduledDose> upcomingDoses,
   ) {
     if (frequency?.times == null) return;
 
@@ -273,7 +287,7 @@ extension MedicationSchedule on Medication {
 
         if (doseTime.isAfter(from) && doseTime.isBefore(until)) {
           upcomingDoses.add(
-            MedSchedule(
+            ScheduledDose(
               date: doseTime,
               dose: dose!,
               medication: this,
@@ -292,7 +306,7 @@ extension MedicationSchedule on Medication {
   void _generateWeeklyDoses(
     DateTime from,
     DateTime until,
-    List<MedSchedule> upcomingDoses,
+    List<ScheduledDose> upcomingDoses,
   ) {
     List<DayOfWeek>? daysOfWeek = frequency?.daysOfWeek;
 
@@ -323,7 +337,7 @@ extension MedicationSchedule on Medication {
 
           if (doseTime.isAfter(from) && doseTime.isBefore(until)) {
             upcomingDoses.add(
-              MedSchedule(
+              ScheduledDose(
                 date: doseTime,
                 dose: dose!,
                 medication: this,
@@ -343,7 +357,7 @@ extension MedicationSchedule on Medication {
   void _generateMonthlyDoses(
     DateTime from,
     DateTime until,
-    List<MedSchedule> upcomingDoses,
+    List<ScheduledDose> upcomingDoses,
   ) {
     if (frequency?.datesOfMonth == null || frequency?.times == null) return;
 
@@ -368,7 +382,7 @@ extension MedicationSchedule on Medication {
 
           if (doseTime.isAfter(from) && doseTime.isBefore(until)) {
             upcomingDoses.add(
-              MedSchedule(
+              ScheduledDose(
                 date: doseTime,
                 dose: dose!,
                 medication: this,
