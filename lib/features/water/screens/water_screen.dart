@@ -6,15 +6,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:circle/core/core.dart';
 
-
 import '../../../components/components.dart';
+import '../../../components/selectable_circular_button.dart';
 import '../../auth/auth.dart';
 import '../water.dart';
 import 'charts/bar_chart_widget.dart';
 import 'charts/chart_data_transformer.dart';
 import 'charts/line_chart_widget.dart';
 import 'components/components.dart';
-import 'components/water_volume_selector.dart';
 
 @RoutePage(name: WaterScreen.name)
 class WaterScreen extends ConsumerStatefulWidget {
@@ -28,6 +27,15 @@ class WaterScreen extends ConsumerStatefulWidget {
 
 class _WaterScreenState extends ConsumerState<WaterScreen> {
   bool showFullDay = false;
+  Map<int, bool> isVolumeSelected = {};
+  List<String> volumes = ["250", "500", "1000", "custom"];
+
+  Map<String, IconData> volumesData = {
+    "250": FluentIcons.drink_coffee_24_regular,
+    "500": FluentIcons.drink_bottle_32_regular,
+    "100": FluentIcons.drink_bottle_32_regular,
+    "custom": FluentIcons.add_24_regular,
+  };
 
   @override
   void initState() {
@@ -39,30 +47,34 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final WaterLogNotifier waterLogNotifier =
-        ref.watch(waterLogNotifierProviderIml.notifier);
+    final WaterLogNotifier waterLogNotifier = ref.watch(
+      waterLogNotifierProviderIml.notifier,
+    );
     AppUser selfUser = ref.watch(userNotifierProviderImpl).value!;
     List<WaterLog> allLogs = ref.watch(waterLogNotifierProviderIml).value!;
-  //  WaterStats waterStats = ref.watch(waterStatsProvider);
-
-
+    //  WaterStats waterStats = ref.watch(waterStatsProvider);
 
     final DateTime now = DateTime.now();
     final DateTime today = DateTime(now.year, now.month, now.day);
     final DateTime tomorrow = today.add(const Duration(days: 1));
 
-    List<WaterLog> logsToday = allLogs
-        .where((log) =>
-    log.timestamp.isAfter(today) && log.timestamp.isBefore(tomorrow))
-        .toList();
+    List<WaterLog> logsToday =
+        allLogs
+            .where(
+              (log) =>
+                  log.timestamp.isAfter(today) &&
+                  log.timestamp.isBefore(tomorrow),
+            )
+            .toList();
 
     WaterStats waterStats = WaterStats(
-        logsToday: logsToday,
-        logsLastSevenDays: const [],
-        logsLastThirtyDays: const [],
-        logsThisWeek: const [],
-        logsThisMonth: const [],
-        dailyGoal: 2000);
+      logsToday: logsToday,
+      logsLastSevenDays: const [],
+      logsLastThirtyDays: const [],
+      logsThisWeek: const [],
+      logsThisMonth: const [],
+      dailyGoal: 2000,
+    );
     WaterPreferences waterPreferences =
         ref.watch(waterPrefsNotifierProviderImpl).value!;
     List<WaterLog>? todayLogs = waterStats.logsToday;
@@ -70,6 +82,7 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
     List<WaterLog>? thisMonthLogs = waterStats.logsThisMonth;
 
     final ThemeData theme = Theme.of(context);
+    final bool isDarkMode = theme.brightness == Brightness.dark;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -82,47 +95,82 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
                 value: waterStats.percentCompleteToday.toInt().toString(),
                 shouldAnimate: true,
                 unit: "%",
-                progress: waterStats.percentCompleteToday > 100
-                    ? 1
-                    : waterStats.percentCompleteToday / 100,
+                progress:
+                    waterStats.percentCompleteToday > 100
+                        ? 1
+                        : waterStats.percentCompleteToday / 100,
               ),
             ),
             const Gap(kPadding16),
             Align(
               alignment: Alignment.center,
-              child: Text("${waterStats.totalToday.toInt()} ml",
-                  style: theme.textTheme.displaySmall!
-                      .copyWith(fontWeight: FontWeight.w700)),
+              child: Text(
+                "${waterStats.totalToday.toInt()} ml",
+                style: theme.textTheme.displaySmall!.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
             const Gap(kPadding12),
             Align(
               alignment: Alignment.center,
               child: Text(
-                  waterStats.remainingToday <= 0
-                      ? "Goal Completed!"
-                      : "remaining ${waterStats.remainingToday} ml",
-                  style: theme.textTheme.bodyMedium),
+                waterStats.remainingToday <= 0
+                    ? "Goal Completed!"
+                    : "remaining ${waterStats.remainingToday} ml",
+                style: theme.textTheme.bodyMedium,
+              ),
             ),
             const Gap(kPadding24),
-            WaterVolumeSelector(
-                selectedVolume: (double? selectedVolume) async {
-              WaterLog waterLog = WaterLog(
-                  timestamp: DateTime.now(),
-                  value: selectedVolume ??
-                      waterPreferences.defaultLogValue!.toDouble());
 
-              await waterLogNotifier.putWaterLog(
-                  entry: waterLog, user: selfUser, updateRemote: false);
-              if(ref.watch(waterLogNotifierProviderIml).hasError){
-                if (context.mounted) {
-                  showCustomSnackBar(
-                      context: context,
-                      message: "Failed to add entry",
-                      mode: SnackBarMode.error);
+            GenericSelector(
+              layout: SelectorLayout.grid,
+              childAspectRatio: .7,
+              crossAxisCount: 4,
+              mainAxisSpacing: 0,
+              onItemSelected: (selectedVolume) async {
+                if (selectedVolume.first.key == "custom") {
+                  /// Launch the custom picker
+                } else {
+                  double value = double.parse(selectedVolume.first.key);
+
+                  WaterLog waterLog = WaterLog(
+                    timestamp: DateTime.now(),
+                    value: value,
+                  );
+
+                  await waterLogNotifier.putWaterLog(
+                    entry: waterLog,
+                    user: selfUser,
+                    updateRemote: false,
+                  );
+                  if (ref.watch(waterLogNotifierProviderIml).hasError) {
+                    if (context.mounted) {
+                      showCustomSnackBar(
+                        context: context,
+                        message: "Failed to add entry",
+                        mode: SnackBarMode.error,
+                      );
+                    }
+                  }
                 }
-              }
+              },
+              items: volumesData.entries.toList(),
+              selectableWidgetBuilder: (item, isSelected, onSelected) {
+                return SelectableCircularButton(
+                  color: theme.colorScheme.tertiary,
+                  backgroundColor:
+                      isDarkMode
+                          ? theme.cardColor
+                          : theme.colorScheme.tertiaryContainer,
+                  icon: item.value,
+                  label: "${item.key}ml",
+                  isItemSelected: isSelected,
+                  onPressed: onSelected,
+                );
+              },
+            ),
 
-            }),
             Padding(
               padding: const EdgeInsets.only(left: kPadding16),
               child: Text("Statistics", style: theme.textTheme.titleMedium),
@@ -134,23 +182,26 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
                 children: [
                   const Gap(kPadding16),
                   WaterStatsCard(
-                      dateRange: "Today",
-                      title: "Today so far",
-                      visible: todayLogs.isNotEmpty,
-                      onActionPressed: () {
-                        setState(() {
-                          showFullDay = !showFullDay;
-                        });
-                      },
-                      value:
-                          "${(waterStats.totalToday / 1000).toStringAsFixed(1)} L",
-                      child: LineChartWidget(
-                        yUnit: "L",
-                        timeScale: ChartTimeScale.day,
-                        showFullDay: showFullDay,
-                        spots: ChartDataTransformer
-                            .transformForCumulativeDailyTrend(todayLogs),
-                      )),
+                    dateRange: "Today",
+                    title: "Today so far",
+                    visible: todayLogs.isNotEmpty,
+                    onActionPressed: () {
+                      setState(() {
+                        showFullDay = !showFullDay;
+                      });
+                    },
+                    value:
+                        "${(waterStats.totalToday / 1000).toStringAsFixed(1)} L",
+                    child: LineChartWidget(
+                      yUnit: "L",
+                      timeScale: ChartTimeScale.day,
+                      showFullDay: showFullDay,
+                      spots:
+                          ChartDataTransformer.transformForCumulativeDailyTrend(
+                            todayLogs,
+                          ),
+                    ),
+                  ),
                   const Gap(kPadding16),
                   WaterStatsCard(
                     dateRange: "This Week",
@@ -163,9 +214,9 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
                     child: BarChartWidget(
                       yUnit: "L",
                       timeScale: ChartTimeScale.week,
-                      barGroups:
-                          ChartDataTransformer.transformForWeeklyTotals(
-                              logList: thisWeekLogs),
+                      barGroups: ChartDataTransformer.transformForWeeklyTotals(
+                        logList: thisWeekLogs,
+                      ),
                     ),
                   ),
                   const Gap(kPadding16),
@@ -176,24 +227,24 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
                     value:
                         "${(waterStats.averageThisMonth ?? 0).toStringAsFixed(2)} L",
                     child: BarChartWidget(
-                        timeScale: ChartTimeScale.month,
-                        yUnit: "L",
-                        barGroups:
-                            ChartDataTransformer.transformForMonthlyTotals(
-                                logList: thisMonthLogs)),
+                      timeScale: ChartTimeScale.month,
+                      yUnit: "L",
+                      barGroups: ChartDataTransformer.transformForMonthlyTotals(
+                        logList: thisMonthLogs,
+                      ),
+                    ),
                   ),
                   const Gap(kPadding16),
                 ],
               ),
-            )
+            ),
 
             //    const WaterStatistics(),
-            ,
             const Gap(24),
             Padding(
-                padding: const EdgeInsets.only(left: kPadding16),
-                child:
-                    Text("Today's Logs", style: theme.textTheme.titleMedium)),
+              padding: const EdgeInsets.only(left: kPadding16),
+              child: Text("Today's Logs", style: theme.textTheme.titleMedium),
+            ),
             const Gap(16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: kPadding16),
@@ -208,24 +259,24 @@ class _WaterScreenState extends ConsumerState<WaterScreen> {
                     log: waterStats.logsToday[index],
                     onDeletePressed: () async {
                       await waterLogNotifier.deleteWaterLog(
-                          entry: waterStats.logsToday[index],
-                          user: selfUser,
-                          updateRemote:
-                              false); // Todo: change to true or setup periodic syncing
+                        entry: waterStats.logsToday[index],
+                        user: selfUser,
+                        updateRemote: false,
+                      ); // Todo: change to true or setup periodic syncing
                     },
                     onEditPressed: (newLog) async {
                       await waterLogNotifier.putWaterLog(
-                          entry: newLog,
-                          user: selfUser,
-                          updateRemote:
-                              false); // Todo: change to true or setup periodic syncing
+                        entry: newLog,
+                        user: selfUser,
+                        updateRemote: false,
+                      ); // Todo: change to true or setup periodic syncing
                       setState(() {});
                     },
                   );
                 },
               ),
             ),
-            const Gap(64)
+            const Gap(64),
           ],
         ),
       ),
@@ -306,18 +357,18 @@ class WaterStatsCard extends StatelessWidget {
             //  Spacer(),
 
             // ],),
-
             Row(
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title,
-                        style: theme.textTheme.bodyMedium!.copyWith(
-
-                            //color: Colors.white,
-
-                            color: theme.colorScheme.onTertiary)),
+                    Text(
+                      title,
+                      style: theme.textTheme.bodyMedium!.copyWith(
+                        //color: Colors.white,
+                        color: theme.colorScheme.onTertiary,
+                      ),
+                    ),
                     const Gap(kPadding4),
                     Row(
                       children: [
@@ -327,13 +378,18 @@ class WaterStatsCard extends StatelessWidget {
                           child: SvgPicture.asset(
                             "assets/svg/droplet-alt-filled.svg",
                             colorFilter: ColorFilter.mode(
-                                theme.colorScheme.tertiary, BlendMode.srcIn),
+                              theme.colorScheme.tertiary,
+                              BlendMode.srcIn,
+                            ),
                           ),
                         ),
                         const Gap(kPadding4),
-                        Text(value,
-                            style: theme.textTheme.titleMedium!
-                                .copyWith(color: theme.colorScheme.tertiary)),
+                        Text(
+                          value,
+                          style: theme.textTheme.titleMedium!.copyWith(
+                            color: theme.colorScheme.tertiary,
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -344,12 +400,13 @@ class WaterStatsCard extends StatelessWidget {
                   child: IconButton.filled(
                     onPressed: onActionPressed,
                     icon: Icon(
-                        actionIconData ?? FluentIcons.arrow_maximize_20_regular,
-                        color: theme.colorScheme.onTertiary),
+                      actionIconData ?? FluentIcons.arrow_maximize_20_regular,
+                      color: theme.colorScheme.onTertiary,
+                    ),
                     style: IconButton.styleFrom(
-                        backgroundColor: isDarkMode
-                            ? AppColours.neutral10
-                            : AppColours.blue90),
+                      backgroundColor:
+                          isDarkMode ? AppColours.neutral10 : AppColours.blue90,
+                    ),
                   ),
                 ),
               ],
@@ -358,10 +415,7 @@ class WaterStatsCard extends StatelessWidget {
             const Gap(kPadding32),
             Padding(
               padding: const EdgeInsets.only(right: 16),
-              child: AspectRatio(
-                aspectRatio: 2,
-                child: child,
-              ),
+              child: AspectRatio(aspectRatio: 2, child: child),
             ),
           ],
         ),
