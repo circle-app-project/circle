@@ -25,9 +25,7 @@ class MedScheduledDosesNotifier extends _$MedScheduleNotifier {
   List<ScheduledDose> _pastDosesForToday = [];
 
   List<ScheduledDose> get upcomingDosesForToday => _upcomingDosesForToday;
-
   List<ScheduledDose> get allDosesForToday => _allDosesForToday;
-
   List<ScheduledDose> get pastDosesForToday => _pastDosesForToday;
   List<ScheduledDose> get allDoses => _allDoses;
 
@@ -90,7 +88,7 @@ class MedScheduledDosesNotifier extends _$MedScheduleNotifier {
         );
       },
       (doses) async {
-        log("Success ${state.value}", name: "Med Schedule Notifier");
+        log("Success", name: "Med Schedule Notifier");
         await getMedScheduledDoses();
       },
     );
@@ -239,6 +237,8 @@ class MedScheduledDosesNotifier extends _$MedScheduleNotifier {
     final DateTime today = now.copyWith(hour: 0, minute: 0);
     final DateTime tomorrow = today.add(const Duration(days: 1));
 
+   // _allDosesForToday.clear();
+
     _allDosesForToday = await getMedScheduledDosesForTimePeriod(
       from: today,
       until: tomorrow,
@@ -249,10 +249,9 @@ class MedScheduledDosesNotifier extends _$MedScheduleNotifier {
     /// Get the medications that should be taken today
     if (_allDosesForToday.isNotEmpty) {
       _upcomingDosesForToday =
-          _allDosesForToday.filter((dose) => dose.date.isAfter(now)).toList();
+          _allDosesForToday.filter((dose) => dose.date.isAfter(now) && dose.status!=CompletionsStatus.completed).toList();
       _pastDosesForToday =
-          _allDosesForToday.filter((dose) => dose.date.isBefore(now)).toList();
-      _allDosesForToday = allDoses;
+          _allDosesForToday.filter((dose) => dose.date.isBefore(now) || dose.status==CompletionsStatus.completed).toList();
     }
 
     /// Sorts the doses by schedule time

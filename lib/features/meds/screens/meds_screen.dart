@@ -28,15 +28,17 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
   List<ScheduledDose> allDosesForToday = [];
   List<ScheduledDose> pastDosesForToday = [];
 
-
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(medNotifierProviderImpl.notifier).getMedications();
-      await ref.read(medScheduleNotifierProviderImpl.notifier).calculateDosesForToday();
+      await ref
+          .read(medScheduleNotifierProviderImpl.notifier)
+          .calculateDosesForToday();
       upcomingDosesForToday =
-          ref.watch(medScheduleNotifierProviderImpl.notifier).upcomingDosesForToday;
+          ref
+              .watch(medScheduleNotifierProviderImpl.notifier)
+              .upcomingDosesForToday;
       pastDosesForToday =
           ref.watch(medScheduleNotifierProviderImpl.notifier).pastDosesForToday;
       allDosesForToday =
@@ -51,18 +53,6 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
         ref.watch(medNotifierProviderImpl).value ?? [];
     List<ScheduledDose> medicationSchedule =
         ref.watch(medScheduleNotifierProviderImpl).value ?? [];
-
-    if (medications.isEmpty) {
-      print("No medications");
-    } else {
-      print(
-        "number of medication activity records for this medication: ${medications.first.activityRecord.length}",
-      );
-
-      print(
-        "LIST OF DOSES FOR TODAY FOR THIS MEDICATION IS : $upcomingDosesForToday",
-      );
-    }
 
     final ThemeData theme = Theme.of(context);
     return Scaffold(
@@ -84,7 +74,7 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
                   children: [
                     Text("Next Dose", style: theme.textTheme.titleMedium),
                     MedicationReminderCard(
-                      medSchedule: upcomingDosesForToday.first,
+                      scheduledDose: upcomingDosesForToday.first,
                       isEmphasized: true,
                     ),
                   ],
@@ -104,43 +94,52 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
             ),
             const Gap(kPadding16),
 
-            SizedBox(
-              height: 200,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    const Gap(kPadding16),
-                    if (medications.isNotEmpty) ...[
-                      ListView.separated(
-                        itemCount: medications.length,
-                        scrollDirection: Axis.horizontal,
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.zero,
-                        separatorBuilder:
-                            (context, index) => const Gap(kPadding16),
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return MedicationCard(
-                            medication: medications[index],
-                            viewportWidthFraction: .9,
-                          );
+            if (medications.isNotEmpty)
+              SizedBox(
+                height: 200,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      const Gap(kPadding16),
+                      if (medications.isNotEmpty) ...[
+                        ListView.separated(
+                          itemCount: medications.length,
+                          scrollDirection: Axis.horizontal,
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: EdgeInsets.zero,
+                          separatorBuilder:
+                              (context, index) => const Gap(kPadding16),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return MedicationCard(
+                              medication: medications[index],
+                              viewportWidthFraction: .9,
+                            );
+                          },
+                        ),
+                        const Gap(kPadding16),
+                      ],
+                      AddMedicationButton(
+                        viewportWidthFraction: medications.isNotEmpty ? .9 : 1,
+                        onPressed: () {
+                          context.router.pushNamed(AddMedsScreen.path);
                         },
                       ),
+
                       const Gap(kPadding16),
                     ],
-                    AddMedicationButton(
-                      viewportWidthFraction: medications.isNotEmpty ? .9 : 1,
-                      onPressed: () {
-                        context.router.pushNamed(AddMedsScreen.path);
-                      },
-                    ),
-
-                    const Gap(kPadding16),
-                  ],
+                  ),
                 ),
               ),
-            ),
+
+            if (medications.isEmpty)
+              AddMedicationButton(
+                viewportWidthFraction: medications.isNotEmpty ? .9 : 1,
+                onPressed: () {
+                  context.router.pushNamed(AddMedsScreen.path);
+                },
+              ),
 
             const SizedBox(height: 32),
 
@@ -152,18 +151,18 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
               padding: const EdgeInsets.symmetric(horizontal: kPadding16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-
                 children: [
                   Text("Upcoming Doses", style: theme.textTheme.titleMedium),
                   const Gap(kPadding8),
                   ListView.separated(
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: upcomingDosesForToday.length,
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     separatorBuilder: (context, index) => const Gap(kPadding8),
                     itemBuilder: (context, index) {
                       return MedicationReminderCard(
-                        medSchedule: upcomingDosesForToday[index],
+                        scheduledDose: upcomingDosesForToday[index],
                         isEmphasized: false,
                       );
                     },
@@ -171,26 +170,25 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
                 ],
               ),
             ),
-
             const SizedBox(height: 32),
 
-            /// Past Doses
+            // Past Doses
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: kPadding16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-
                 children: [
                   Text("Past Doses", style: theme.textTheme.titleMedium),
                   const Gap(kPadding8),
                   ListView.separated(
                     itemCount: pastDosesForToday.length,
                     padding: EdgeInsets.zero,
+                    physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     separatorBuilder: (context, index) => const Gap(kPadding8),
                     itemBuilder: (context, index) {
                       return MedicationReminderCard(
-                        medSchedule: pastDosesForToday[index],
+                        scheduledDose: pastDosesForToday[index],
                         isEmphasized: false,
                       );
                     },
@@ -198,7 +196,7 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
                 ],
               ),
             ),
-            const Gap( 64),
+            const Gap(64),
           ],
         ),
       ),
