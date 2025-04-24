@@ -793,11 +793,14 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                                   medication.endDate ??
                                   DateTime.now().add(const Duration(days: 365)),
                             );
-                        ref
-                            .watch(medScheduleNotifierProviderImpl.notifier)
-                            .putMedScheduledDoses(
-                              schedules: allScheduledDoses,
-                            );
+                        MedScheduledDosesNotifier scheduleNotifier = ref.watch(
+                          medScheduleNotifierProviderImpl.notifier,
+                        );
+                        await scheduleNotifier.putMedScheduledDoses(
+                          schedules: allScheduledDoses,
+                        );
+                        await scheduleNotifier.getMedScheduledDoses();
+                        await scheduleNotifier.calculateDosesForToday();
                         if (context.mounted) {
                           showCustomSnackBar(
                             context: context,
@@ -806,6 +809,7 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                           );
                           context.back();
                         }
+
                         ///Navigate to where ever
                       }
                     }

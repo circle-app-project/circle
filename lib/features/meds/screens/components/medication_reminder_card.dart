@@ -14,13 +14,13 @@ import '../../providers/med_schedule_notifier.dart';
 
 class MedicationReminderCard extends ConsumerStatefulWidget {
   const MedicationReminderCard({
-    required this.medSchedule,
+    required this.scheduledDose,
     super.key,
     this.viewportWidthFraction = 1,
     this.isEmphasized = false,
   }) : assert(viewportWidthFraction >= 0 && viewportWidthFraction <= 1);
 
-  final ScheduledDose medSchedule;
+  final ScheduledDose scheduledDose;
 
   /// The fraction of the horizontal viewport width this widget should take, should be between 0.0 & 1.0
   final double viewportWidthFraction;
@@ -43,7 +43,9 @@ class _MedicationReminderCardState extends ConsumerState<MedicationReminderCard>
   void initState() {
 
     animationController = AnimationController(vsync: this);
-    medication = widget.medSchedule.medication!;
+
+    print(widget.scheduledDose.medication);
+    medication = widget.scheduledDose.medication!;
     super.initState();
   }
 
@@ -176,7 +178,7 @@ class _MedicationReminderCardState extends ConsumerState<MedicationReminderCard>
                       ),
                       TextSpan(
                         text:
-                            " ${widget.medSchedule.dose.amount.toStringAsFixed(0)} ${widget.medSchedule.dose.unit.symbol}",
+                            " ${widget.scheduledDose.dose.amount.toStringAsFixed(0)} ${widget.scheduledDose.dose.unit.symbol}",
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontSize: widget.isEmphasized ? 22 : 18,
                           color:
@@ -206,7 +208,7 @@ class _MedicationReminderCardState extends ConsumerState<MedicationReminderCard>
                                   ),
                         ),
                         Text(
-                          "${widget.medSchedule.dose.number.toStringAsFixed(0)} ${medication.type?.label}",
+                          "${widget.scheduledDose.dose.number.toStringAsFixed(0)} ${medication.type?.label}",
                           style: theme.textTheme.bodyLarge?.copyWith(
                             color:
                                 widget.isEmphasized
@@ -233,7 +235,7 @@ class _MedicationReminderCardState extends ConsumerState<MedicationReminderCard>
                                   ),
                         ),
                         Text(
-                          " At ${TimeOfDay.fromDateTime(widget.medSchedule.date).format(context)}",
+                          " At ${TimeOfDay.fromDateTime(widget.scheduledDose.date).format(context)}",
                           style: theme.textTheme.bodyLarge?.copyWith(
                             color:
                                 widget.isEmphasized
@@ -316,7 +318,7 @@ class _MedicationReminderCardState extends ConsumerState<MedicationReminderCard>
                                     if (_formKey.currentState!.validate()) {
 
                                       await medScheduleNotifier.markDoseAsSkipped(
-                                        dose: widget.medSchedule,
+                                        dose: widget.scheduledDose,
                                         skipReason: skipReasonController.text.trim(),
                                       );
 
@@ -368,7 +370,7 @@ class _MedicationReminderCardState extends ConsumerState<MedicationReminderCard>
                         child: AppButton(
                           onPressed: () async {
                             await medScheduleNotifier.markDoseAsCompleted(
-                              dose: widget.medSchedule,
+                              dose: widget.scheduledDose,
                             );
                             if (ref.watch(medScheduleNotifierProviderImpl).hasError) {
                               if(context.mounted){

@@ -164,7 +164,7 @@ class ScheduledDose extends Equatable implements ActivityRecord {
       'parentId': parentId,
       'date': date.toIso8601String(),
       'activityDetails': activityDetails,
-      'completedAt': completedAt?.toIso8601String(),
+      'completedAt': completedAt?.toUtc().toIso8601String(),
       'skipReason': skipReason,
       'note': note,
       'dose': dose.toMap(),
@@ -295,6 +295,7 @@ extension MedicationSchedule on Medication {
               status: CompletionsStatus.pending,
               createdAt: DateTime.now(),
               completedAt: null,
+              updatedAt: null,
             ),
           );
         }
@@ -345,6 +346,7 @@ extension MedicationSchedule on Medication {
                 status: CompletionsStatus.pending,
                 createdAt: DateTime.now(),
                 completedAt: null,
+                updatedAt: null,
               ),
             );
           }
@@ -390,6 +392,7 @@ extension MedicationSchedule on Medication {
                 status: CompletionsStatus.pending,
                 createdAt: DateTime.now(),
                 completedAt: null,
+                updatedAt: null,
               ),
             );
           }
