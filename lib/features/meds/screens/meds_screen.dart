@@ -51,8 +51,7 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
   Widget build(BuildContext context) {
     List<Medication> medications =
         ref.watch(medNotifierProviderImpl).value ?? [];
-    List<ScheduledDose> medicationSchedule =
-        ref.watch(medScheduleNotifierProviderImpl).value ?? [];
+
 
     final ThemeData theme = Theme.of(context);
     return Scaffold(
@@ -155,7 +154,7 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
                   Text("Upcoming Doses", style: theme.textTheme.titleMedium),
                   const Gap(kPadding8),
                   ListView.separated(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: upcomingDosesForToday.length,
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
@@ -183,7 +182,7 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
                   ListView.separated(
                     itemCount: pastDosesForToday.length,
                     padding: EdgeInsets.zero,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     separatorBuilder: (context, index) => const Gap(kPadding8),
                     itemBuilder: (context, index) {
