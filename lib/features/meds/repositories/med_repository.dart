@@ -40,10 +40,10 @@ abstract class MedRepository {
     required List<ScheduledDose> schedules,
   });
   FutureEither<ScheduledDose> putAndGetMedScheduledDose({
-  required  ScheduledDose schedule,
+    required ScheduledDose schedule,
   });
   FutureEither<void> deleteMedScheduledDoses({
-   required List<ScheduledDose> schedules,
+    required List<ScheduledDose> schedules,
   });
 }
 
@@ -144,27 +144,46 @@ class MedRepositoryImpl implements MedRepository {
   // MED SCHEDULES
   // TODO: Add remote service to this
   @override
-  FutureEither<void> deleteMedScheduledDoses({required List<ScheduledDose> schedules}) {
+  FutureEither<void> deleteMedScheduledDoses({
+    required List<ScheduledDose> schedules,
+  }) {
     return futureHandler(() async {
-      return _medLocalService.deleteMedicationScheduledDoses(
-    doses: schedules
-      );
-    });
-  }
-
-
-  @override
-  FutureEither<List<ScheduledDose>> getMedScheduledDoses({DateTime? from, DateTime? until}) {
-    return futureHandler(() async {
-      return _medLocalService.getMedicationScheduledDoses(
-        from: from,
-        until: until,
-      );
+      return _medLocalService.deleteMedicationScheduledDoses(doses: schedules);
     });
   }
 
   @override
-  FutureEither<ScheduledDose> putAndGetMedScheduledDose({required ScheduledDose schedule}) {
+  FutureEither<List<ScheduledDose>> getMedScheduledDoses({
+    DateTime? from,
+    DateTime? until,
+  }) {
+    return futureHandler(() async {
+      /// Gets the parent medication for each scheduled dose and include in the
+      /// dose object itself.
+      List<Medication> medications = _medLocalService.getAllMedications();
+
+      List<ScheduledDose> scheduledDoses = _medLocalService
+          .getMedicationScheduledDoses(from: from, until: until);
+
+      scheduledDoses =
+          scheduledDoses
+              .map(
+                (dose) => dose.copyWith(
+                  medication: medications.firstWhere(
+                    (med) => med.uid == dose.parentId,
+                  ),
+                ),
+              )
+              .toList();
+
+      return scheduledDoses;
+    });
+  }
+
+  @override
+  FutureEither<ScheduledDose> putAndGetMedScheduledDose({
+    required ScheduledDose schedule,
+  }) {
     return futureHandler(() async {
       return _medLocalService.putAndGetMedicationScheduledDose(
         schedule: schedule,
@@ -173,7 +192,9 @@ class MedRepositoryImpl implements MedRepository {
   }
 
   @override
-  FutureEither<List<ScheduledDose>> putAndGetMedScheduledDoses({required List<ScheduledDose> schedules}) {
+  FutureEither<List<ScheduledDose>> putAndGetMedScheduledDoses({
+    required List<ScheduledDose> schedules,
+  }) {
     return futureHandler(() async {
       return _medLocalService.putAndGetMedicationScheduledDoses(
         doses: schedules,
