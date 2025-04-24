@@ -244,7 +244,6 @@ class MedScheduledDosesNotifier extends _$MedScheduleNotifier {
       until: tomorrow,
     );
 
-    print("All doses for today direclty from db: $_allDosesForToday ");
 
     /// Get the medications that should be taken today
     if (_allDosesForToday.isNotEmpty) {
@@ -258,10 +257,6 @@ class MedScheduledDosesNotifier extends _$MedScheduleNotifier {
     _upcomingDosesForToday.sort((a, b) => a.date.compareTo(b.date));
     _allDosesForToday.sort((a, b) => a.date.compareTo(b.date));
     _pastDosesForToday.sort((a, b) => a.date.compareTo(b.date));
-
-    print("all doses for today: ${_allDosesForToday.length}");
-    print("Upcoming doses for today: ${_upcomingDosesForToday.length}");
-    print("past doses for today: ${_allDosesForToday.length}");
 
     state = AsyncValue.data(state.value ?? []);
     return _allDosesForToday;

@@ -44,7 +44,6 @@ class _MedicationReminderCardState extends ConsumerState<MedicationReminderCard>
 
     animationController = AnimationController(vsync: this);
 
-    print(widget.scheduledDose.medication);
     medication = widget.scheduledDose.medication!;
     super.initState();
   }
