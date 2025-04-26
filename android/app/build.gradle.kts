@@ -25,6 +25,7 @@ android {
     ndkVersion = "26.1.10909125"
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -66,8 +67,11 @@ flutter {
 
 dependencies {
     implementation("androidx.core:core-splashscreen:1.0.0")
+    implementation("androidx.core:core-splashscreen:1.0.0")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
     // Add objectbox-android-objectbrowser only for debug builds.
-    debugImplementation("io.objectbox:objectbox-android-objectbrowser:4.1.0")
+    debugImplementation("io.objectbox:objectbox-android-objectbrowser:4.2.0")
+
 }
 
 // Tell Gradle to exclude the objectbox-android dependency
