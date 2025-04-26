@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:circle/features/meds/models/scheduled_doses.dart';
-import 'package:circle/features/meds/providers/med_schedule_notifier.dart';
+import 'package:circle/features/meds/providers/med_scheduled_doses_notifier.dart';
 import 'package:circle/features/meds/screens/components/medication_reminder_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -133,11 +133,14 @@ class _MedsScreenState extends ConsumerState<MedsScreen> {
               ),
 
             if (medications.isEmpty)
-              AddMedicationButton(
-                viewportWidthFraction: medications.isNotEmpty ? .9 : 1,
-                onPressed: () {
-                  context.router.pushNamed(AddMedsScreen.path);
-                },
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: kPadding16),
+                child: AddMedicationButton(
+                  viewportWidthFraction: medications.isNotEmpty ? .9 : 1,
+                  onPressed: () {
+                    context.router.pushNamed(AddMedsScreen.path);
+                  },
+                ),
               ),
 
             const SizedBox(height: 32),

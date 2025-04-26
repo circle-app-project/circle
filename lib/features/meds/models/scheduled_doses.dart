@@ -3,6 +3,7 @@ import 'package:circle/features/meds/models/activity_record.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
+import 'package:uuid/uuid.dart';
 
 import 'dose.dart';
 import 'frequency.dart';
@@ -40,6 +41,9 @@ class ScheduledDose extends Equatable implements ActivityRecord {
   @Property(type: PropertyType.date)
   @override
   final DateTime date;
+
+  @Unique(onConflict: ConflictStrategy.replace)
+  final String uid;
 
   @override
   final String? note;
@@ -107,6 +111,7 @@ class ScheduledDose extends Equatable implements ActivityRecord {
 
   ScheduledDose({
     this.id = 0,
+    required this.uid,
     this.dose = Dose.empty,
     this.medication,
     required this.date,
@@ -141,6 +146,7 @@ class ScheduledDose extends Equatable implements ActivityRecord {
   }) {
     return ScheduledDose(
       id: id,
+      uid: uid,
       date: date ?? this.date,
       activityDetails: activityDetails ?? this.activityDetails,
       completedAt: completedAt ?? this.completedAt,
@@ -161,6 +167,7 @@ class ScheduledDose extends Equatable implements ActivityRecord {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'uid': uid,
       'parentId': parentId,
       'date': date.toIso8601String(),
       'activityDetails': activityDetails,
@@ -181,6 +188,7 @@ class ScheduledDose extends Equatable implements ActivityRecord {
   factory ScheduledDose.fromMap(Map<String, dynamic> map) {
     ActivityType activityType = ActivityType.values.byName(map["activityType"]);
     return ScheduledDose(
+      uid: map['uid'],
       dose: Dose.fromMap(map['dose']),
       parentId: map['parentId'],
       date: DateTime.parse(map['date']),
@@ -288,6 +296,7 @@ extension MedicationSchedule on Medication {
         if (doseTime.isAfter(from) && doseTime.isBefore(until)) {
           upcomingDoses.add(
             ScheduledDose(
+              uid: const Uuid().v4(),
               date: doseTime,
               dose: dose!,
               medication: this,
@@ -339,6 +348,7 @@ extension MedicationSchedule on Medication {
           if (doseTime.isAfter(from) && doseTime.isBefore(until)) {
             upcomingDoses.add(
               ScheduledDose(
+                uid: const Uuid().v4(),
                 date: doseTime,
                 dose: dose!,
                 medication: this,
@@ -385,6 +395,7 @@ extension MedicationSchedule on Medication {
           if (doseTime.isAfter(from) && doseTime.isBefore(until)) {
             upcomingDoses.add(
               ScheduledDose(
+                uid: const Uuid().v4(),
                 date: doseTime,
                 dose: dose!,
                 medication: this,
