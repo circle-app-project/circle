@@ -462,7 +462,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(14, 4275058572695879075),
       name: 'ScheduledDose',
-      lastPropertyId: const obx_int.IdUid(14, 5604762930702115242),
+      lastPropertyId: const obx_int.IdUid(15, 4105671264254087409),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -534,7 +534,13 @@ final _entities = <obx_int.ModelEntity>[
             id: const obx_int.IdUid(14, 5604762930702115242),
             name: 'dbDose',
             type: 9,
-            flags: 0)
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(15, 4105671264254087409),
+            name: 'uid',
+            type: 9,
+            flags: 34848,
+            indexId: const obx_int.IdUid(11, 6292842501519135102))
       ],
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
@@ -576,7 +582,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
       lastEntityId: const obx_int.IdUid(14, 4275058572695879075),
-      lastIndexId: const obx_int.IdUid(10, 7451178347421563325),
+      lastIndexId: const obx_int.IdUid(11, 6292842501519135102),
       lastRelationId: const obx_int.IdUid(3, 7294710979211216290),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [
@@ -1009,7 +1015,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
               ? null
               : DateTime.fromMillisecondsSinceEpoch(endDateValue);
           final shouldRemindParam =
-              const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 14);
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 14, false);
           final reminderMessageParam =
               const fb.StringReader(asciiOptimization: true)
                   .vTableGetNullable(buffer, rootOffset, 16);
@@ -1219,7 +1225,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final dbActivityDetailsOffset =
               fbb.writeString(object.dbActivityDetails);
           final dbDoseOffset = fbb.writeString(object.dbDose);
-          fbb.startTable(15);
+          final uidOffset = fbb.writeString(object.uid);
+          fbb.startTable(16);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.completedAt?.millisecondsSinceEpoch);
           fbb.addInt64(2, object.date.millisecondsSinceEpoch);
@@ -1234,6 +1241,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           fbb.addOffset(11, dbStatusOffset);
           fbb.addOffset(12, dbActivityDetailsOffset);
           fbb.addOffset(13, dbDoseOffset);
+          fbb.addOffset(14, uidOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1248,6 +1256,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
               const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 22);
           final idParam =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final uidParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 32, '');
           final dateParam = DateTime.fromMillisecondsSinceEpoch(
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0));
           final parentIdParam = const fb.StringReader(asciiOptimization: true)
@@ -1271,6 +1281,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
               : DateTime.fromMillisecondsSinceEpoch(createdAtValue);
           final object = ScheduledDose(
               id: idParam,
+              uid: uidParam,
               date: dateParam,
               parentId: parentIdParam,
               completedAt: completedAtParam,
@@ -1672,4 +1683,8 @@ class ScheduledDose_ {
   /// See [ScheduledDose.dbDose].
   static final dbDose =
       obx.QueryStringProperty<ScheduledDose>(_entities[6].properties[13]);
+
+  /// See [ScheduledDose.uid].
+  static final uid =
+      obx.QueryStringProperty<ScheduledDose>(_entities[6].properties[14]);
 }
