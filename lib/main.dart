@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:springster/springster.dart';
 
 import 'core/core.dart';
+import 'features/meds/services/local/notification_service.dart';
 import 'firebase_options.dart';
 
 late LocalDatabaseService database;
@@ -23,9 +24,15 @@ void main() async {
   );
   database = LocalDatabaseService.instance;
 
+  // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   // Initialize crashlytics
   CrashlyticsService.initialize();
+
+  // Initialize Notification Service
+  final notificationService = NotificationService();
+  await notificationService.initialize();
 
   runApp(ProviderScope(child: MyApp()));
 }

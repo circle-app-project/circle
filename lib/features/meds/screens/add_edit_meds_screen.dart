@@ -5,7 +5,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:circle/core/extensions/date_time_formatter.dart';
 import 'package:circle/features/meds/models/dose.dart';
 import 'package:circle/features/meds/models/scheduled_doses.dart';
-import 'package:circle/features/meds/providers/med_schedule_notifier.dart';
+import 'package:circle/features/meds/providers/med_scheduled_doses_notifier.dart';
 import 'package:circle/features/meds/screens/components/dose_bottomsheet.dart';
 import 'package:circle/features/meds/screens/components/duration_bottomsheet.dart';
 import 'package:circle/features/meds/screens/components/emphasized_container.dart';
@@ -801,6 +801,25 @@ class _AddMedsScreenState extends ConsumerState<AddMedsScreen> {
                         );
                         await scheduleNotifier.getMedScheduledDoses();
                         await scheduleNotifier.calculateDosesForToday();
+
+                        if (medication.shouldRemind) {
+                          // Schedule Notifications here
+                          await scheduleNotifier
+                              .scheduleNotificationsForMedicationDoses(
+                                doses: allScheduledDoses,
+                                medication: medication,
+                              );
+
+                          if (ref.watch(medScheduleNotifierProviderImpl).hasError){
+                            if(context.mounted){
+                              showCustomSnackBar(
+                                context: context,
+                                message: "Unable to schedule notifications",
+                                mode: SnackBarMode.success,
+                              );
+                            }
+                          }
+                        }
                         if (context.mounted) {
                           showCustomSnackBar(
                             context: context,

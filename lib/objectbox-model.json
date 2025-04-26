@@ -444,7 +444,7 @@
     },
     {
       "id": "14:4275058572695879075",
-      "lastPropertyId": "14:5604762930702115242",
+      "lastPropertyId": "15:4105671264254087409",
       "name": "ScheduledDose",
       "properties": [
         {
@@ -517,13 +517,20 @@
           "id": "14:5604762930702115242",
           "name": "dbDose",
           "type": 9
+        },
+        {
+          "id": "15:4105671264254087409",
+          "name": "uid",
+          "type": 9,
+          "flags": 34848,
+          "indexId": "11:6292842501519135102"
         }
       ],
       "relations": []
     }
   ],
   "lastEntityId": "14:4275058572695879075",
-  "lastIndexId": "10:7451178347421563325",
+  "lastIndexId": "11:6292842501519135102",
   "lastRelationId": "3:7294710979211216290",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
