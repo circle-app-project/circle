@@ -1,6 +1,9 @@
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -13,15 +16,16 @@ void _notificationTapBackground(NotificationResponse notificationResponse) {
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
   Future<void> initialize() async {
     /// Initialize timezone data with local device timezone
     tz.initializeTimeZones();
+    _configureLocalTimeZone();
 
     /// Android Notifications Initialization Settings
     AndroidInitializationSettings androidInitializationSettings =
-    const AndroidInitializationSettings("circle_logo");
+        const AndroidInitializationSettings("circle_logo");
 
     /// iOS Notifications Initialization Settings
     final iosInitializationSettings = DarwinInitializationSettings(
@@ -45,25 +49,29 @@ class NotificationService {
               },
             ),
           ],
-        )
+        ),
       ],
     );
 
     /// Initialization Settings
     InitializationSettings initializationSettings = InitializationSettings(
-        android: androidInitializationSettings, iOS: iosInitializationSettings);
+      android: androidInitializationSettings,
+      iOS: iosInitializationSettings,
+    );
 
     /// Request Permissions for Android
     await notificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin
+        >()
         ?.requestNotificationsPermission();
 
     /// Initialize with notification tap handlers
     await notificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveNotificationResponse:
-          (NotificationResponse notificationResponse) async {
+      onDidReceiveNotificationResponse: (
+        NotificationResponse notificationResponse,
+      ) async {
         //Todo: do something with the notification response
         // This handles notification taps when the app is in the foreground or background
         // You can add deep linking logic here later if needed
@@ -72,15 +80,33 @@ class NotificationService {
     );
   }
 
+  Future<void> _configureLocalTimeZone() async {
+    if (kIsWeb || Platform.isLinux) {
+      return;
+    }
+    tz.initializeTimeZones();
+    if (Platform.isWindows) {
+      return;
+    }
+    final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName));
+  }
+
   Future<NotificationDetails> notificationDetails() async {
     return const NotificationDetails(
-        android: AndroidNotificationDetails("medicationId", "Today's Medication",
-            importance: Importance.max),
-        iOS: DarwinNotificationDetails(
-            presentAlert: true,
-            presentBadge: true,
-            presentSound: true,
-            categoryIdentifier: "medication"));
+      android: AndroidNotificationDetails(
+        "medicationId",
+        "Medication",
+        importance: Importance.max,
+        priority: Priority.high,
+      ),
+      iOS: DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+        categoryIdentifier: "medication",
+      ),
+    );
   }
 
   Future<void> showNotification({
@@ -89,8 +115,12 @@ class NotificationService {
     String? body,
     String? payload,
   }) async {
-    await notificationsPlugin.show(id, title, body, await notificationDetails(),
-        payload: payload // Can be used for deep linking later
+    await notificationsPlugin.show(
+      id,
+      title,
+      body,
+      await notificationDetails(),
+      payload: payload, // Can be used for deep linking later
     );
   }
 
@@ -101,7 +131,6 @@ class NotificationService {
     String? body,
     String? payload,
   }) async {
-
     try {
       notificationsPlugin.zonedSchedule(
         id,
@@ -109,14 +138,19 @@ class NotificationService {
         body,
         tz.TZDateTime.from(selectedTime, tz.local),
         await notificationDetails(),
-        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        matchDateTimeComponents: DateTimeComponents.dateAndTime,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       );
 
-      log("Notification with title '$title' and body '$body' scheduled for ${tz.TZDateTime.from(selectedTime, tz.local)} ${tz.local}", name: "Notification Service");
+      log(
+        "Notification with title '$title' and body '$body' scheduled for ${tz.TZDateTime.from(selectedTime, tz.local)} ${tz.local}",
+        name: "Notification Service",
+      );
     } catch (e, stacktrace) {
-      log("Failed to schedule notification: ${e.toString()}",
-          name: "Notification Service", stackTrace: stacktrace);
+      log(
+        "Failed to schedule notification: ${e.toString()}",
+        name: "Notification Service",
+        stackTrace: stacktrace,
+      );
       rethrow;
     }
   }
@@ -128,7 +162,6 @@ class NotificationService {
     String? body,
     String? payload,
   }) async {
-
     try {
       notificationsPlugin.zonedSchedule(
         id,
@@ -137,14 +170,23 @@ class NotificationService {
         tz.TZDateTime.from(date, tz.local),
         await notificationDetails(),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        matchDateTimeComponents: DateTimeComponents.dateAndTime,
       );
 
-      log("Notification with title '$title' and body '$body' scheduled for ${tz.TZDateTime.from(date, tz.local)} ${tz.local}", name: "Notification Service");
+      log(
+        "Notification with title '$title' and body '$body' scheduled for ${tz.TZDateTime(tz.local, date.year, date.month, date.day, date.hour, date.minute)} ${tz.local}",
+        name: "Notification Service",
+      );
     } catch (e, stacktrace) {
-      log("Failed to schedule notification: ${e.toString()}",
-          name: "Notification Service", stackTrace: stacktrace);
+      log(
+        "Failed to schedule notification: ${e.toString()}",
+        name: "Notification Service",
+        stackTrace: stacktrace,
+      );
       rethrow;
     }
+  }
+
+  Future<void> cancelAllNotifications() async {
+    await notificationsPlugin.cancelAll();
   }
 }
