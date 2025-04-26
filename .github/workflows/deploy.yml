@@ -16,7 +16,7 @@ env:
   SERVICE_ACCOUNT_KEY_PATH: android/circle-60af7-f47644410c6a.json
   RELEASE_TRACK: internal
   PACKAGE_NAME: co.circleapp.app
-  FLUTTER_CHANNEL: main
+  FLUTTER_CHANNEL: stable
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
 jobs:
