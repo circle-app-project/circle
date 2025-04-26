@@ -59,7 +59,7 @@ class Medication extends Equatable {
   final bool isPermanent;
 
   /// Whether or not to send a notification reminder for this medication.
-  final bool? shouldRemind;
+  final bool shouldRemind;
 
   /// The message to display in the reminder notification.
   final String? reminderMessage;
@@ -167,7 +167,7 @@ class Medication extends Equatable {
     required this.isPermanent,
     this.startDate,
     this.endDate,
-    this.shouldRemind,
+    this.shouldRemind = true,
     this.reminderMessage,
     this.warningMessage,
     this.streak,

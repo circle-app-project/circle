@@ -10,7 +10,7 @@ import '../../../../components/components.dart';
 import '../../../../../core/core.dart';
 import '../../meds.dart';
 import '../../models/medication.dart';
-import '../../providers/med_schedule_notifier.dart';
+import '../../providers/med_scheduled_doses_notifier.dart';
 
 class MedicationReminderCard extends ConsumerStatefulWidget {
   const MedicationReminderCard({

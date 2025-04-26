@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'med_schedule_notifier.dart';
+part of 'med_scheduled_doses_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$medScheduleNotifierHash() =>
-    r'c7c91d94809a7b6c8dfa6f32f6d81ace98061c1a';
+String _$medScheduledDosesNotifierHash() =>
+    r'5b4b11117dca33568bdade9698180b0a759a734a';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,31 +30,35 @@ class _SystemHash {
   }
 }
 
-abstract class _$MedScheduleNotifier
+abstract class _$MedScheduledDosesNotifier
     extends BuildlessAsyncNotifier<List<ScheduledDose>> {
   late final MedRepository medRepository;
+  late final NotificationRepository notificationRepository;
 
   FutureOr<List<ScheduledDose>> build({
     required MedRepository medRepository,
+    required NotificationRepository notificationRepository,
   });
 }
 
 /// See also [MedScheduledDosesNotifier].
 @ProviderFor(MedScheduledDosesNotifier)
-const medScheduleNotifierProvider = MedScheduleNotifierFamily();
+const medScheduledDosesNotifierProvider = MedScheduledDosesNotifierFamily();
 
 /// See also [MedScheduledDosesNotifier].
-class MedScheduleNotifierFamily
+class MedScheduledDosesNotifierFamily
     extends Family<AsyncValue<List<ScheduledDose>>> {
   /// See also [MedScheduledDosesNotifier].
-  const MedScheduleNotifierFamily();
+  const MedScheduledDosesNotifierFamily();
 
   /// See also [MedScheduledDosesNotifier].
   MedScheduledDosesNotifierProvider call({
     required MedRepository medRepository,
+    required NotificationRepository notificationRepository,
   }) {
     return MedScheduledDosesNotifierProvider(
       medRepository: medRepository,
+      notificationRepository: notificationRepository,
     );
   }
 
@@ -64,6 +68,7 @@ class MedScheduleNotifierFamily
   ) {
     return call(
       medRepository: provider.medRepository,
+      notificationRepository: provider.notificationRepository,
     );
   }
 
@@ -79,7 +84,7 @@ class MedScheduleNotifierFamily
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'medScheduleNotifierProvider';
+  String? get name => r'medScheduledDosesNotifierProvider';
 }
 
 /// See also [MedScheduledDosesNotifier].
@@ -88,18 +93,22 @@ class MedScheduledDosesNotifierProvider extends AsyncNotifierProviderImpl<
   /// See also [MedScheduledDosesNotifier].
   MedScheduledDosesNotifierProvider({
     required MedRepository medRepository,
+    required NotificationRepository notificationRepository,
   }) : this._internal(
-          () => MedScheduledDosesNotifier()..medRepository = medRepository,
-          from: medScheduleNotifierProvider,
-          name: r'medScheduleNotifierProvider',
+          () => MedScheduledDosesNotifier()
+            ..medRepository = medRepository
+            ..notificationRepository = notificationRepository,
+          from: medScheduledDosesNotifierProvider,
+          name: r'medScheduledDosesNotifierProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$medScheduleNotifierHash,
-          dependencies: MedScheduleNotifierFamily._dependencies,
+                  : _$medScheduledDosesNotifierHash,
+          dependencies: MedScheduledDosesNotifierFamily._dependencies,
           allTransitiveDependencies:
-              MedScheduleNotifierFamily._allTransitiveDependencies,
+              MedScheduledDosesNotifierFamily._allTransitiveDependencies,
           medRepository: medRepository,
+          notificationRepository: notificationRepository,
         );
 
   MedScheduledDosesNotifierProvider._internal(
@@ -110,9 +119,11 @@ class MedScheduledDosesNotifierProvider extends AsyncNotifierProviderImpl<
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.medRepository,
+    required this.notificationRepository,
   }) : super.internal();
 
   final MedRepository medRepository;
+  final NotificationRepository notificationRepository;
 
   @override
   FutureOr<List<ScheduledDose>> runNotifierBuild(
@@ -120,6 +131,7 @@ class MedScheduledDosesNotifierProvider extends AsyncNotifierProviderImpl<
   ) {
     return notifier.build(
       medRepository: medRepository,
+      notificationRepository: notificationRepository,
     );
   }
 
@@ -128,13 +140,16 @@ class MedScheduledDosesNotifierProvider extends AsyncNotifierProviderImpl<
     return ProviderOverride(
       origin: this,
       override: MedScheduledDosesNotifierProvider._internal(
-        () => create()..medRepository = medRepository,
+        () => create()
+          ..medRepository = medRepository
+          ..notificationRepository = notificationRepository,
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         medRepository: medRepository,
+        notificationRepository: notificationRepository,
       ),
     );
   }
@@ -142,19 +157,21 @@ class MedScheduledDosesNotifierProvider extends AsyncNotifierProviderImpl<
   @override
   AsyncNotifierProviderElement<MedScheduledDosesNotifier, List<ScheduledDose>>
       createElement() {
-    return _MedScheduleNotifierProviderElement(this);
+    return _MedScheduledDosesNotifierProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
     return other is MedScheduledDosesNotifierProvider &&
-        other.medRepository == medRepository;
+        other.medRepository == medRepository &&
+        other.notificationRepository == notificationRepository;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, medRepository.hashCode);
+    hash = _SystemHash.combine(hash, notificationRepository.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -162,18 +179,26 @@ class MedScheduledDosesNotifierProvider extends AsyncNotifierProviderImpl<
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin MedScheduleNotifierRef on AsyncNotifierProviderRef<List<ScheduledDose>> {
+mixin MedScheduledDosesNotifierRef
+    on AsyncNotifierProviderRef<List<ScheduledDose>> {
   /// The parameter `medRepository` of this provider.
   MedRepository get medRepository;
+
+  /// The parameter `notificationRepository` of this provider.
+  NotificationRepository get notificationRepository;
 }
 
-class _MedScheduleNotifierProviderElement extends AsyncNotifierProviderElement<
-    MedScheduledDosesNotifier, List<ScheduledDose>> with MedScheduleNotifierRef {
-  _MedScheduleNotifierProviderElement(super.provider);
+class _MedScheduledDosesNotifierProviderElement
+    extends AsyncNotifierProviderElement<MedScheduledDosesNotifier,
+        List<ScheduledDose>> with MedScheduledDosesNotifierRef {
+  _MedScheduledDosesNotifierProviderElement(super.provider);
 
   @override
   MedRepository get medRepository =>
       (origin as MedScheduledDosesNotifierProvider).medRepository;
+  @override
+  NotificationRepository get notificationRepository =>
+      (origin as MedScheduledDosesNotifierProvider).notificationRepository;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
