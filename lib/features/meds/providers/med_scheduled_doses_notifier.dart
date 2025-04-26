@@ -7,16 +7,26 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/error/failure.dart';
 import '../models/activity_record.dart';
+import '../models/medication.dart';
 import '../models/scheduled_doses.dart';
+import '../repositories/notification_repository.dart';
+import '../services/local/notification_service.dart';
 import 'med_notifier.dart';
-part 'med_schedule_notifier.g.dart';
+part 'med_scheduled_doses_notifier.g.dart';
 
+final NotificationRepository _notificationRepository = NotificationRepository(
+  notificationService: NotificationService(),
+);
 final MedScheduledDosesNotifierProvider medScheduleNotifierProviderImpl =
-    MedScheduledDosesNotifierProvider(medRepository: medRepository);
+    MedScheduledDosesNotifierProvider(
+      medRepository: medRepository,
+      notificationRepository: _notificationRepository,
+    );
 
 @Riverpod(keepAlive: true)
-class MedScheduledDosesNotifier extends _$MedScheduleNotifier {
+class MedScheduledDosesNotifier extends _$MedScheduledDosesNotifier {
   late final MedRepository _medRepository;
+  late final NotificationRepository _notificationRepository;
   late final AppUser? selfUser;
 
   List<ScheduledDose> _allDoses = [];
@@ -32,11 +42,40 @@ class MedScheduledDosesNotifier extends _$MedScheduleNotifier {
   @override
   FutureOr<List<ScheduledDose>> build({
     required MedRepository medRepository,
+    required NotificationRepository notificationRepository,
   }) async {
     _medRepository = medRepository;
+    _notificationRepository = notificationRepository;
     selfUser = ref.watch(userNotifierProviderImpl).value;
 
     return [];
+  }
+
+  // ////// SCHEDULE NOTIFICATIONS /////
+
+  Future<void> scheduleNotificationsForMedicationDoses({
+    required List<ScheduledDose> doses,
+    required Medication medication,
+  }) async {
+    log("Scheduling Notifications", name: "Med Schedule Notifier");
+    final Either<Failure, void> response = await _notificationRepository
+        .scheduleMedDosesNotifications(doses: doses, medication: medication);
+
+    response.fold(
+      (failure) {
+        state = AsyncValue.error(failure, failure.stackTrace!);
+        log(
+          "Failed: $failure, Message:${failure.message}, Code: ${failure.code}",
+          name: "Med Schedule Notifier",
+          stackTrace: failure.stackTrace,
+        );
+      },
+      (empty) {
+        state = AsyncValue.data(state.value ?? []);
+
+        log("Success", name: "Med Schedule Notifier");
+      },
+    );
   }
 
   // /////// C R U D  O P E R A T I O N S ///////
@@ -208,7 +247,6 @@ class MedScheduledDosesNotifier extends _$MedScheduleNotifier {
 
     ScheduledDose? schedule;
 
-
     response.fold(
       (failure) {
         state = AsyncValue.error(failure, failure.stackTrace!);
@@ -237,20 +275,31 @@ class MedScheduledDosesNotifier extends _$MedScheduleNotifier {
     final DateTime today = now.copyWith(hour: 0, minute: 0);
     final DateTime tomorrow = today.add(const Duration(days: 1));
 
-   // _allDosesForToday.clear();
+    // _allDosesForToday.clear();
 
     _allDosesForToday = await getMedScheduledDosesForTimePeriod(
       from: today,
       until: tomorrow,
     );
 
-
     /// Get the medications that should be taken today
     if (_allDosesForToday.isNotEmpty) {
       _upcomingDosesForToday =
-          _allDosesForToday.filter((dose) => dose.date.isAfter(now) && dose.status!=CompletionsStatus.completed).toList();
+          _allDosesForToday
+              .filter(
+                (dose) =>
+                    dose.date.isAfter(now) &&
+                    dose.status != CompletionsStatus.completed,
+              )
+              .toList();
       _pastDosesForToday =
-          _allDosesForToday.filter((dose) => dose.date.isBefore(now) || dose.status==CompletionsStatus.completed).toList();
+          _allDosesForToday
+              .filter(
+                (dose) =>
+                    dose.date.isBefore(now) ||
+                    dose.status == CompletionsStatus.completed,
+              )
+              .toList();
     }
 
     /// Sorts the doses by schedule time
