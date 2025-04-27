@@ -17,7 +17,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
 
-version: 0.1.2+8
+version: 0.1.3+8
 # Things to note when versioning. Do not touch the build number, i.e (X.Y.Z+N) where N is the build number.
 # It will be automatically incremented by the CI/CD pipeline.
 # Also, also, when merging `release` branches, do not `rebase` use only `merge` for pull requests,

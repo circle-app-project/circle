@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Circle',
-      debugShowCheckedModeBanner: true,
+      debugShowCheckedModeBanner: false,
       theme: AppThemeData.lightTheme,
       darkTheme: AppThemeData.darkTheme,
       themeMode: ThemeMode.system,
