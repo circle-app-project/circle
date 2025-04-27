@@ -25,7 +25,7 @@ class NotificationService {
 
     /// Android Notifications Initialization Settings
     AndroidInitializationSettings androidInitializationSettings =
-        const AndroidInitializationSettings("circle_logo");
+        const AndroidInitializationSettings("circle_logo_fav");
 
     /// iOS Notifications Initialization Settings
     final iosInitializationSettings = DarwinInitializationSettings(
