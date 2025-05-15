@@ -214,3 +214,4 @@ jobs:
           whatsNewDirectory: distribution/whats_new
           status: draft
           releaseName: ${{ env.RELEASE_NAME }}
+          changesNotSentForReview: true
