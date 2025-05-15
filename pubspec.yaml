@@ -17,7 +17,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
 
-version: 0.1.4+10
+version: 0.1.5+12
 # Things to note when versioning. Do not touch the build number, i.e (X.Y.Z+N) where N is the build number.
 # It will be automatically incremented by the CI/CD pipeline.
 # Also, also, when merging `release` branches, do not `rebase` use only `merge` for pull requests,
@@ -43,7 +43,7 @@ dependencies:
   firebase_core: ^3.12.0
   firebase_auth: ^5.5.0
   cloud_firestore: ^5.6.4
-  firebase_crashlytics: ^4.3.3
+  firebase_crashlytics: ^4.3.5
   firebase_analytics: ^11.4.3
   google_sign_in: ^6.2.2
   flutter_riverpod: ^2.6.1
@@ -62,7 +62,7 @@ dependencies:
   auto_route: ^9.3.0+1
   uuid: ^4.5.1
   generic_selector: ^0.1.0
-  flutter_local_notifications: ^19.1.0
+  flutter_local_notifications: ^19.2.0
   timezone: ^0.10.0
   flutter_timezone: ^4.1.0
   url_launcher: ^6.3.1

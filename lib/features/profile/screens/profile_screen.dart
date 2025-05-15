@@ -29,7 +29,7 @@ class ProfileScreen extends ConsumerWidget {
     final userState = ref.watch(userNotifierProviderImpl);
     final AppUser selfUser = userState.value!;
     //AppUser selfUser = AppUser.sample;
-    final UserProfile userProfile = selfUser.profile.target!;
+    final UserProfile userProfile = selfUser.profile.target ?? UserProfile.empty;
 
     return PopScope(
       canPop: true,
@@ -58,14 +58,14 @@ class ProfileScreen extends ConsumerWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "${userProfile.name!.split(" ").first} ",
+                          text: "${userProfile.name?.split(" ").first} ",
                           style: theme.textTheme.titleLarge!.copyWith(
                             fontWeight: FontWeight.w700,
                           ),
                         ),
                         TextSpan(
-                          text: userProfile.name!.split(" ").last,
-                          style: theme.textTheme.titleLarge!.copyWith(
+                          text: userProfile.name?.split(" ").last,
+                          style: theme.textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w300,
                           ),
                         ),
@@ -286,7 +286,7 @@ class ProfileScreen extends ConsumerWidget {
                   children: [
                     Text(
                       "Allergies",
-                      style: theme.textTheme.titleMedium!.copyWith(
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -354,12 +354,14 @@ class ProfileScreen extends ConsumerWidget {
 
                 const Gap(kPadding24),
 
-                TextButton(
-                  onPressed: () async {
-                    final Uri url = Uri.parse('https://flutter.dev');
-                    await launchUrl(url);
-                  },
-                  child: const Text("Privacy Policy"),
+                Align(
+                  child: TextButton(
+                    onPressed: () async {
+                      final Uri url = Uri.parse('https://github.com/circle-app-project/circle/blob/main/PRIVACY_POLICY.md');
+                      await launchUrl(url);
+                    },
+                    child: const Text("Privacy Policy"),
+                  ),
                 ),
                 const Gap(64),
               ],
