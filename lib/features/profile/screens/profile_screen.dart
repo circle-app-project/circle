@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../components/components.dart';
 import '../../../core/core.dart';
@@ -86,14 +87,14 @@ class ProfileScreen extends ConsumerWidget {
                     AppChip(
                       label: "${userProfile.gender?.name.toTitleCase()}",
                       icon: HugeIcons.strokeRoundedDna,
-                    //  backgroundColor: theme.colorScheme.primaryContainer,
-                    //  color: theme.colorScheme.primary,
+                      //  backgroundColor: theme.colorScheme.primaryContainer,
+                      //  color: theme.colorScheme.primary,
                     ),
                     AppChip(
                       label: "${userProfile.genotype?.name.toUpperCase()}",
                       icon: HugeIcons.strokeRoundedDna,
-                    //  backgroundColor: theme.colorScheme.primaryContainer,
-                    //  color: theme.colorScheme.primary,
+                      //  backgroundColor: theme.colorScheme.primaryContainer,
+                      //  color: theme.colorScheme.primary,
                     ),
                   ],
                 ),
@@ -140,7 +141,9 @@ class ProfileScreen extends ConsumerWidget {
                       },
                       icon: Icon(
                         HugeIcons.strokeRoundedPencilEdit02,
-                        color: theme.colorScheme.onSurface.withValues(alpha: .5),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: .5,
+                        ),
                       ),
                     ),
                   ],
@@ -347,6 +350,16 @@ class ProfileScreen extends ConsumerWidget {
                       );
                     },
                   ),
+                ),
+
+                const Gap(kPadding24),
+
+                TextButton(
+                  onPressed: () async {
+                    final Uri url = Uri.parse('https://flutter.dev');
+                    await launchUrl(url);
+                  },
+                  child: const Text("Privacy Policy"),
                 ),
                 const Gap(64),
               ],
