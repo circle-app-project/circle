@@ -3,6 +3,7 @@ import '../../components/bottom_nav_bar.dart';
 import '../../features/auth/auth.dart';
 import '../../features/emergency/emergency.dart';
 import '../../features/health_connect/health_connect.dart';
+import '../../features/hla/hla.dart';
 import '../../features/home/home.dart';
 import '../../features/meds/meds.dart';
 import '../../features/profile/profile.dart';
@@ -33,6 +34,38 @@ class AppRouter extends RootStackRouter {
 
     // ////-------Health Connect-------//// //
     AutoRoute(page: route.HealthScreen.page, path: HealthScreen.path),
+
+    // ////-------HLA Typing-------//// //
+    AutoRoute(page: route.HlaIntroScreen.page, path: HlaIntroScreen.path),
+    AutoRoute(
+      page: route.HlaRequestFormScreen.page,
+      path: HlaRequestFormScreen.path,
+    ),
+    AutoRoute(
+      page: route.HlaRequestsListScreen.page,
+      path: HlaRequestsListScreen.path,
+    ),
+    AutoRoute(
+      page: route.HlaStatusScreen.page,
+      path: "${HlaStatusScreen.path}/:requestId",
+    ),
+    AutoRoute(
+      page: route.HlaResultsScreen.page,
+      path: "${HlaResultsScreen.path}/:requestId",
+    ),
+    // HLA admin (role-gated at the entry point)
+    AutoRoute(
+      page: route.HlaAdminListScreen.page,
+      path: HlaAdminListScreen.path,
+    ),
+    AutoRoute(
+      page: route.HlaAdminDetailScreen.page,
+      path: "${HlaAdminDetailScreen.path}/:requestId",
+    ),
+    AutoRoute(
+      page: route.HlaAdminSlotsScreen.page,
+      path: HlaAdminSlotsScreen.path,
+    ),
 
     // ////-------Emergency-------//// //
     AutoRoute(page: route.EmergencyScreen.page, path: EmergencyScreen.path),
