@@ -53,6 +53,11 @@ class UserProfile extends Equatable {
   @Transient()
   Genotype? genotype;
 
+  /// Whether this account is a patient or Circle staff. Stored as an enum but
+  /// converted to a string for persistence. Defaults to [UserRole.patient].
+  @Transient()
+  UserRole? role;
+
   // Health Info
   /// User's self-reported pain severity level.
   int? painSeverity;
@@ -112,6 +117,19 @@ class UserProfile extends Equatable {
     }
   }
 
+  /// Converts the role enum to a string for database persistence.
+  String? get dbRole => role?.name;
+
+  /// Maps a string to the role enum for database retrieval, defaulting to
+  /// [UserRole.patient] for legacy records that predate the field.
+  set dbRole(String? value) {
+    if (value != null) {
+      role = UserRole.values.byName(value);
+    } else {
+      role = UserRole.patient;
+    }
+  }
+
   /// Constructor for creating a [UserProfile] instance.
   UserProfile({
     // Profile Info
@@ -124,6 +142,7 @@ class UserProfile extends Equatable {
     this.email,
     this.photoUrl,
     this.phone,
+    this.role,
 
     // Health Info
     this.crisisFrequency,
@@ -153,6 +172,7 @@ class UserProfile extends Equatable {
     String? email,
     String? photoUrl,
     String? phone,
+    UserRole? role,
     Genotype? genotype,
     int? painSeverity,
     String? crisisFrequency,
@@ -178,6 +198,7 @@ class UserProfile extends Equatable {
       email: email ?? this.email,
       phone: phone ?? this.phone,
       photoUrl: photoUrl ?? this.photoUrl,
+      role: role ?? this.role,
       painSeverity: painSeverity ?? this.painSeverity,
       crisisFrequency: crisisFrequency ?? this.crisisFrequency,
       genotype: genotype ?? this.genotype,
@@ -207,6 +228,7 @@ class UserProfile extends Equatable {
         "photoUrl": photoUrl,
         "phone": phone,
         "email": email,
+        "role": (role ?? UserRole.patient).name,
       },
       "health": {
         "painSeverity": painSeverity,
@@ -236,6 +258,9 @@ class UserProfile extends Equatable {
       name: data["profile"]["name"] as String,
       displayName: data["profile"]["displayName"] as String?,
       age: data["profile"]["age"] as int,
+      role: data["profile"]["role"] != null
+          ? UserRole.values.byName(data["profile"]["role"] as String)
+          : UserRole.patient,
       painSeverity: data["health"]["painSeverity"] as int?,
       crisisFrequency: data["health"]["crisisFrequency"] as String?,
       genotype: Genotype.values.byName(data["health"]["genotype"] as String),
@@ -312,6 +337,7 @@ class UserProfile extends Equatable {
     age,
     gender,
     genotype,
+    role,
     height,
     weight,
     bmi,
