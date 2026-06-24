@@ -1,0 +1,51 @@
+rules_version = '2';
+
+// Circle — Firestore security rules
+//
+// Data model (all owned data is keyed by the owner's auth UID at the first
+// path segment):
+//   /users/{uid}                              -> user profile document
+//   /users/{uid}/preferences/{prefId}         -> e.g. .../preferences/water
+//   /meds/{uid}                               -> medication document (array field)
+//   /logs/{uid}/water/{monthYear}             -> water log buckets, e.g. "June_2026"
+//
+// Baseline policy: deny everything, then allow a signed-in user to access ONLY
+// the documents whose {uid} segment matches their own auth UID. No user can read
+// or write another user's health data.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // True when the request comes from the user that owns `uid`.
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    // User profile and everything nested under it (e.g. /preferences/water).
+    match /users/{uid} {
+      allow read, write: if isOwner(uid);
+
+      match /{document=**} {
+        allow read, write: if isOwner(uid);
+      }
+    }
+
+    // Medication document for a user.
+    match /meds/{uid} {
+      allow read, write: if isOwner(uid);
+    }
+
+    // Logs (water, and any future log types) for a user.
+    match /logs/{uid} {
+      allow read, write: if isOwner(uid);
+
+      match /{document=**} {
+        allow read, write: if isOwner(uid);
+      }
+    }
+
+    // Explicit default-deny for anything not matched above.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
