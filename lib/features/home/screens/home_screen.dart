@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+
 import '../../../core/core.dart';
 import '../../auth/auth.dart';
 import '../../emergency/emergency.dart';
 import '../../health_connect/health_connect.dart';
+import '../../hla/hla.dart';
 import '../../profile/profile.dart';
 import '../../water/water.dart';
 import '../home.dart';
@@ -148,11 +151,80 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   context.router.pushNamed(EmergencyScreen.path);
                 },
               ),
+              const Gap(kPadding16),
+              _HlaEntryCard(
+                onPressed: () {
+                  context.router.pushNamed(HlaIntroScreen.path);
+                },
+              ),
               const SizedBox(
                 height: kPadding64 * 2,
               )
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Home dashboard entry point into the HLA typing feature.
+class _HlaEntryCard extends StatelessWidget {
+  const _HlaEntryCard({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return InkWell(
+      splashFactory: InkSparkle.splashFactory,
+      splashColor: theme.colorScheme.primary.withValues(alpha: .2),
+      borderRadius: BorderRadius.circular(kPadding24),
+      onTap: onPressed,
+      child: Ink(
+        padding: const EdgeInsets.all(kPadding16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(kPadding24),
+          color: theme.colorScheme.secondaryContainer,
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 24,
+              backgroundColor: theme.colorScheme.secondary.withValues(alpha: .2),
+              child: Icon(
+                FluentIcons.organization_24_regular,
+                color: theme.colorScheme.secondary,
+              ),
+            ),
+            const Gap(kPadding16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "HLA Typing",
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.colorScheme.onSecondaryContainer,
+                    ),
+                  ),
+                  const Gap(kPadding4),
+                  Text(
+                    "Start your transplant matching journey",
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: theme.colorScheme.onSecondaryContainer
+                          .withValues(alpha: .8),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              FluentIcons.chevron_right_24_regular,
+              color: theme.colorScheme.onSecondaryContainer,
+            ),
+          ],
         ),
       ),
     );
