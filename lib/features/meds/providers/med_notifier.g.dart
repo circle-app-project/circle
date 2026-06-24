@@ -32,9 +32,7 @@ class _SystemHash {
 abstract class _$MedNotifier extends BuildlessAsyncNotifier<List<Medication>> {
   late final MedRepository medRepository;
 
-  FutureOr<List<Medication>> build({
-    required MedRepository medRepository,
-  });
+  FutureOr<List<Medication>> build({required MedRepository medRepository});
 }
 
 /// See also [MedNotifier].
@@ -47,21 +45,15 @@ class MedNotifierFamily extends Family<AsyncValue<List<Medication>>> {
   const MedNotifierFamily();
 
   /// See also [MedNotifier].
-  MedNotifierProvider call({
-    required MedRepository medRepository,
-  }) {
-    return MedNotifierProvider(
-      medRepository: medRepository,
-    );
+  MedNotifierProvider call({required MedRepository medRepository}) {
+    return MedNotifierProvider(medRepository: medRepository);
   }
 
   @override
   MedNotifierProvider getProviderOverride(
     covariant MedNotifierProvider provider,
   ) {
-    return call(
-      medRepository: provider.medRepository,
-    );
+    return call(medRepository: provider.medRepository);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -83,21 +75,19 @@ class MedNotifierFamily extends Family<AsyncValue<List<Medication>>> {
 class MedNotifierProvider
     extends AsyncNotifierProviderImpl<MedNotifier, List<Medication>> {
   /// See also [MedNotifier].
-  MedNotifierProvider({
-    required MedRepository medRepository,
-  }) : this._internal(
-          () => MedNotifier()..medRepository = medRepository,
-          from: medNotifierProvider,
-          name: r'medNotifierProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$medNotifierHash,
-          dependencies: MedNotifierFamily._dependencies,
-          allTransitiveDependencies:
-              MedNotifierFamily._allTransitiveDependencies,
-          medRepository: medRepository,
-        );
+  MedNotifierProvider({required MedRepository medRepository})
+    : this._internal(
+        () => MedNotifier()..medRepository = medRepository,
+        from: medNotifierProvider,
+        name: r'medNotifierProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$medNotifierHash,
+        dependencies: MedNotifierFamily._dependencies,
+        allTransitiveDependencies: MedNotifierFamily._allTransitiveDependencies,
+        medRepository: medRepository,
+      );
 
   MedNotifierProvider._internal(
     super._createNotifier, {
@@ -112,12 +102,8 @@ class MedNotifierProvider
   final MedRepository medRepository;
 
   @override
-  FutureOr<List<Medication>> runNotifierBuild(
-    covariant MedNotifier notifier,
-  ) {
-    return notifier.build(
-      medRepository: medRepository,
-    );
+  FutureOr<List<Medication>> runNotifierBuild(covariant MedNotifier notifier) {
+    return notifier.build(medRepository: medRepository);
   }
 
   @override
@@ -171,5 +157,6 @@ class _MedNotifierProviderElement
   MedRepository get medRepository =>
       (origin as MedNotifierProvider).medRepository;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
