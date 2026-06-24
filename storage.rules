@@ -1,0 +1,39 @@
+rules_version = '2';
+
+// Circle — Firebase Storage security rules
+//
+// Only HLA result documents live in Storage today. They contain medical data,
+// so access is locked to the owning patient (read) and admins (read + write).
+// Everything else is denied by default.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Mirrors the Firestore admin registry (console-managed, not client-writable).
+    function isAdmin() {
+      return isSignedIn() &&
+        firestore.exists(/databases/(default)/documents/hla_admins/$(request.auth.uid));
+    }
+
+    // The patient who owns the request the file belongs to.
+    function isRequestOwner(requestId) {
+      return isSignedIn() &&
+        firestore.get(/databases/(default)/documents/hla_test_requests/$(requestId)).data.userId
+          == request.auth.uid;
+    }
+
+    // HLA result documents: hla_results/{requestId}/{fileName}
+    match /hla_results/{requestId}/{fileName} {
+      allow read: if isAdmin() || isRequestOwner(requestId);
+      allow write: if isAdmin();
+    }
+
+    // Default deny.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
