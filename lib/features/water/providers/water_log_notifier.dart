@@ -73,6 +73,9 @@ class WaterLogNotifier extends _$WaterLogNotifier {
   }
 
   double calculateTotalFromLogs({List<WaterLog>? logs}) {
+    if (state.value == null) {
+      return 0.0;
+    }
     List<WaterLog> allLogs = logs ?? state.value!;
     double totalToday = 0;
     //Calculate total
