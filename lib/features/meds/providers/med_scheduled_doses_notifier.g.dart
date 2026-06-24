@@ -88,28 +88,33 @@ class MedScheduledDosesNotifierFamily
 }
 
 /// See also [MedScheduledDosesNotifier].
-class MedScheduledDosesNotifierProvider extends AsyncNotifierProviderImpl<
-    MedScheduledDosesNotifier, List<ScheduledDose>> {
+class MedScheduledDosesNotifierProvider
+    extends
+        AsyncNotifierProviderImpl<
+          MedScheduledDosesNotifier,
+          List<ScheduledDose>
+        > {
   /// See also [MedScheduledDosesNotifier].
   MedScheduledDosesNotifierProvider({
     required MedRepository medRepository,
     required NotificationRepository notificationRepository,
   }) : this._internal(
-          () => MedScheduledDosesNotifier()
-            ..medRepository = medRepository
-            ..notificationRepository = notificationRepository,
-          from: medScheduledDosesNotifierProvider,
-          name: r'medScheduledDosesNotifierProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$medScheduledDosesNotifierHash,
-          dependencies: MedScheduledDosesNotifierFamily._dependencies,
-          allTransitiveDependencies:
-              MedScheduledDosesNotifierFamily._allTransitiveDependencies,
-          medRepository: medRepository,
-          notificationRepository: notificationRepository,
-        );
+         () =>
+             MedScheduledDosesNotifier()
+               ..medRepository = medRepository
+               ..notificationRepository = notificationRepository,
+         from: medScheduledDosesNotifierProvider,
+         name: r'medScheduledDosesNotifierProvider',
+         debugGetCreateSourceHash:
+             const bool.fromEnvironment('dart.vm.product')
+                 ? null
+                 : _$medScheduledDosesNotifierHash,
+         dependencies: MedScheduledDosesNotifierFamily._dependencies,
+         allTransitiveDependencies:
+             MedScheduledDosesNotifierFamily._allTransitiveDependencies,
+         medRepository: medRepository,
+         notificationRepository: notificationRepository,
+       );
 
   MedScheduledDosesNotifierProvider._internal(
     super._createNotifier, {
@@ -140,9 +145,10 @@ class MedScheduledDosesNotifierProvider extends AsyncNotifierProviderImpl<
     return ProviderOverride(
       origin: this,
       override: MedScheduledDosesNotifierProvider._internal(
-        () => create()
-          ..medRepository = medRepository
-          ..notificationRepository = notificationRepository,
+        () =>
+            create()
+              ..medRepository = medRepository
+              ..notificationRepository = notificationRepository,
         from: from,
         name: null,
         dependencies: null,
@@ -156,7 +162,7 @@ class MedScheduledDosesNotifierProvider extends AsyncNotifierProviderImpl<
 
   @override
   AsyncNotifierProviderElement<MedScheduledDosesNotifier, List<ScheduledDose>>
-      createElement() {
+  createElement() {
     return _MedScheduledDosesNotifierProviderElement(this);
   }
 
@@ -189,8 +195,12 @@ mixin MedScheduledDosesNotifierRef
 }
 
 class _MedScheduledDosesNotifierProviderElement
-    extends AsyncNotifierProviderElement<MedScheduledDosesNotifier,
-        List<ScheduledDose>> with MedScheduledDosesNotifierRef {
+    extends
+        AsyncNotifierProviderElement<
+          MedScheduledDosesNotifier,
+          List<ScheduledDose>
+        >
+    with MedScheduledDosesNotifierRef {
   _MedScheduledDosesNotifierProviderElement(super.provider);
 
   @override
@@ -200,5 +210,6 @@ class _MedScheduledDosesNotifierProviderElement
   NotificationRepository get notificationRepository =>
       (origin as MedScheduledDosesNotifierProvider).notificationRepository;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
