@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import '../../components/bottom_nav_bar.dart';
 import '../../features/auth/auth.dart';
 import '../../features/emergency/emergency.dart';
+import '../../features/health_connect/health_connect.dart';
 import '../../features/home/home.dart';
 import '../../features/meds/meds.dart';
 import '../../features/profile/profile.dart';
@@ -29,6 +30,9 @@ class AppRouter extends RootStackRouter {
       path: SuggestedWaterDailyGoalScreen.path,
     ),
     AutoRoute(page: route.WaterEmptyScreen.page, path: WaterEmptyScreen.path),
+
+    // ////-------Health Connect-------//// //
+    AutoRoute(page: route.HealthScreen.page, path: HealthScreen.path),
 
     // ////-------Emergency-------//// //
     AutoRoute(page: route.EmergencyScreen.page, path: EmergencyScreen.path),

@@ -66,21 +66,21 @@ class $AssetsFontsGen {
 
   /// List of all assets
   List<String> get values => [
-        plusJakartaSansBold,
-        plusJakartaSansBoldItalic,
-        plusJakartaSansExtraBold,
-        plusJakartaSansExtraBoldItalic,
-        plusJakartaSansExtraLight,
-        plusJakartaSansExtraLightItalic,
-        plusJakartaSansItalic,
-        plusJakartaSansLight,
-        plusJakartaSansLightItalic,
-        plusJakartaSansMedium,
-        plusJakartaSansMediumItalic,
-        plusJakartaSansRegular,
-        plusJakartaSansSemiBold,
-        plusJakartaSansSemiBoldItalic
-      ];
+    plusJakartaSansBold,
+    plusJakartaSansBoldItalic,
+    plusJakartaSansExtraBold,
+    plusJakartaSansExtraBoldItalic,
+    plusJakartaSansExtraLight,
+    plusJakartaSansExtraLightItalic,
+    plusJakartaSansItalic,
+    plusJakartaSansLight,
+    plusJakartaSansLightItalic,
+    plusJakartaSansMedium,
+    plusJakartaSansMediumItalic,
+    plusJakartaSansRegular,
+    plusJakartaSansSemiBold,
+    plusJakartaSansSemiBoldItalic,
+  ];
 }
 
 class $AssetsImagesGen {
@@ -312,76 +312,76 @@ class $AssetsSvgGen {
 
   /// List of all assets
   List<String> get values => [
-        apple,
-        arrowLeft,
-        arrowRight,
-        bottle,
-        cake,
-        calendarFilled,
-        calendar,
-        check,
-        chevronBack,
-        chevronDown,
-        chevronLeft,
-        chevronRight,
-        chevronUp,
-        clockFilled,
-        clock,
-        cross,
-        cupFiiled,
-        cup,
-        deleteFilled,
-        delete,
-        detailsFilled,
-        details,
-        distance,
-        dna,
-        dropletAltFilled,
-        dropletAlt,
-        dropletFilled,
-        droplet,
-        edit,
-        emergencyAltFilled,
-        emergencyAlt,
-        emergency,
-        eyeOff,
-        eye,
-        filter,
-        google,
-        googleLogoColor,
-        heartFilled,
-        heart,
-        homeAltFilled,
-        homeAlt,
-        homeFilled,
-        home,
-        locationFilled,
-        locationOffFilled,
-        locationOff,
-        location,
-        logOut,
-        medicationFilled,
-        medication,
-        moonFilled,
-        moon,
-        peopleFilled,
-        people,
-        phoneFilled,
-        phone,
-        plus,
-        ruler,
-        settingsFilled,
-        settings,
-        stethoscope,
-        stream,
-        syringe,
-        tablet,
-        userFilled,
-        userLinkFilled,
-        userLink,
-        user,
-        weight
-      ];
+    apple,
+    arrowLeft,
+    arrowRight,
+    bottle,
+    cake,
+    calendarFilled,
+    calendar,
+    check,
+    chevronBack,
+    chevronDown,
+    chevronLeft,
+    chevronRight,
+    chevronUp,
+    clockFilled,
+    clock,
+    cross,
+    cupFiiled,
+    cup,
+    deleteFilled,
+    delete,
+    detailsFilled,
+    details,
+    distance,
+    dna,
+    dropletAltFilled,
+    dropletAlt,
+    dropletFilled,
+    droplet,
+    edit,
+    emergencyAltFilled,
+    emergencyAlt,
+    emergency,
+    eyeOff,
+    eye,
+    filter,
+    google,
+    googleLogoColor,
+    heartFilled,
+    heart,
+    homeAltFilled,
+    homeAlt,
+    homeFilled,
+    home,
+    locationFilled,
+    locationOffFilled,
+    locationOff,
+    location,
+    logOut,
+    medicationFilled,
+    medication,
+    moonFilled,
+    moon,
+    peopleFilled,
+    people,
+    phoneFilled,
+    phone,
+    plus,
+    ruler,
+    settingsFilled,
+    settings,
+    stethoscope,
+    stream,
+    syringe,
+    tablet,
+    userFilled,
+    userLinkFilled,
+    userLink,
+    user,
+    weight,
+  ];
 }
 
 class $AssetsSvgIllustrationsGen {
@@ -458,23 +458,23 @@ class $AssetsSvgIllustrationsEmojisGen {
 
   /// List of all assets
   List<dynamic> get values => [
-        beamingFaceSmilingEyes,
-        blushingSmilingFace,
-        clappingHands,
-        confusedFace,
-        grinningFaceBigEyes,
-        grinningFaceSmilingEyes,
-        grinningFace,
-        grinningSquintingFace,
-        okHand,
-        peaceHand,
-        slightlySmilingFace,
-        smilingFaceHalo,
-        smilingFaceWithTear,
-        thumbsUp,
-        upsideDownSmilingFace,
-        winkingFace
-      ];
+    beamingFaceSmilingEyes,
+    blushingSmilingFace,
+    clappingHands,
+    confusedFace,
+    grinningFaceBigEyes,
+    grinningFaceSmilingEyes,
+    grinningFace,
+    grinningSquintingFace,
+    okHand,
+    peaceHand,
+    slightlySmilingFace,
+    smilingFaceHalo,
+    smilingFaceWithTear,
+    thumbsUp,
+    upsideDownSmilingFace,
+    winkingFace,
+  ];
 }
 
 class Assets {
@@ -486,11 +486,7 @@ class Assets {
 }
 
 class AssetGenImage {
-  const AssetGenImage(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-  });
+  const AssetGenImage(this._assetName, {this.size, this.flavors = const {}});
 
   final String _assetName;
 
@@ -550,15 +546,8 @@ class AssetGenImage {
     );
   }
 
-  ImageProvider provider({
-    AssetBundle? bundle,
-    String? package,
-  }) {
-    return AssetImage(
-      _assetName,
-      bundle: bundle,
-      package: package,
-    );
+  ImageProvider provider({AssetBundle? bundle, String? package}) {
+    return AssetImage(_assetName, bundle: bundle, package: package);
   }
 
   String get path => _assetName;

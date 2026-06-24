@@ -32,9 +32,7 @@ class _SystemHash {
 abstract class _$AuthNotifier extends BuildlessAsyncNotifier<AppUser> {
   late final AuthRepository authRepository;
 
-  FutureOr<AppUser> build({
-    required AuthRepository authRepository,
-  });
+  FutureOr<AppUser> build({required AuthRepository authRepository});
 }
 
 /// See also [AuthNotifier].
@@ -47,21 +45,15 @@ class AuthNotifierFamily extends Family<AsyncValue<AppUser>> {
   const AuthNotifierFamily();
 
   /// See also [AuthNotifier].
-  AuthNotifierProvider call({
-    required AuthRepository authRepository,
-  }) {
-    return AuthNotifierProvider(
-      authRepository: authRepository,
-    );
+  AuthNotifierProvider call({required AuthRepository authRepository}) {
+    return AuthNotifierProvider(authRepository: authRepository);
   }
 
   @override
   AuthNotifierProvider getProviderOverride(
     covariant AuthNotifierProvider provider,
   ) {
-    return call(
-      authRepository: provider.authRepository,
-    );
+    return call(authRepository: provider.authRepository);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -83,21 +75,20 @@ class AuthNotifierFamily extends Family<AsyncValue<AppUser>> {
 class AuthNotifierProvider
     extends AsyncNotifierProviderImpl<AuthNotifier, AppUser> {
   /// See also [AuthNotifier].
-  AuthNotifierProvider({
-    required AuthRepository authRepository,
-  }) : this._internal(
-          () => AuthNotifier()..authRepository = authRepository,
-          from: authNotifierProvider,
-          name: r'authNotifierProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$authNotifierHash,
-          dependencies: AuthNotifierFamily._dependencies,
-          allTransitiveDependencies:
-              AuthNotifierFamily._allTransitiveDependencies,
-          authRepository: authRepository,
-        );
+  AuthNotifierProvider({required AuthRepository authRepository})
+    : this._internal(
+        () => AuthNotifier()..authRepository = authRepository,
+        from: authNotifierProvider,
+        name: r'authNotifierProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$authNotifierHash,
+        dependencies: AuthNotifierFamily._dependencies,
+        allTransitiveDependencies:
+            AuthNotifierFamily._allTransitiveDependencies,
+        authRepository: authRepository,
+      );
 
   AuthNotifierProvider._internal(
     super._createNotifier, {
@@ -112,12 +103,8 @@ class AuthNotifierProvider
   final AuthRepository authRepository;
 
   @override
-  FutureOr<AppUser> runNotifierBuild(
-    covariant AuthNotifier notifier,
-  ) {
-    return notifier.build(
-      authRepository: authRepository,
-    );
+  FutureOr<AppUser> runNotifierBuild(covariant AuthNotifier notifier) {
+    return notifier.build(authRepository: authRepository);
   }
 
   @override
@@ -172,5 +159,6 @@ class _AuthNotifierProviderElement
   AuthRepository get authRepository =>
       (origin as AuthNotifierProvider).authRepository;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

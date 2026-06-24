@@ -34,9 +34,7 @@ abstract class _$WaterPrefsNotifier
     extends BuildlessAsyncNotifier<WaterPreferences> {
   late final WaterRepository waterRepository;
 
-  FutureOr<WaterPreferences> build({
-    required WaterRepository waterRepository,
-  });
+  FutureOr<WaterPreferences> build({required WaterRepository waterRepository});
 }
 
 /// See also [WaterPrefsNotifier].
@@ -49,21 +47,15 @@ class WaterPrefsNotifierFamily extends Family<AsyncValue<WaterPreferences>> {
   const WaterPrefsNotifierFamily();
 
   /// See also [WaterPrefsNotifier].
-  WaterPrefsNotifierProvider call({
-    required WaterRepository waterRepository,
-  }) {
-    return WaterPrefsNotifierProvider(
-      waterRepository: waterRepository,
-    );
+  WaterPrefsNotifierProvider call({required WaterRepository waterRepository}) {
+    return WaterPrefsNotifierProvider(waterRepository: waterRepository);
   }
 
   @override
   WaterPrefsNotifierProvider getProviderOverride(
     covariant WaterPrefsNotifierProvider provider,
   ) {
-    return call(
-      waterRepository: provider.waterRepository,
-    );
+    return call(waterRepository: provider.waterRepository);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -85,21 +77,20 @@ class WaterPrefsNotifierFamily extends Family<AsyncValue<WaterPreferences>> {
 class WaterPrefsNotifierProvider
     extends AsyncNotifierProviderImpl<WaterPrefsNotifier, WaterPreferences> {
   /// See also [WaterPrefsNotifier].
-  WaterPrefsNotifierProvider({
-    required WaterRepository waterRepository,
-  }) : this._internal(
-          () => WaterPrefsNotifier()..waterRepository = waterRepository,
-          from: waterPrefsNotifierProvider,
-          name: r'waterPrefsNotifierProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$waterPrefsNotifierHash,
-          dependencies: WaterPrefsNotifierFamily._dependencies,
-          allTransitiveDependencies:
-              WaterPrefsNotifierFamily._allTransitiveDependencies,
-          waterRepository: waterRepository,
-        );
+  WaterPrefsNotifierProvider({required WaterRepository waterRepository})
+    : this._internal(
+        () => WaterPrefsNotifier()..waterRepository = waterRepository,
+        from: waterPrefsNotifierProvider,
+        name: r'waterPrefsNotifierProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$waterPrefsNotifierHash,
+        dependencies: WaterPrefsNotifierFamily._dependencies,
+        allTransitiveDependencies:
+            WaterPrefsNotifierFamily._allTransitiveDependencies,
+        waterRepository: waterRepository,
+      );
 
   WaterPrefsNotifierProvider._internal(
     super._createNotifier, {
@@ -117,9 +108,7 @@ class WaterPrefsNotifierProvider
   FutureOr<WaterPreferences> runNotifierBuild(
     covariant WaterPrefsNotifier notifier,
   ) {
-    return notifier.build(
-      waterRepository: waterRepository,
-    );
+    return notifier.build(waterRepository: waterRepository);
   }
 
   @override
@@ -140,7 +129,7 @@ class WaterPrefsNotifierProvider
 
   @override
   AsyncNotifierProviderElement<WaterPrefsNotifier, WaterPreferences>
-      createElement() {
+  createElement() {
     return _WaterPrefsNotifierProviderElement(this);
   }
 
@@ -175,5 +164,6 @@ class _WaterPrefsNotifierProviderElement
   WaterRepository get waterRepository =>
       (origin as WaterPrefsNotifierProvider).waterRepository;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

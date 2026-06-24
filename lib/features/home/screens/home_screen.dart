@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +8,7 @@ import 'package:gap/gap.dart';
 import '../../../core/core.dart';
 import '../../auth/auth.dart';
 import '../../emergency/emergency.dart';
+import '../../health_connect/health_connect.dart';
 import '../../profile/profile.dart';
 import '../../water/water.dart';
 import '../home.dart';
@@ -28,6 +31,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       await ref.watch(userNotifierProviderImpl.notifier).getSelfUserData();
       await ref.watch(waterLogNotifierProviderIml.notifier).getWaterLogs();
       await ref.watch(waterPrefsNotifierProviderImpl.notifier).getWaterPreferences();
+
+      // Health Connect — check permissions, then fetch data only if granted.
+      // Fetched without awaiting so it doesn't delay the rest of the dashboard.
+      await ref
+          .read(healthPermissionNotifierProviderImpl.notifier)
+          .checkPermissions();
+      if (ref.read(healthPermissionNotifierProviderImpl).value ==
+          HealthPermissionStatus.granted) {
+        unawaited(ref
+            .read(healthSummaryNotifierProviderImpl.notifier)
+            .getHealthSummary());
+      }
     });
     super.initState();
   }
@@ -114,6 +129,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 alignment: Alignment.centerLeft,
                 child: Text("Your Health Info",
                     style: theme.textTheme.titleMedium),
+              ),
+              const Gap(kPadding16),
+              HealthSummaryCard(
+                onPressed: () {
+                  context.router.pushNamed(HealthScreen.path);
+                },
               ),
               // const Gap(kPadding16),
               // GestureDetector(
