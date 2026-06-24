@@ -1,0 +1,26 @@
+import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
+
+/// Firebase configuration for the HLA admin **web** app.
+///
+/// ⚠️ The `apiKey` and `appId` below are PLACEHOLDERS. A Web app must be
+/// registered on the `circle-60af7` Firebase project to obtain them. The
+/// quickest way is to run, from this `admin/` directory:
+///
+///     flutterfire configure --project=circle-60af7 --platforms=web
+///
+/// which regenerates this file with the real web credentials. Alternatively,
+/// register a Web app in the Firebase console (Project settings → Your apps →
+/// Add app → Web) and paste its `apiKey` and `appId` here.
+///
+/// The non-secret identifiers (projectId, messagingSenderId, storageBucket)
+/// are shared with the mobile app and already filled in.
+class DefaultFirebaseOptions {
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'REPLACE_WITH_WEB_API_KEY',
+    appId: 'REPLACE_WITH_WEB_APP_ID',
+    messagingSenderId: '497391679746',
+    projectId: 'circle-60af7',
+    authDomain: 'circle-60af7.firebaseapp.com',
+    storageBucket: 'circle-60af7.firebasestorage.app',
+  );
+}
