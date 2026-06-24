@@ -32,9 +32,7 @@ class _SystemHash {
 abstract class _$UserNotifier extends BuildlessAsyncNotifier<AppUser> {
   late final UserRepository userRepository;
 
-  FutureOr<AppUser> build({
-    required UserRepository userRepository,
-  });
+  FutureOr<AppUser> build({required UserRepository userRepository});
 }
 
 /// See also [UserNotifier].
@@ -47,21 +45,15 @@ class UserNotifierFamily extends Family<AsyncValue<AppUser>> {
   const UserNotifierFamily();
 
   /// See also [UserNotifier].
-  UserNotifierProvider call({
-    required UserRepository userRepository,
-  }) {
-    return UserNotifierProvider(
-      userRepository: userRepository,
-    );
+  UserNotifierProvider call({required UserRepository userRepository}) {
+    return UserNotifierProvider(userRepository: userRepository);
   }
 
   @override
   UserNotifierProvider getProviderOverride(
     covariant UserNotifierProvider provider,
   ) {
-    return call(
-      userRepository: provider.userRepository,
-    );
+    return call(userRepository: provider.userRepository);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -83,21 +75,20 @@ class UserNotifierFamily extends Family<AsyncValue<AppUser>> {
 class UserNotifierProvider
     extends AsyncNotifierProviderImpl<UserNotifier, AppUser> {
   /// See also [UserNotifier].
-  UserNotifierProvider({
-    required UserRepository userRepository,
-  }) : this._internal(
-          () => UserNotifier()..userRepository = userRepository,
-          from: userNotifierProvider,
-          name: r'userNotifierProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$userNotifierHash,
-          dependencies: UserNotifierFamily._dependencies,
-          allTransitiveDependencies:
-              UserNotifierFamily._allTransitiveDependencies,
-          userRepository: userRepository,
-        );
+  UserNotifierProvider({required UserRepository userRepository})
+    : this._internal(
+        () => UserNotifier()..userRepository = userRepository,
+        from: userNotifierProvider,
+        name: r'userNotifierProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$userNotifierHash,
+        dependencies: UserNotifierFamily._dependencies,
+        allTransitiveDependencies:
+            UserNotifierFamily._allTransitiveDependencies,
+        userRepository: userRepository,
+      );
 
   UserNotifierProvider._internal(
     super._createNotifier, {
@@ -112,12 +103,8 @@ class UserNotifierProvider
   final UserRepository userRepository;
 
   @override
-  FutureOr<AppUser> runNotifierBuild(
-    covariant UserNotifier notifier,
-  ) {
-    return notifier.build(
-      userRepository: userRepository,
-    );
+  FutureOr<AppUser> runNotifierBuild(covariant UserNotifier notifier) {
+    return notifier.build(userRepository: userRepository);
   }
 
   @override
@@ -172,5 +159,6 @@ class _UserNotifierProviderElement
   UserRepository get userRepository =>
       (origin as UserNotifierProvider).userRepository;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
