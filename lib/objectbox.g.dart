@@ -16,6 +16,7 @@ import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'features/auth/models/user/app_user.dart';
 import 'features/auth/models/user/user_profile.dart';
+import 'features/hla/models/hla_test_request.dart';
 import 'features/meds/models/med_activity_record.dart';
 import 'features/meds/models/medication.dart';
 import 'features/meds/models/scheduled_doses.dart';
@@ -28,7 +29,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(2, 7166028067144916976),
     name: 'UserProfile',
-    lastPropertyId: const obx_int.IdUid(22, 7473741569339705467),
+    lastPropertyId: const obx_int.IdUid(23, 3446162015300538428),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -162,6 +163,12 @@ final _entities = <obx_int.ModelEntity>[
         id: const obx_int.IdUid(22, 7473741569339705467),
         name: 'createdAt',
         type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(23, 3446162015300538428),
+        name: 'dbRole',
+        type: 9,
         flags: 0,
       ),
     ],
@@ -641,6 +648,119 @@ final _entities = <obx_int.ModelEntity>[
     relations: <obx_int.ModelRelation>[],
     backlinks: <obx_int.ModelBacklink>[],
   ),
+  obx_int.ModelEntity(
+    id: const obx_int.IdUid(15, 2928551838704968054),
+    name: 'HlaTestRequest',
+    lastPropertyId: const obx_int.IdUid(17, 8100974252932526204),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 3895586918529119094),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 299854502190908852),
+        name: 'uid',
+        type: 9,
+        flags: 34848,
+        indexId: const obx_int.IdUid(12, 5330856156796068253),
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 6767700118325617687),
+        name: 'userId',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 7970246581718522105),
+        name: 'patientName',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 6102784803988311171),
+        name: 'appointmentSlotId',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 1011341504457499727),
+        name: 'appointmentDate',
+        type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(7, 8538426739594004834),
+        name: 'collectionLocation',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(8, 2317583891011123815),
+        name: 'resultFileUrl',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(9, 4645561225361471759),
+        name: 'resultFileName',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(10, 1634046434977878014),
+        name: 'resultSummary',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(11, 3565336256070983570),
+        name: 'adminNotes',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(12, 5108099464489980828),
+        name: 'isCancelled',
+        type: 1,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(13, 7639696737927559332),
+        name: 'createdAt',
+        type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(14, 6814588809397735326),
+        name: 'updatedAt',
+        type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(15, 699322799870719491),
+        name: 'dbStatus',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(16, 6739967865939100593),
+        name: 'dbSubjects',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(17, 8100974252932526204),
+        name: 'dbStatusHistory',
+        type: 9,
+        flags: 0,
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
 ];
 
 /// Shortcut for [obx.Store.new] that passes [getObjectBoxModel] and for Flutter
@@ -681,8 +801,8 @@ Future<obx.Store> openStore({
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
     entities: _entities,
-    lastEntityId: const obx_int.IdUid(14, 4275058572695879075),
-    lastIndexId: const obx_int.IdUid(11, 6292842501519135102),
+    lastEntityId: const obx_int.IdUid(15, 2928551838704968054),
+    lastIndexId: const obx_int.IdUid(12, 5330856156796068253),
     lastRelationId: const obx_int.IdUid(3, 7294710979211216290),
     lastSequenceId: const obx_int.IdUid(0, 0),
     retiredEntityUids: const [
@@ -833,7 +953,10 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final dbGenotypeOffset = object.dbGenotype == null
             ? null
             : fbb.writeString(object.dbGenotype!);
-        fbb.startTable(23);
+        final dbRoleOffset = object.dbRole == null
+            ? null
+            : fbb.writeString(object.dbRole!);
+        fbb.startTable(24);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, uidOffset);
         fbb.addOffset(2, nameOffset);
@@ -856,6 +979,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addBool(19, object.isSynced);
         fbb.addInt64(20, object.updatedAt?.millisecondsSinceEpoch);
         fbb.addInt64(21, object.createdAt?.millisecondsSinceEpoch);
+        fbb.addOffset(22, dbRoleOffset);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -981,7 +1105,10 @@ obx_int.ModelDefinition getObjectBoxModel() {
               ).vTableGetNullable(buffer, rootOffset, 36)
               ..dbGenotype = const fb.StringReader(
                 asciiOptimization: true,
-              ).vTableGetNullable(buffer, rootOffset, 38);
+              ).vTableGetNullable(buffer, rootOffset, 38)
+              ..dbRole = const fb.StringReader(
+                asciiOptimization: true,
+              ).vTableGetNullable(buffer, rootOffset, 48);
 
         return object;
       },
@@ -1627,6 +1754,156 @@ obx_int.ModelDefinition getObjectBoxModel() {
         return object;
       },
     ),
+    HlaTestRequest: obx_int.EntityDefinition<HlaTestRequest>(
+      model: _entities[7],
+      toOneRelations: (HlaTestRequest object) => [],
+      toManyRelations: (HlaTestRequest object) => {},
+      getId: (HlaTestRequest object) => object.id,
+      setId: (HlaTestRequest object, int id) {
+        object.id = id;
+      },
+      objectToFB: (HlaTestRequest object, fb.Builder fbb) {
+        final uidOffset = fbb.writeString(object.uid);
+        final userIdOffset = fbb.writeString(object.userId);
+        final patientNameOffset = fbb.writeString(object.patientName);
+        final appointmentSlotIdOffset = object.appointmentSlotId == null
+            ? null
+            : fbb.writeString(object.appointmentSlotId!);
+        final collectionLocationOffset = object.collectionLocation == null
+            ? null
+            : fbb.writeString(object.collectionLocation!);
+        final resultFileUrlOffset = object.resultFileUrl == null
+            ? null
+            : fbb.writeString(object.resultFileUrl!);
+        final resultFileNameOffset = object.resultFileName == null
+            ? null
+            : fbb.writeString(object.resultFileName!);
+        final resultSummaryOffset = object.resultSummary == null
+            ? null
+            : fbb.writeString(object.resultSummary!);
+        final adminNotesOffset = object.adminNotes == null
+            ? null
+            : fbb.writeString(object.adminNotes!);
+        final dbStatusOffset = fbb.writeString(object.dbStatus);
+        final dbSubjectsOffset = fbb.writeString(object.dbSubjects);
+        final dbStatusHistoryOffset = fbb.writeString(object.dbStatusHistory);
+        fbb.startTable(18);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, uidOffset);
+        fbb.addOffset(2, userIdOffset);
+        fbb.addOffset(3, patientNameOffset);
+        fbb.addOffset(4, appointmentSlotIdOffset);
+        fbb.addInt64(5, object.appointmentDate?.millisecondsSinceEpoch);
+        fbb.addOffset(6, collectionLocationOffset);
+        fbb.addOffset(7, resultFileUrlOffset);
+        fbb.addOffset(8, resultFileNameOffset);
+        fbb.addOffset(9, resultSummaryOffset);
+        fbb.addOffset(10, adminNotesOffset);
+        fbb.addBool(11, object.isCancelled);
+        fbb.addInt64(12, object.createdAt?.millisecondsSinceEpoch);
+        fbb.addInt64(13, object.updatedAt?.millisecondsSinceEpoch);
+        fbb.addOffset(14, dbStatusOffset);
+        fbb.addOffset(15, dbSubjectsOffset);
+        fbb.addOffset(16, dbStatusHistoryOffset);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final appointmentDateValue = const fb.Int64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          14,
+        );
+        final createdAtValue = const fb.Int64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          28,
+        );
+        final updatedAtValue = const fb.Int64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          30,
+        );
+        final idParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          4,
+          0,
+        );
+        final uidParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 6, '');
+        final userIdParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 8, '');
+        final patientNameParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 10, '');
+        final appointmentSlotIdParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 12);
+        final appointmentDateParam = appointmentDateValue == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(appointmentDateValue);
+        final collectionLocationParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 16);
+        final resultFileUrlParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 18);
+        final resultFileNameParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 20);
+        final resultSummaryParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 22);
+        final adminNotesParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 24);
+        final isCancelledParam = const fb.BoolReader().vTableGet(
+          buffer,
+          rootOffset,
+          26,
+          false,
+        );
+        final createdAtParam = createdAtValue == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(createdAtValue);
+        final updatedAtParam = updatedAtValue == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(updatedAtValue);
+        final object =
+            HlaTestRequest(
+                id: idParam,
+                uid: uidParam,
+                userId: userIdParam,
+                patientName: patientNameParam,
+                appointmentSlotId: appointmentSlotIdParam,
+                appointmentDate: appointmentDateParam,
+                collectionLocation: collectionLocationParam,
+                resultFileUrl: resultFileUrlParam,
+                resultFileName: resultFileNameParam,
+                resultSummary: resultSummaryParam,
+                adminNotes: adminNotesParam,
+                isCancelled: isCancelledParam,
+                createdAt: createdAtParam,
+                updatedAt: updatedAtParam,
+              )
+              ..dbStatus = const fb.StringReader(
+                asciiOptimization: true,
+              ).vTableGet(buffer, rootOffset, 32, '')
+              ..dbSubjects = const fb.StringReader(
+                asciiOptimization: true,
+              ).vTableGet(buffer, rootOffset, 34, '')
+              ..dbStatusHistory = const fb.StringReader(
+                asciiOptimization: true,
+              ).vTableGet(buffer, rootOffset, 36, '');
+
+        return object;
+      },
+    ),
   };
 
   return obx_int.ModelDefinition(model, bindings);
@@ -1742,6 +2019,11 @@ class UserProfile_ {
   /// See [UserProfile.createdAt].
   static final createdAt = obx.QueryDateProperty<UserProfile>(
     _entities[0].properties[21],
+  );
+
+  /// See [UserProfile.dbRole].
+  static final dbRole = obx.QueryStringProperty<UserProfile>(
+    _entities[0].properties[22],
   );
 }
 
@@ -2101,5 +2383,93 @@ class ScheduledDose_ {
   /// See [ScheduledDose.uid].
   static final uid = obx.QueryStringProperty<ScheduledDose>(
     _entities[6].properties[14],
+  );
+}
+
+/// [HlaTestRequest] entity fields to define ObjectBox queries.
+class HlaTestRequest_ {
+  /// See [HlaTestRequest.id].
+  static final id = obx.QueryIntegerProperty<HlaTestRequest>(
+    _entities[7].properties[0],
+  );
+
+  /// See [HlaTestRequest.uid].
+  static final uid = obx.QueryStringProperty<HlaTestRequest>(
+    _entities[7].properties[1],
+  );
+
+  /// See [HlaTestRequest.userId].
+  static final userId = obx.QueryStringProperty<HlaTestRequest>(
+    _entities[7].properties[2],
+  );
+
+  /// See [HlaTestRequest.patientName].
+  static final patientName = obx.QueryStringProperty<HlaTestRequest>(
+    _entities[7].properties[3],
+  );
+
+  /// See [HlaTestRequest.appointmentSlotId].
+  static final appointmentSlotId = obx.QueryStringProperty<HlaTestRequest>(
+    _entities[7].properties[4],
+  );
+
+  /// See [HlaTestRequest.appointmentDate].
+  static final appointmentDate = obx.QueryDateProperty<HlaTestRequest>(
+    _entities[7].properties[5],
+  );
+
+  /// See [HlaTestRequest.collectionLocation].
+  static final collectionLocation = obx.QueryStringProperty<HlaTestRequest>(
+    _entities[7].properties[6],
+  );
+
+  /// See [HlaTestRequest.resultFileUrl].
+  static final resultFileUrl = obx.QueryStringProperty<HlaTestRequest>(
+    _entities[7].properties[7],
+  );
+
+  /// See [HlaTestRequest.resultFileName].
+  static final resultFileName = obx.QueryStringProperty<HlaTestRequest>(
+    _entities[7].properties[8],
+  );
+
+  /// See [HlaTestRequest.resultSummary].
+  static final resultSummary = obx.QueryStringProperty<HlaTestRequest>(
+    _entities[7].properties[9],
+  );
+
+  /// See [HlaTestRequest.adminNotes].
+  static final adminNotes = obx.QueryStringProperty<HlaTestRequest>(
+    _entities[7].properties[10],
+  );
+
+  /// See [HlaTestRequest.isCancelled].
+  static final isCancelled = obx.QueryBooleanProperty<HlaTestRequest>(
+    _entities[7].properties[11],
+  );
+
+  /// See [HlaTestRequest.createdAt].
+  static final createdAt = obx.QueryDateProperty<HlaTestRequest>(
+    _entities[7].properties[12],
+  );
+
+  /// See [HlaTestRequest.updatedAt].
+  static final updatedAt = obx.QueryDateProperty<HlaTestRequest>(
+    _entities[7].properties[13],
+  );
+
+  /// See [HlaTestRequest.dbStatus].
+  static final dbStatus = obx.QueryStringProperty<HlaTestRequest>(
+    _entities[7].properties[14],
+  );
+
+  /// See [HlaTestRequest.dbSubjects].
+  static final dbSubjects = obx.QueryStringProperty<HlaTestRequest>(
+    _entities[7].properties[15],
+  );
+
+  /// See [HlaTestRequest.dbStatusHistory].
+  static final dbStatusHistory = obx.QueryStringProperty<HlaTestRequest>(
+    _entities[7].properties[16],
   );
 }

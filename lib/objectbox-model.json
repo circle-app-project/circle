@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "2:7166028067144916976",
-      "lastPropertyId": "22:7473741569339705467",
+      "lastPropertyId": "23:3446162015300538428",
       "name": "UserProfile",
       "properties": [
         {
@@ -120,6 +120,11 @@
           "id": "22:7473741569339705467",
           "name": "createdAt",
           "type": 10
+        },
+        {
+          "id": "23:3446162015300538428",
+          "name": "dbRole",
+          "type": 9
         }
       ],
       "relations": []
@@ -527,10 +532,106 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "15:2928551838704968054",
+      "lastPropertyId": "17:8100974252932526204",
+      "name": "HlaTestRequest",
+      "properties": [
+        {
+          "id": "1:3895586918529119094",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:299854502190908852",
+          "name": "uid",
+          "type": 9,
+          "flags": 34848,
+          "indexId": "12:5330856156796068253"
+        },
+        {
+          "id": "3:6767700118325617687",
+          "name": "userId",
+          "type": 9
+        },
+        {
+          "id": "4:7970246581718522105",
+          "name": "patientName",
+          "type": 9
+        },
+        {
+          "id": "5:6102784803988311171",
+          "name": "appointmentSlotId",
+          "type": 9
+        },
+        {
+          "id": "6:1011341504457499727",
+          "name": "appointmentDate",
+          "type": 10
+        },
+        {
+          "id": "7:8538426739594004834",
+          "name": "collectionLocation",
+          "type": 9
+        },
+        {
+          "id": "8:2317583891011123815",
+          "name": "resultFileUrl",
+          "type": 9
+        },
+        {
+          "id": "9:4645561225361471759",
+          "name": "resultFileName",
+          "type": 9
+        },
+        {
+          "id": "10:1634046434977878014",
+          "name": "resultSummary",
+          "type": 9
+        },
+        {
+          "id": "11:3565336256070983570",
+          "name": "adminNotes",
+          "type": 9
+        },
+        {
+          "id": "12:5108099464489980828",
+          "name": "isCancelled",
+          "type": 1
+        },
+        {
+          "id": "13:7639696737927559332",
+          "name": "createdAt",
+          "type": 10
+        },
+        {
+          "id": "14:6814588809397735326",
+          "name": "updatedAt",
+          "type": 10
+        },
+        {
+          "id": "15:699322799870719491",
+          "name": "dbStatus",
+          "type": 9
+        },
+        {
+          "id": "16:6739967865939100593",
+          "name": "dbSubjects",
+          "type": 9
+        },
+        {
+          "id": "17:8100974252932526204",
+          "name": "dbStatusHistory",
+          "type": 9
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "14:4275058572695879075",
-  "lastIndexId": "11:6292842501519135102",
+  "lastEntityId": "15:2928551838704968054",
+  "lastIndexId": "12:5330856156796068253",
   "lastRelationId": "3:7294710979211216290",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
