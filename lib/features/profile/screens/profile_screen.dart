@@ -12,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../components/components.dart';
 import '../../../core/core.dart';
 import '../../../gen/assets.gen.dart';
+import '../../hla/hla.dart';
 import '../../water/water.dart';
 import '../profile.dart';
 
@@ -97,6 +98,10 @@ class ProfileScreen extends ConsumerWidget {
                       //  color: theme.colorScheme.primary,
                     ),
                   ],
+                ),
+                const Gap(24),
+                _HlaProfileSection(
+                  isAdmin: userProfile.role == UserRole.admin,
                 ),
                 // const Gap(16),
                 // Container(
@@ -367,6 +372,86 @@ class ProfileScreen extends ConsumerWidget {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// HLA typing entry points on the profile: a patient-facing tile for everyone
+/// and a staff-only admin tile gated on [isAdmin] (the role read). The server
+/// also enforces the admin boundary via Firestore rules.
+class _HlaProfileSection extends StatelessWidget {
+  const _HlaProfileSection({required this.isAdmin});
+
+  final bool isAdmin;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("HLA Typing", style: theme.textTheme.titleMedium),
+        const Gap(kPadding8),
+        _HlaNavTile(
+          icon: FluentIcons.organization_24_regular,
+          label: "HLA typing & transplant matching",
+          onTap: () => context.router.pushNamed(HlaIntroScreen.path),
+        ),
+        if (isAdmin) ...[
+          const Gap(kPadding8),
+          _HlaNavTile(
+            icon: FluentIcons.shield_task_24_regular,
+            label: "HLA admin",
+            onTap: () => context.router.pushNamed(HlaAdminListScreen.path),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _HlaNavTile extends StatelessWidget {
+  const _HlaNavTile({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return InkWell(
+      borderRadius: BorderRadius.circular(kPadding16),
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(kPadding16),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(kPadding16),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: theme.colorScheme.primary),
+            const Gap(kPadding12),
+            Expanded(
+              child: Text(
+                label,
+                style: theme.textTheme.bodyLarge
+                    ?.copyWith(fontWeight: FontWeight.w500),
+              ),
+            ),
+            const Icon(
+              FluentIcons.chevron_right_24_regular,
+              size: 18,
+              color: AppColours.neutral50,
+            ),
+          ],
         ),
       ),
     );
