@@ -55,9 +55,11 @@ a Web app must be registered on the Firebase project first.
    This rewrites `lib/firebase_options.dart` with the real web credentials.
    (Or register a Web app in the Firebase console and paste `apiKey` + `appId`.)
 
-3. **Enable Google sign-in**: Firebase console -> Authentication -> Sign-in
-   method -> enable **Google**. Under Authentication -> Settings -> Authorized
-   domains, add `localhost` (for local dev) and your eventual hosting domain.
+3. **Enable sign-in providers**: Firebase console -> Authentication -> Sign-in
+   method -> enable **Google** and **Email/Password** (the dashboard offers
+   both). Under Authentication -> Settings -> Authorized domains, add `localhost`
+   (for local dev) and your eventual hosting domain. Email/password admins are
+   created in Authentication -> Users.
 
 4. **Deploy the security rules + indexes** (from the repo root — these are shared
    with the mobile feature and live in `../firestore.rules`, `../storage.rules`):
