@@ -14,13 +14,16 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 ///
 /// The non-secret identifiers (projectId, messagingSenderId, storageBucket)
 /// are shared with the mobile app and already filled in.
-class DefaultFirebaseOptions {
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'REPLACE_WITH_WEB_API_KEY',
-    appId: 'REPLACE_WITH_WEB_APP_ID',
+
+ const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBdJoJ6xP2VH2fuAS4oUtQ1qQ2xDoIn5o8',
+    appId: '1:497391679746:web:7a3f50c4e6f710119d2a1b',
     messagingSenderId: '497391679746',
     projectId: 'circle-60af7',
     authDomain: 'circle-60af7.firebaseapp.com',
     storageBucket: 'circle-60af7.firebasestorage.app',
+    measurementId: 'G-3KQHB7RSVC',
   );
+
+class DefaultFirebaseOptions {
 }
